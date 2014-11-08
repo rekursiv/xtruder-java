@@ -1,0 +1,18 @@
+
+ModuleCommand
+
+===
+
+build touchscreen widget  (stepperature replacement)
+
+finish command protocol for all modules
+
+
+
+
+=== stepper uCode
+
+"reset" cmd - clear status codes
+
+
+

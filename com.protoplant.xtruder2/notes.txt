@@ -1,0 +1,24 @@
+
+======  module protocol   ====
+
+
+
+
+
+
+
+=======  stepper notes    =====
+
+
+	 2" wheel:  9 IPS = 3 RPS = 180 RPM
+	 1" wheel:  9 IPS = 6 RPS = 360 RPM,   X2 = 12 RPS  = 19200hz step rate
+	
+	  1.8deg sepper motor = 200 steps per rev
+	  1/8 microstepping = 1600 steps per rev = 60rpm
+	  1/2 microstepping = 400 steps per rev = 60rpm
+
+	 range 1/2:  400:4800
+	 range 1/8:  1600:19200	
+	
+	
+	

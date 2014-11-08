@@ -1,0 +1,16 @@
+=== USB_PIDs ===
+
+0x0301  TEST
+
+0x03E0  Indicator
+0x03E1  Analog
+0x03E2  Stepper
+
+=============
+
+"report id" = 0x3F
+VID:  0x2047  (8263)
+PID:  somewhere in the range of 0x03DF-0x03FD.  
+
+
+
