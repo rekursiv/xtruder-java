@@ -25,7 +25,7 @@ public class UsbManager extends Thread {
 	private static final int IO_REFRESH_PERIOD = 200;
 	private static final int CONNECT_REFRESH_PERIOD = 2000;
 	
-	protected static final int vid = 0x2047;
+	protected static final int vendorId = 0x2047;
 	
 	private Logger log;
 	private Injector injector;
@@ -43,9 +43,11 @@ public class UsbManager extends Thread {
 			log.warning("Failed to load native HID library.");
 		}
 		
+		listDevs();
+		
 		ioRefreshCount = 0;
 		modules = new TreeMap<String, UsbModule>();
-		refreshConnections();
+		refreshConnectionAsync();
         start();
 		
 	}
@@ -66,13 +68,22 @@ public class UsbManager extends Thread {
 		try {
 			HIDDeviceInfo[] devs = HIDManager.getInstance().listDevices();
 			for (HIDDeviceInfo info : devs) {
-				if (info.getVendor_id()==vid) log.info(info.toString());
+				if (info.getVendor_id()==vendorId) log.info(info.toString());
 			}
 		} catch (IOException e) {
 			log.log(Level.WARNING, "", e);
 		}
 	}
 	
+	
+	private void refreshConnectionAsync() {
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				refreshConnections();
+			}
+		});
+	}
 	
 	private void refreshConnections() {
 //		log.info(modules.size()+"");
@@ -87,7 +98,7 @@ public class UsbManager extends Thread {
 		try {
 			HIDDeviceInfo[] devs = HIDManager.getInstance().listDevices();
 			for (HIDDeviceInfo info : devs) {
-				if (info.getVendor_id()==vid) {
+				if (info.getVendor_id()==vendorId) {
 					if (!modules.containsKey(info.getSerial_number())) {  // check to see if this device is already mapped
 						UsbModule mod = null;
 						switch (info.getProduct_id()) {
@@ -103,7 +114,7 @@ public class UsbManager extends Thread {
 						}
 						
 						if (mod!=null) {
-							mod.connect(info.getVendor_id(), info.getProduct_id(), info.getSerial_number());
+							mod.connect(info);
 							if (mod.isConnected()) {
 								log.info("*USB* "+info.getProduct_string()+":"+info.getSerial_number());
 								log.info(info.toString());
@@ -117,13 +128,15 @@ public class UsbManager extends Thread {
 			log.log(Level.WARNING, "", e);
 		}
 	}
+	
+
 
 	@Override
 	public void run() {
 		while (isAlive()) {
 			
 			if (ioRefreshCount*IO_REFRESH_PERIOD>CONNECT_REFRESH_PERIOD) {
-				refreshConnections();
+				refreshConnectionAsync();
 				ioRefreshCount=0;
 			} else {
 				++ioRefreshCount;

@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.xml.bind.DatatypeConverter;
 
 import com.codeminders.hidapi.HIDDevice;
+import com.codeminders.hidapi.HIDDeviceInfo;
 import com.codeminders.hidapi.HIDDeviceNotFoundException;
 import com.codeminders.hidapi.HIDManager;
 import com.google.common.eventbus.EventBus;
@@ -16,8 +17,16 @@ public class UsbModule {
 	protected static final int reportId = 0x3F;
 	
 	protected Logger log;
-	protected HIDDevice dev = null;
 	protected EventBus eb;
+	
+	protected HIDDeviceInfo devInfo = null;
+	protected HIDDevice dev = null;
+
+
+	protected int vendorId;
+	protected int productId;
+	protected String serial;
+	
 	
 
 
@@ -31,10 +40,11 @@ public class UsbModule {
 		return dev!=null;
 	}
 	
-	public void connect(int vid, int pid, String serial) {
+	public void connect(HIDDeviceInfo devInfo) {
+		this.devInfo = devInfo;  // TODO:  set to null on disconnect??
 		disconnect();
         try {
-			dev = HIDManager.getInstance().openById(vid, pid, serial);
+			dev = HIDManager.getInstance().openById(devInfo.getVendor_id(), devInfo.getProduct_id(), devInfo.getSerial_number());
 			if (dev==null) return;
 			dev.disableBlocking();
 			log.info("Connected");

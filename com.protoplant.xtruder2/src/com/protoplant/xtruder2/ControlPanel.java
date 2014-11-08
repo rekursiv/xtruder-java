@@ -8,7 +8,8 @@ import com.google.inject.Injector;
 public class ControlPanel extends Composite {
 	private IndicatorPanel pnlIndicator;
 	private AnalogPanel pnlAnalog;
-	private StepperPanel pnlStepper;
+	private StepperPanel pnlStepper1;
+	private StepperPanel pnlStepper2;
 	
 	/**
 	 * Create the composite.
@@ -24,11 +25,11 @@ public class ControlPanel extends Composite {
 		pnlAnalog = new AnalogPanel(this, injector);
 		pnlAnalog.setBounds(265, 10, 259, 200);
 		
-		XtruderConfig config = injector.getInstance(XtruderConfig.class);
-		
-		pnlStepper = new StepperPanel(this, injector, config.motors[0]);
-		pnlStepper.setBounds(10, 216, 1189, 104);
+		pnlStepper1 = new StepperPanel(this, injector, 0);
+		pnlStepper1.setBounds(10, 220, 858, 104);
 
+		pnlStepper2 = new StepperPanel(this, injector, 1);
+		pnlStepper2.setBounds(10, 330, 858, 104);
 		
 	}
 
