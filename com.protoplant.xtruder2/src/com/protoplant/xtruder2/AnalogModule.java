@@ -24,6 +24,7 @@ public class AnalogModule extends UsbModule {
 		return pkt;
 	}
 	
+	
 	@Override
 	protected void decodePacket(byte[] pkt) {
         AnalogDataEvent ade = new AnalogDataEvent();

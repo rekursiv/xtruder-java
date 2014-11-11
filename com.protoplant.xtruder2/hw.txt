@@ -13,4 +13,8 @@ VID:  0x2047  (8263)
 PID:  somewhere in the range of 0x03DF-0x03FD.  
 
 
+Test Vendor ID:
+80ee
+VirtualBox
+
 

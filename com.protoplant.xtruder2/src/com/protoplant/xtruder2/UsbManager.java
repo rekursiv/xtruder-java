@@ -25,7 +25,8 @@ public class UsbManager extends Thread {
 	private static final int IO_REFRESH_PERIOD = 200;
 	private static final int CONNECT_REFRESH_PERIOD = 2000;
 	
-	protected static final int vendorId = 0x2047;
+//	protected static final int vendorId = 0x2047;
+	protected static final int vendorId = 0x80ee;
 	
 	private Logger log;
 	private Injector injector;
@@ -67,9 +68,12 @@ public class UsbManager extends Thread {
 	public void listDevs() {
 		try {
 			HIDDeviceInfo[] devs = HIDManager.getInstance().listDevices();
-			for (HIDDeviceInfo info : devs) {
-				if (info.getVendor_id()==vendorId) log.info(info.toString());
+			if (devs!=null) {
+				for (HIDDeviceInfo info : devs) {
+					if (info.getVendor_id()==vendorId) log.info(info.toString());
+				}	
 			}
+
 		} catch (IOException e) {
 			log.log(Level.WARNING, "", e);
 		}
@@ -97,28 +101,30 @@ public class UsbManager extends Thread {
 
 		try {
 			HIDDeviceInfo[] devs = HIDManager.getInstance().listDevices();
-			for (HIDDeviceInfo info : devs) {
-				if (info.getVendor_id()==vendorId) {
-					if (!modules.containsKey(info.getSerial_number())) {  // check to see if this device is already mapped
-						UsbModule mod = null;
-						switch (info.getProduct_id()) {
-							case 0x03E0:
+			if (devs!=null) {
+				for (HIDDeviceInfo info : devs) {
+					if (info.getVendor_id()==vendorId&&info.getSerial_number()!=null) {
+						if (!modules.containsKey(info.getSerial_number())) {  // check to see if this device is already mapped
+							UsbModule mod = null;
+							switch (info.getProduct_id()) {
+							case 0x0100://0x03E0:
 								mod = injector.getInstance(IndicatorModule.class);
-							break;
-							case 0x03E1:
+								break;
+							case 0x0101://0x03E1:
 								mod = injector.getInstance(AnalogModule.class);
-							break;
-							case 0x03E2:  
+								break;
+							case 0x0102://0x03E2:  
 								mod = injector.getInstance(StepperModule.class);
-							break;
-						}
-						
-						if (mod!=null) {
-							mod.connect(info);
-							if (mod.isConnected()) {
-								log.info("*USB* "+info.getProduct_string()+":"+info.getSerial_number());
-								log.info(info.toString());
-								modules.put(info.getSerial_number(), mod);
+								break;
+							}
+
+							if (mod!=null) {
+								mod.connect(info);
+								if (mod.isConnected()&&info.getSerial_number()!=null) {
+									log.info("*USB* "+info.getProduct_string()+":"+info.getSerial_number());
+									log.info(info.toString());
+									modules.put(info.getSerial_number(), mod);
+								}
 							}
 						}
 					}

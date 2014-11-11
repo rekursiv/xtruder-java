@@ -33,14 +33,17 @@ public class Xtruder2App {
 		
 
 		// ChalkElec touchscreen is 1280 X 800
-		shell.setSize(1280, 800);
+//		shell.setSize(1280, 800);
 
 		// Dell touchscreen is 1600 X 900
+		shell.setBounds(0, 0, 1600, 900);
 //		shell.setSize(1600, 900);
 		
 		shell.setText("Protoplant Xtruder V2.x");
 
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+
 		
 		Injector injector = Guice.createInjector(new XtruderModule());
 		

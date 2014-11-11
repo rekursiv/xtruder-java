@@ -36,15 +36,15 @@ public class IndicatorPanel extends Group {
 		setText("Indicator");
 		
 		lblMin = new Label(this, SWT.NONE);
-		lblMin.setBounds(10, 23, 207, 24);
+		lblMin.setBounds(10, 23, 100, 24);
 		lblMin.setText("MIN");
 		
 		lblDia = new Label(this, SWT.NONE);
-		lblDia.setBounds(56, 54, 161, 25);
+		lblDia.setBounds(266, 23, 106, 25);
 		lblDia.setText("CUR");
 		
 		lblMax = new Label(this, SWT.NONE);
-		lblMax.setBounds(10, 86, 207, 24);
+		lblMax.setBounds(129, 23, 106, 24);
 		lblMax.setText("MAX");
 		
 		btnZero = new Button(this, SWT.NONE);
@@ -54,7 +54,7 @@ public class IndicatorPanel extends Group {
 				eb.post(new IndicatorZeroEvent());
 			}
 		});
-		btnZero.setBounds(10, 126, 75, 25);
+		btnZero.setBounds(10, 53, 75, 25);
 		btnZero.setText("Zero");
 		
 		btnReset = new Button(this, SWT.NONE);
@@ -64,7 +64,7 @@ public class IndicatorPanel extends Group {
 				reset();
 			}
 		});
-		btnReset.setBounds(91, 126, 75, 25);
+		btnReset.setBounds(91, 53, 75, 25);
 		btnReset.setText("Reset");
 
 		if (injector!=null) injector.injectMembers(this);

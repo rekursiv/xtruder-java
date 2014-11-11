@@ -39,14 +39,14 @@ public class AnalogPanel extends Group {
 		
 		lblData3 = new Label(this, SWT.NONE);
 		lblData3.setText("Data 3");
-		lblData3.setBounds(10, 105, 106, 33);
+		lblData3.setBounds(72, 27, 106, 33);
 		
 		lblData4 = new Label(this, SWT.NONE);
 		lblData4.setText("Data 4");
-		lblData4.setBounds(10, 144, 106, 33);
+		lblData4.setBounds(72, 66, 106, 33);
 		
 		lblTest = new Label(this, SWT.NONE);
-		lblTest.setBounds(122, 27, 115, 33);
+		lblTest.setBounds(203, 27, 115, 33);
 		lblTest.setText("Test");
 		if (injector!=null) injector.injectMembers(this);
 	}

@@ -127,6 +127,7 @@ public class UsbModule {
 	private void readUsb() throws IOException {
         byte[] data = new byte[64];
         dev.readTimeout(data, 10);   // TODO:  check if this function returns 64 to catch errors??
+//        System.out.println("pktLen="+dev.readTimeout(data, 10));
         decodePacket(data);
 	}
 
