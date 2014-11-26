@@ -25,8 +25,8 @@ public class UsbManager extends Thread {
 	private static final int IO_REFRESH_PERIOD = 200;
 	private static final int CONNECT_REFRESH_PERIOD = 2000;
 	
-//	protected static final int vendorId = 0x2047;
-	protected static final int vendorId = 0x80ee;
+	protected static final int vendorId = 0x2047;
+//	protected static final int vendorId = 0x80ee;
 	
 	private Logger log;
 	private Injector injector;
@@ -107,13 +107,13 @@ public class UsbManager extends Thread {
 						if (!modules.containsKey(info.getSerial_number())) {  // check to see if this device is already mapped
 							UsbModule mod = null;
 							switch (info.getProduct_id()) {
-							case 0x0100://0x03E0:
+							case 0x03E0:
 								mod = injector.getInstance(IndicatorModule.class);
 								break;
-							case 0x0101://0x03E1:
+							case 0x03E1:
 								mod = injector.getInstance(AnalogModule.class);
 								break;
-							case 0x0102://0x03E2:  
+							case 0x03E2:  
 								mod = injector.getInstance(StepperModule.class);
 								break;
 							}

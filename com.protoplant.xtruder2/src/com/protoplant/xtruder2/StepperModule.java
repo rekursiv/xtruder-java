@@ -38,6 +38,8 @@ public class StepperModule extends UsbModule {
 	@Override
 	protected void decodePacket(byte[] pkt) {
         eb.post(new StepperStatusEvent(devInfo.getSerial_number(), extractInt16(pkt, 3), pkt[5]&0xFF, pkt[6]&0xFF));
+
+//        log.info(devInfo.getSerial_number()+":"+extractInt16(pkt, 3)+":"+(pkt[5]&0xFF)+":"+(pkt[6]&0xFF));
         
 //        log.info(DatatypeConverter.printHexBinary(pkt));
  //       log.info(pkt[1]+":"+pkt[2]+"     "+extractInt16(pkt, 3)+"    "+(int)(pkt[5]&0xFF)+"    "+toBinary((int)(pkt[6]&0xFF)) );

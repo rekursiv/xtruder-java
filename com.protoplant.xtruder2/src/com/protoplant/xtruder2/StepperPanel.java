@@ -84,11 +84,13 @@ public class StepperPanel extends Group {
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
-		setText("Stepper "+config.steppers[index].serial);
+		if (config.steppers.length<index) log.warning("No entry in config file for index #"+index);
+		else setText("Stepper "+config.steppers[index].serial);
 	}
 
 	@Subscribe
 	public void onData(final StepperStatusEvent evt) {
+		if (config.steppers.length<index) return;
 		if (evt.getSerial().compareTo(config.steppers[index].serial)==0) {
 			lblTorque.setText(""+evt.getTorque());
 			lblSpeed.setText(""+evt.getSpeed());
