@@ -8,6 +8,7 @@ import javax.xml.bind.DatatypeConverter;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
+import com.protoplant.xtruder2.event.AnalogDataEvent;
 
 public class AnalogModule extends UsbModule {
 	

@@ -7,6 +7,8 @@ import javax.xml.bind.DatatypeConverter;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
+import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
+import com.protoplant.xtruder2.event.StepperStatusEvent;
 
 public class StepperModule extends UsbModule {
 

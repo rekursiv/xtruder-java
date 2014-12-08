@@ -1,4 +1,4 @@
-package com.protoplant.xtruder2;
+package com.protoplant.xtruder2.event;
 
 public class AnalogDataEvent {
 	public int data1 = 0;

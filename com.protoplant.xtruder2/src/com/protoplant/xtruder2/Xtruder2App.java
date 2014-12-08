@@ -5,6 +5,7 @@ import org.eclipse.swt.layout.FillLayout;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.panel.RootPanel;
 
 
 
@@ -32,12 +33,9 @@ public class Xtruder2App {
 		}
 		
 
-		// ChalkElec touchscreen is 1280 X 800
-//		shell.setSize(1280, 800);
-
 		// Dell touchscreen is 1600 X 900
-		shell.setBounds(0, 0, 1600, 900);
-//		shell.setSize(1600, 900);
+//		shell.setBounds(0, 0, 1600, 900);
+		shell.setSize(1600, 900);
 		
 		shell.setText("Protoplant Xtruder V2.x");
 
@@ -45,9 +43,9 @@ public class Xtruder2App {
 		
 
 		
-		Injector injector = Guice.createInjector(new XtruderModule());
+		Injector injector = Guice.createInjector(new XtruderGuice());
 		
-		new RootPanel(shell, SWT.NONE, injector);
+		new RootPanel(shell, injector);
 		
 		UsbManager usb = injector.getInstance(UsbManager.class);
 		usb.init();

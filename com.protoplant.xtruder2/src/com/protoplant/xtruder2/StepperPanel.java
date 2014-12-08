@@ -15,6 +15,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
+import com.protoplant.xtruder2.event.StepperStatusEvent;
 
 public class StepperPanel extends Group {
 

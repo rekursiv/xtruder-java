@@ -14,7 +14,7 @@ import util.logging.LogView;
 
 import com.google.inject.Injector;
 
-public class RootPanel extends Composite {
+public class _RootPanel extends Composite {
 //	private Logger log;
 
 	private ControlPanel ctlPanel = null;
@@ -24,7 +24,7 @@ public class RootPanel extends Composite {
 	private StatusPanel statusPanel;
 
 
-	public RootPanel(Composite parent, int style, Injector injector) {
+	public _RootPanel(Composite parent, int style, Injector injector) {
 		super(parent, style);
 		
 		ctlPanel = new ControlPanel(this, injector);

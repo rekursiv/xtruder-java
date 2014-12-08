@@ -12,6 +12,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.event.IndicatorDataEvent;
+import com.protoplant.xtruder2.event.IndicatorZeroEvent;
 
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;

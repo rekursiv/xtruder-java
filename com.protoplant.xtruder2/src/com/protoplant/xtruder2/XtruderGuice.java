@@ -16,7 +16,7 @@ import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeListener;
 import com.google.inject.spi.TypeEncounter;
 
-public class XtruderModule extends AbstractModule {
+public class XtruderGuice extends AbstractModule {
 
 	protected final ConfigManager<XtruderConfig> cfgMgr = new ConfigManager<XtruderConfig>(XtruderConfig.class, "xtruder-config.js");
 	protected XtruderConfig config;
