@@ -24,8 +24,8 @@ public class _RootPanel extends Composite {
 	private StatusPanel statusPanel;
 
 
-	public _RootPanel(Composite parent, int style, Injector injector) {
-		super(parent, style);
+	public _RootPanel(Composite parent, Injector injector) {
+		super(parent, SWT.BORDER);
 		
 		ctlPanel = new ControlPanel(this, injector);
 

@@ -23,6 +23,7 @@ public class RootPanel extends SashForm {
 	public RootPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
 		
+	
 		rsp = new RootSummaryPanel(this, injector);
 		rdp = new RootDetailPanel(this, injector);
 		

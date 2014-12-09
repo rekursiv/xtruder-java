@@ -45,7 +45,7 @@ public class Xtruder2App {
 		
 		Injector injector = Guice.createInjector(new XtruderGuice());
 		
-		new RootPanel(shell, injector);
+		new _RootPanel(shell, injector);
 		
 		UsbManager usb = injector.getInstance(UsbManager.class);
 		usb.init();

@@ -26,7 +26,6 @@ public class UsbManager extends Thread {
 	private static final int CONNECT_REFRESH_PERIOD = 2000;
 	
 	protected static final int vendorId = 0x2047;
-//	protected static final int vendorId = 0x80ee;
 	
 	private Logger log;
 	private Injector injector;

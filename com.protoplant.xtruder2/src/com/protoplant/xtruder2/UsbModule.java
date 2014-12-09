@@ -22,14 +22,6 @@ public class UsbModule {
 	protected HIDDeviceInfo devInfo = null;
 	protected HIDDevice dev = null;
 
-
-	protected int vendorId;
-	protected int productId;
-	protected String serial;
-	
-	
-
-
 	@Inject
 	public UsbModule(Logger log, EventBus eb) {
 		this.log = log;
@@ -41,12 +33,12 @@ public class UsbModule {
 	}
 	
 	public void connect(HIDDeviceInfo devInfo) {
-		this.devInfo = devInfo;  // TODO:  set to null on disconnect??
 		disconnect();
         try {
 			dev = HIDManager.getInstance().openById(devInfo.getVendor_id(), devInfo.getProduct_id(), devInfo.getSerial_number());
 			if (dev==null) return;
 			dev.disableBlocking();
+			this.devInfo = devInfo;
 			log.info("Connected");
 		} catch (HIDDeviceNotFoundException e) {
 			dev = null;
@@ -63,6 +55,7 @@ public class UsbModule {
 			} catch (IOException e) {
 			} finally {
 				dev = null;
+				devInfo = null;
 			}
 		}
 	}
@@ -109,7 +102,6 @@ public class UsbModule {
 	protected void decodePacket(byte[] pkt) {
         log.info(DatatypeConverter.printHexBinary(pkt));
 	}
-	
 	
 	
 	private void writeUsb() throws IOException {

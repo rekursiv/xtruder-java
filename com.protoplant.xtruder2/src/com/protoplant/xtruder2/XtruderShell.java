@@ -1,5 +1,6 @@
 package com.protoplant.xtruder2;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -7,6 +8,7 @@ public class XtruderShell extends Shell {
 
 	public void init() {
 		Display display = Display.getDefault();
+		setBackgroundMode(SWT.INHERIT_FORCE);
 		open();
 		layout();		
 		while (!isDisposed()) {

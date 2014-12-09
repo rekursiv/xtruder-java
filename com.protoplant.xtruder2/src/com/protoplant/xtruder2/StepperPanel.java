@@ -32,11 +32,11 @@ public class StepperPanel extends Group {
 	private Label lblSpeed;
 	private Label lblStatus;
 	private XtruderConfig config;
-	private int index;
+	private StepperType type;
 
-	public StepperPanel(Composite parent, Injector injector, int index) {
+	public StepperPanel(Composite parent, Injector injector, StepperType type) {
 		super(parent, SWT.NONE);
-		this.index = index;
+		this.type = type;
 		
 		lblTorque = new Label(this, SWT.NONE);
 		lblTorque.setBounds(438, 74, 55, 15);
@@ -86,14 +86,15 @@ public class StepperPanel extends Group {
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
-		if (config.steppers.length<index) log.warning("No entry in config file for index #"+index);
-		else setText("Stepper "+config.steppers[index].serial);
+		 setText("Stepper "+type.name());
+//		if (config.steppers.length<index) log.warning("No entry in config file for index #"+index);
+//		else setText("Stepper "+config.steppers[index].serial);
 	}
 
 	@Subscribe
 	public void onData(final StepperStatusEvent evt) {
-		if (config.steppers.length<index) return;
-		if (evt.getSerial().compareTo(config.steppers[index].serial)==0) {
+//		if (config.steppers.length<index) return;
+		if (evt.getType()==type) {
 			lblTorque.setText(""+evt.getTorque());
 			lblSpeed.setText(""+evt.getSpeed());
 			lblStatus.setText(toBinary(evt.getStatus()));
@@ -102,7 +103,7 @@ public class StepperPanel extends Group {
 
 	public void onSpeedChange() {
 		sliderVal = slider.getSelection()-scaleRange/2;
-		eb.post(new StepperSpeedChangeEvent(config.steppers[index].serial, sliderVal));
+		eb.post(new StepperSpeedChangeEvent(type, sliderVal));
 		lblSliderValue.setText(""+sliderVal);
 //		lblTorque.setText(calcTorque());
 	}

@@ -1,12 +1,14 @@
 package com.protoplant.xtruder2.event;
 
+import com.protoplant.xtruder2.StepperType;
+
 public class StepperSpeedChangeEvent {
 
-	private String serial;
+	private StepperType type;
 	private int speed;
 
-	public StepperSpeedChangeEvent(String serial, int speed) {
-		this.serial = serial;
+	public StepperSpeedChangeEvent(StepperType type, int speed) {
+		this.type = type;
 		this.setSpeed(speed);
 	}
 
@@ -18,8 +20,8 @@ public class StepperSpeedChangeEvent {
 		this.speed = speed;
 	}
 
-	public String getSerial() {
-		return serial;
+	public StepperType getType() {
+		return type;
 	}
 
 }

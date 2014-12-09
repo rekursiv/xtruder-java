@@ -29,12 +29,14 @@ public class ControlPanel extends Composite {
 		pnlAnalog = new AnalogPanel(this, injector);
 		pnlAnalog.setBounds(902, 120, 328, 104);
 		
-		pnlStepper1 = new StepperPanel(this, injector, 0);
+		pnlStepper1 = new StepperPanel(this, injector, StepperType.ONE);
 		pnlStepper1.setBounds(10, 10, 858, 104);
 
-		pnlStepper2 = new StepperPanel(this, injector, 1);
+		pnlStepper2 = new StepperPanel(this, injector, StepperType.TWO);
 		pnlStepper2.setBounds(10, 120, 858, 104);
 		
+		
+		/*
 		stepperPanel = new StepperPanel(this, injector, 2);
 		stepperPanel.setBounds(10, 230, 858, 104);
 		
@@ -46,7 +48,7 @@ public class ControlPanel extends Composite {
 		
 		stepperPanel_3 = new StepperPanel(this, injector, 5);
 		stepperPanel_3.setBounds(10, 560, 858, 104);
-		
+		*/
 	}
 
 	@Override

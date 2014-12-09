@@ -1,15 +1,17 @@
 package com.protoplant.xtruder2.event;
 
+import com.protoplant.xtruder2.StepperType;
+
 public class StepperStatusEvent {
 
-	private String serial;
+	private StepperType type;
 	private int speed;
 	private int torque;
 	private int status;
 
 	
-	public StepperStatusEvent(String serial, int speed, int torque, int status) {
-		this.serial = serial;
+	public StepperStatusEvent(StepperType type, int speed, int torque, int status) {
+		this.type = type;
 		this.speed = speed;
 		this.torque = torque;
 		this.status = status;
@@ -27,8 +29,8 @@ public class StepperStatusEvent {
 		return status;
 	}
 	
-	public String getSerial() {
-		return serial;
+	public StepperType getType() {
+		return type;
 	}
 
 
