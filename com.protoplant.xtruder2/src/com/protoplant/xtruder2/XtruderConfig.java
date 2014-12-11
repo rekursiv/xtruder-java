@@ -11,6 +11,6 @@ public class XtruderConfig extends ConfigBase {
 	public boolean logToFile=false;
 	public boolean showLogView=true;
 	
-	public StepperConfig[] steppers = {new StepperConfig(), new StepperConfig(), new StepperConfig(), new StepperConfig(), new StepperConfig(), new StepperConfig()};
+//	public StepperConfig[] steppers = {new StepperConfig(), new StepperConfig(), new StepperConfig(), new StepperConfig(), new StepperConfig(), new StepperConfig()};
 	
 }

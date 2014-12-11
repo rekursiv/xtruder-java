@@ -23,8 +23,8 @@ public class TestDetailPanel extends Composite {
 		asp = new AdjustableStepperPanel(this, injector, StepperType.TopRoller);
 		asp.setBounds(10, 10, 497, 156);
 		
-		tsp = new TrackingStepperPanel(this, injector, StepperType.TopRoller, StepperType.BottomRoller);
-		tsp.setBounds(10, 191, 497, 156);
+//		tsp = new TrackingStepperPanel(this, injector, StepperType.TopRoller, StepperType.BottomRoller);
+//		tsp.setBounds(10, 191, 497, 156);
 
 //		if (injector!=null) injector.injectMembers(this);
 	}

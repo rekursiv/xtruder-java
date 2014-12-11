@@ -18,7 +18,7 @@ import com.google.inject.spi.TypeEncounter;
 
 public class XtruderGuice extends AbstractModule {
 
-	protected final ConfigManager<XtruderConfig> cfgMgr = new ConfigManager<XtruderConfig>(XtruderConfig.class, "xtruder-config.js");
+	protected final ConfigManager<XtruderConfig> cfgMgr = new ConfigManager<XtruderConfig>(XtruderConfig.class, "config/global.js");
 	protected XtruderConfig config;
 	protected final EventBus eventBus = new EventBus();
 
