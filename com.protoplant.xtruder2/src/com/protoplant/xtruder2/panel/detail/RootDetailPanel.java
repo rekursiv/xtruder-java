@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.event.PanelFocusEvent;
 import com.protoplant.xtruder2.panel.summary.ConveyanceSummaryPanel;
+import com.protoplant.xtruder2.panel.summary.RootSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.StatusSummaryPanel;
 
 public class RootDetailPanel extends Composite {
@@ -21,7 +22,7 @@ public class RootDetailPanel extends Composite {
 	protected StackLayout stack;
 	protected Injector injector;
 	
-	
+	protected TestDetailPanel pnlTest;
 	protected ConveyanceDetailPanel pnlConv;
 	protected StatusDetailPanel pnlStatus;
 
@@ -45,7 +46,11 @@ public class RootDetailPanel extends Composite {
 		Widget w = event.getWidget();
 		if (w==null) return;
 		log.info(w.toString());
-		if (w instanceof StatusSummaryPanel) {
+		if (w instanceof RootSummaryPanel) {
+			if (pnlTest == null) pnlTest = new TestDetailPanel(this, injector);
+			stack.topControl = pnlTest;
+			layout();
+		} else if (w instanceof StatusSummaryPanel) {
 			if (pnlStatus == null) pnlStatus = new StatusDetailPanel(this, injector);
 			stack.topControl = pnlStatus;
 			layout();

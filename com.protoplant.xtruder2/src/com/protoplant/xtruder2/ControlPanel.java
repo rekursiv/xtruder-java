@@ -8,12 +8,12 @@ import com.google.inject.Injector;
 public class ControlPanel extends Composite {
 	private IndicatorPanel pnlIndicator;
 	private AnalogPanel pnlAnalog;
-	private StepperPanel pnlStepper1;
-	private StepperPanel pnlStepper2;
-	private StepperPanel stepperPanel;
-	private StepperPanel stepperPanel_1;
-	private StepperPanel stepperPanel_2;
-	private StepperPanel stepperPanel_3;
+	private TestStepperPanel pnlStepper1;
+	private TestStepperPanel pnlStepper2;
+	private TestStepperPanel stepperPanel;
+	private TestStepperPanel stepperPanel_1;
+	private TestStepperPanel stepperPanel_2;
+	private TestStepperPanel stepperPanel_3;
 	
 	/**
 	 * Create the composite.
@@ -29,10 +29,10 @@ public class ControlPanel extends Composite {
 		pnlAnalog = new AnalogPanel(this, injector);
 		pnlAnalog.setBounds(902, 120, 328, 104);
 		
-		pnlStepper1 = new StepperPanel(this, injector, StepperType.ONE);
+		pnlStepper1 = new TestStepperPanel(this, injector, StepperType.TopRoller);
 		pnlStepper1.setBounds(10, 10, 858, 104);
 
-		pnlStepper2 = new StepperPanel(this, injector, StepperType.TWO);
+		pnlStepper2 = new TestStepperPanel(this, injector, StepperType.BottomRoller);
 		pnlStepper2.setBounds(10, 120, 858, 104);
 		
 		

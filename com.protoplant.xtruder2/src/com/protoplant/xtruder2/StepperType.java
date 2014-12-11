@@ -1,5 +1,5 @@
 package com.protoplant.xtruder2;
 
 public enum StepperType {
-	UNDEFINED, ONE, TWO, THREE
+	UNDEFINED, TopRoller, BottomRoller, TopWheel, BottomWheel, Winder, WinderMinder;
 }

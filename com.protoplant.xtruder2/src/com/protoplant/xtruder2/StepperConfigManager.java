@@ -18,8 +18,8 @@ public class StepperConfigManager {
 
 	public StepperType getType(HIDDeviceInfo devInfo) {
 		log.info(devInfo.getSerial_number());
-		if (devInfo.getSerial_number().equals("0ED1906F1D000500")) return StepperType.ONE;
-		else return StepperType.TWO;
+		if (devInfo.getSerial_number().equals("0ED1906F1D000500")) return StepperType.TopRoller;
+		else return StepperType.BottomRoller;
 	}
 	
 	

@@ -18,7 +18,7 @@ import com.google.inject.Injector;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 
-public class StepperPanel extends Group {
+public class TestStepperPanel extends Group {
 
 	private Logger log;
 	private EventBus eb;
@@ -34,7 +34,7 @@ public class StepperPanel extends Group {
 	private XtruderConfig config;
 	private StepperType type;
 
-	public StepperPanel(Composite parent, Injector injector, StepperType type) {
+	public TestStepperPanel(Composite parent, Injector injector, StepperType type) {
 		super(parent, SWT.NONE);
 		this.type = type;
 		

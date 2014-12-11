@@ -15,18 +15,13 @@ public class RootPanel extends SashForm {
 	RootSummaryPanel rsp;
 	RootDetailPanel rdp;
 	
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
 	public RootPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
-		
-	
+
 		rsp = new RootSummaryPanel(this, injector);
 		rdp = new RootDetailPanel(this, injector);
 		
+		rsp.setDefaultFocus();
 	}
 
 	@Override
