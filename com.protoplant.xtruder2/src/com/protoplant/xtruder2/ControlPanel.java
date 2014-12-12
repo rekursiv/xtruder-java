@@ -29,10 +29,10 @@ public class ControlPanel extends Composite {
 		pnlAnalog = new AnalogPanel(this, injector);
 		pnlAnalog.setBounds(902, 120, 328, 104);
 		
-		pnlStepper1 = new TestStepperPanel(this, injector, StepperType.TopRoller);
+		pnlStepper1 = new TestStepperPanel(this, injector, StepperFunction.TopRoller);
 		pnlStepper1.setBounds(10, 10, 858, 104);
 
-		pnlStepper2 = new TestStepperPanel(this, injector, StepperType.BottomRoller);
+		pnlStepper2 = new TestStepperPanel(this, injector, StepperFunction.BottomRoller);
 		pnlStepper2.setBounds(10, 120, 858, 104);
 		
 		

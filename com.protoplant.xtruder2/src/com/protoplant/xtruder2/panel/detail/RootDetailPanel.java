@@ -7,7 +7,6 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Widget;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -37,7 +36,7 @@ public class RootDetailPanel extends Composite {
 	}
 
 	@Inject
-	public void inject(Logger log, EventBus eb) {
+	public void inject(Logger log) {
 		this.log = log;
 	}
 

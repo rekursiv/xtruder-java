@@ -4,7 +4,7 @@ import util.config.ConfigBase;
 
 public class StepperConfigList extends ConfigBase {
 
-	public StepperConfig[] steppers = {new StepperConfig(), new StepperConfig()};
+//	public StepperConfig[] steppers = {new StepperConfig("one"), new StepperConfig("two")};
 	
 	
 }

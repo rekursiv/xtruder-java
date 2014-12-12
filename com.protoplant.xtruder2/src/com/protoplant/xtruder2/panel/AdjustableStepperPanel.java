@@ -15,18 +15,20 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.protoplant.xtruder2.StepperType;
+import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
+import com.protoplant.xtruder2.event.StepperStopEvent;
 
 import org.eclipse.swt.widgets.Slider;
 
 public class AdjustableStepperPanel extends StepperPanel {
 	protected Slider sldSpeed;
-	protected Button btnStart;
+	protected Button btnRunStop;
+	protected boolean isRunning = false;
 
-
-	public AdjustableStepperPanel(Composite parent, Injector injector, StepperType type) {
+	public AdjustableStepperPanel(Composite parent, Injector injector, StepperFunction type) {
 		super(parent, null, type);
 		
 		sldSpeed = new Slider(this, SWT.NONE);
@@ -41,9 +43,23 @@ public class AdjustableStepperPanel extends StepperPanel {
 		sldSpeed.setMaximum(32000);
 		sldSpeed.setSelection(5000);
 		
-		btnStart = new Button(this, SWT.NONE);
-		btnStart.setBounds(10, 95, 75, 25);
-		btnStart.setText("Start");
+		btnRunStop = new Button(this, SWT.NONE);
+		btnRunStop.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (isRunning) {
+					btnRunStop.setText("Run");
+					eb.post(new StepperStopEvent(function));
+					isRunning = false;
+				} else {
+					btnRunStop.setText("Stop");
+					eb.post(new StepperRunEvent(function));
+					isRunning = true;
+				}
+			}
+		});
+		btnRunStop.setBounds(10, 95, 75, 25);
+		btnRunStop.setText("Run");
 
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -51,7 +67,7 @@ public class AdjustableStepperPanel extends StepperPanel {
 
 	public void onAdjust() {
 		int sliderVal = sldSpeed.getSelection();
-		eb.post(new StepperSpeedChangeEvent(type, sliderVal));
+		eb.post(new StepperSpeedChangeEvent(function, sliderVal));
 	}
 
 	

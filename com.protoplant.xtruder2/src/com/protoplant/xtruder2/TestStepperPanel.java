@@ -32,9 +32,9 @@ public class TestStepperPanel extends Group {
 	private Label lblSpeed;
 	private Label lblStatus;
 	private XtruderConfig config;
-	private StepperType type;
+	private StepperFunction type;
 
-	public TestStepperPanel(Composite parent, Injector injector, StepperType type) {
+	public TestStepperPanel(Composite parent, Injector injector, StepperFunction type) {
 		super(parent, SWT.NONE);
 		this.type = type;
 		
@@ -94,7 +94,7 @@ public class TestStepperPanel extends Group {
 	@Subscribe
 	public void onData(final StepperStatusEvent evt) {
 //		if (config.steppers.length<index) return;
-		if (evt.getType()==type) {
+		if (evt.getFunction()==type) {
 			lblTorque.setText(""+evt.getTorque());
 			lblSpeed.setText(""+evt.getSpeed());
 			lblStatus.setText(toBinary(evt.getStatus()));

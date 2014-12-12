@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.protoplant.xtruder2.StepperType;
+import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.panel.StepperPanel;
 import com.protoplant.xtruder2.panel.TrackingStepperPanel;
@@ -67,7 +67,7 @@ public class ConveyanceDetailPanel extends Composite {
 		fd_slider.left = new FormAttachment(0, 7);
 		slider.setLayoutData(fd_slider);
 		
-		stepperPinch1 = new StepperPanel(grpPinchRoller, injector, StepperType.TopRoller);
+		stepperPinch1 = new StepperPanel(grpPinchRoller, injector, StepperFunction.TopRoller);
 		FormData fd_topPinch = new FormData();
 		fd_topPinch.right = new FormAttachment(slider, 0, SWT.RIGHT);
 		fd_topPinch.left = new FormAttachment(0, 10);
@@ -75,7 +75,7 @@ public class ConveyanceDetailPanel extends Composite {
 		fd_topPinch.top = new FormAttachment(0, 136);
 		stepperPinch1.setLayoutData(fd_topPinch);
 		
-		stepperPanel = new StepperPanel(grpPinchRoller, injector, StepperType.BottomRoller);
+		stepperPanel = new StepperPanel(grpPinchRoller, injector, StepperFunction.BottomRoller);
 		FormData fd_stepperPanel = new FormData();
 		fd_stepperPanel.right = new FormAttachment(stepperPinch1, 0, SWT.RIGHT);
 		fd_stepperPanel.left = new FormAttachment(stepperPinch1, 0, SWT.LEFT);
@@ -102,7 +102,7 @@ public class ConveyanceDetailPanel extends Composite {
 		fd_grpTakeupWheels.left = new FormAttachment(grpPinchRoller, 0, SWT.LEFT);
 		grpTakeupWheels.setLayoutData(fd_grpTakeupWheels);
 		
-		pnlTopRoller = new TrackingStepperPanel(grpTakeupWheels, injector, StepperType.TopWheel, StepperType.TopRoller);
+		pnlTopRoller = new TrackingStepperPanel(grpTakeupWheels, injector, StepperFunction.TopWheel, StepperFunction.TopRoller);
 		FormData fd_topRoller = new FormData();
 		fd_topRoller.bottom = new FormAttachment(0, 147);
 		fd_topRoller.right = new FormAttachment(0, 795);
@@ -110,7 +110,7 @@ public class ConveyanceDetailPanel extends Composite {
 		fd_topRoller.left = new FormAttachment(0, 7);
 		pnlTopRoller.setLayoutData(fd_topRoller);
 		
-		pnlBtmRoller = new TrackingStepperPanel(grpTakeupWheels, injector, StepperType.BottomWheel, StepperType.TopWheel);
+		pnlBtmRoller = new TrackingStepperPanel(grpTakeupWheels, injector, StepperFunction.BottomWheel, StepperFunction.TopWheel);
 		FormData fd_btmRoller = new FormData();
 		fd_btmRoller.bottom = new FormAttachment(0, 285);
 		fd_btmRoller.right = new FormAttachment(0, 795);
@@ -133,8 +133,8 @@ public class ConveyanceDetailPanel extends Composite {
 	
 	public void onSpeedChange() {
 		int sliderVal = slider.getSelection();
-		eb.post(new StepperSpeedChangeEvent(StepperType.TopRoller, sliderVal));
-		eb.post(new StepperSpeedChangeEvent(StepperType.BottomRoller, sliderVal));
+		eb.post(new StepperSpeedChangeEvent(StepperFunction.TopRoller, sliderVal));
+		eb.post(new StepperSpeedChangeEvent(StepperFunction.BottomRoller, sliderVal));
 //		lblSliderValue.setText(""+sliderVal);
 	}
 	

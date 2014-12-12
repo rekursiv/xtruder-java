@@ -34,10 +34,16 @@ public class Xtruder2App {
 		Injector injector = Guice.createInjector(new XtruderGuice());
 		
 		new RootPanel(shell, injector);
+
+		
+		/////////
+		
+		StepperConfigManager scm = injector.getInstance(StepperConfigManager.class);
+		
+		/////////
 		
 		UsbManager usb = injector.getInstance(UsbManager.class);
 		usb.init();
-		
 		
 		// Dell touchscreen is 1600 X 900
 //		shell.setBounds(0, 0, 1600, 900);

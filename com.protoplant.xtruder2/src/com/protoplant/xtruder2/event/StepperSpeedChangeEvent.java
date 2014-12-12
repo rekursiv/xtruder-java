@@ -1,14 +1,14 @@
 package com.protoplant.xtruder2.event;
 
-import com.protoplant.xtruder2.StepperType;
+import com.protoplant.xtruder2.StepperFunction;
 
 public class StepperSpeedChangeEvent {
 
-	private StepperType type;
+	private StepperFunction function;
 	private int speed;
 
-	public StepperSpeedChangeEvent(StepperType type, int speed) {
-		this.type = type;
+	public StepperSpeedChangeEvent(StepperFunction function, int speed) {
+		this.function = function;
 		this.setSpeed(speed);
 	}
 
@@ -20,8 +20,8 @@ public class StepperSpeedChangeEvent {
 		this.speed = speed;
 	}
 
-	public StepperType getType() {
-		return type;
+	public StepperFunction getFunction() {
+		return function;
 	}
 
 }

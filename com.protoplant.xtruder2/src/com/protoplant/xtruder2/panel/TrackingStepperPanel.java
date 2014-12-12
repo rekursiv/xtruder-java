@@ -15,7 +15,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.protoplant.xtruder2.StepperType;
+import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 
@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Slider;
 
 public class TrackingStepperPanel extends AdjustableStepperPanel {
 	
-	protected StepperType typeToTrack;
+	protected StepperFunction typeToTrack;
 	protected int trackedSpeed = 0;         //  FIXME: do proper init
 	protected float speedScaleFactor = 1.0f;
 	
@@ -33,7 +33,7 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 	protected Label lblScaleFactor;
 	
 
-	public TrackingStepperPanel(Composite parent, Injector injector, StepperType type, StepperType typeToTrack) {
+	public TrackingStepperPanel(Composite parent, Injector injector, StepperFunction type, StepperFunction typeToTrack) {
 		super(parent, null, type);
 		
 		this.typeToTrack = typeToTrack;
@@ -58,7 +58,7 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 	@Override
 	public void onAdjust() {
 		calcScaleFactor();
-		eb.post(new StepperSpeedChangeEvent(type, sldSpeed.getSelection()));
+		eb.post(new StepperSpeedChangeEvent(function, sldSpeed.getSelection()));
 	}
 	
 	public void calcScaleFactor() {
@@ -71,7 +71,7 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 	@Override
 	public void onSpeedChange(StepperSpeedChangeEvent evt) {
 		super.onSpeedChange(evt);
-		if (evt.getType()==typeToTrack&&typeToTrack!=type) {
+		if (evt.getFunction()==typeToTrack&&typeToTrack!=function) {
 			trackedSpeed = evt.getSpeed();
 			if (chkTracking.getSelection()) {
 	//			log.info(""+evt.getSpeed());

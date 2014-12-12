@@ -1,18 +1,19 @@
 
-ModuleCommand
 
-===
+complete motor start/stop (tracking, conveyance)
 
-build touchscreen widget  (stepperature replacement)
+test config
 
-finish command protocol for all modules
+ConfigDetail
 
+System Status log window
 
+test with touch screen
 
 
 === stepper uCode
 
 "reset" cmd - clear status codes
 
-
+reversing uSwitches for WinderMinder
 

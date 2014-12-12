@@ -15,9 +15,11 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.protoplant.xtruder2.StepperType;
+import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.XtruderConfig;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
+
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
@@ -26,17 +28,18 @@ public class StepperPanel extends Group {
 
 	protected Logger log;
 	protected EventBus eb;
-	protected StepperType type;
+	protected StepperFunction function;
 
 	private Label lblTorque;
 	private Label lblSetpt;
 
 	private Label lblSpeed;
 	private Label lblStatus;
+	private XtruderConfig config;
 
-	public StepperPanel(Composite parent, Injector injector, StepperType type) {
+	public StepperPanel(Composite parent, Injector injector, StepperFunction function) {
 		super(parent, SWT.NONE);
-		this.type = type;
+		this.function = function;
 		setLayout(null);
 		
 		lblTorque = new Label(this, SWT.NONE);
@@ -60,23 +63,26 @@ public class StepperPanel extends Group {
 	
 
 	@Inject
-	public void inject(Logger log, EventBus eb) {
+	public void inject(Logger log, EventBus eb, XtruderConfig config) {
 		this.log = log;
 		this.eb = eb;
-		setText(type.name());
+		this.config = config;
+		setText(function.name());
 	}
 
 	@Subscribe
 	public void onSpeedChange(StepperSpeedChangeEvent evt) {
-		if (evt.getType() == type) {
+		if (evt.getFunction() == function) {
 			lblSetpt.setText("Setpoint: "+evt.getSpeed());
+			
+//			lblStatus.setText("TEST:  "+config.test);   ///  TEST
 		}
 	}
 	
 	@Subscribe
 	public void onData(final StepperStatusEvent evt) {
 //		if (config.steppers.length<index) return;
-		if (evt.getType()==type) {
+		if (evt.getFunction()==function) {
 			lblTorque.setText("Torque: "+evt.getTorque());
 			lblSpeed.setText("Speed: "+evt.getSpeed());
 			lblStatus.setText("Status: "+toBinary(evt.getStatus()));

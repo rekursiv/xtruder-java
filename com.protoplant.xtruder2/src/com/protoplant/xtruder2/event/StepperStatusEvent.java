@@ -1,17 +1,17 @@
 package com.protoplant.xtruder2.event;
 
-import com.protoplant.xtruder2.StepperType;
+import com.protoplant.xtruder2.StepperFunction;
 
 public class StepperStatusEvent {
 
-	private StepperType type;
+	private StepperFunction function;
 	private int speed;
 	private int torque;
 	private int status;
 
 	
-	public StepperStatusEvent(StepperType type, int speed, int torque, int status) {
-		this.type = type;
+	public StepperStatusEvent(StepperFunction type, int speed, int torque, int status) {
+		this.function = type;
 		this.speed = speed;
 		this.torque = torque;
 		this.status = status;
@@ -29,8 +29,8 @@ public class StepperStatusEvent {
 		return status;
 	}
 	
-	public StepperType getType() {
-		return type;
+	public StepperFunction getFunction() {
+		return function;
 	}
 
 
