@@ -39,6 +39,10 @@ public class TestDetailPanel extends Composite {
 		asp = new AdjustableStepperPanel(this, injector, StepperFunction.TopRoller);
 		asp.setBounds(10, 10, 592, 156);
 		
+		tsp = new TrackingStepperPanel(this, injector, StepperFunction.BottomRoller, StepperFunction.TopRoller);
+		tsp.setBounds(10, 191, 592, 156);
+
+		
 		btnTest = new Button(this, SWT.NONE);
 		btnTest.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -47,12 +51,9 @@ public class TestDetailPanel extends Composite {
 				eb.post(new StepperConfigChangeEvent(StepperFunction.TopRoller));
 			}
 		});
-		btnTest.setBounds(59, 244, 75, 25);
+		btnTest.setBounds(10, 403, 75, 25);
 		btnTest.setText("TEST");
 		
-//		tsp = new TrackingStepperPanel(this, injector, StepperType.TopRoller, StepperType.BottomRoller);
-//		tsp.setBounds(10, 191, 497, 156);
-
 		if (injector!=null) injector.injectMembers(this);
 	}
 

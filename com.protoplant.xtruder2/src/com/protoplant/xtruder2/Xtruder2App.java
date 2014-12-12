@@ -33,8 +33,6 @@ public class Xtruder2App {
 		
 		Injector injector = Guice.createInjector(new XtruderGuice());
 		
-		new RootPanel(shell, injector);
-
 		
 		/////////
 		
@@ -44,13 +42,16 @@ public class Xtruder2App {
 		
 		UsbManager usb = injector.getInstance(UsbManager.class);
 		usb.init();
+
+		
+		new RootPanel(shell, injector);
 		
 		// Dell touchscreen is 1600 X 900
 //		shell.setBounds(0, 0, 1600, 900);
 		shell.setSize(1600, 900);
 		shell.setText("Protoplant Xtruder V2.x");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
-
+		
 		
 		shell.init();  // main loop
 		

@@ -45,8 +45,8 @@ public class StepperConfigManager {
 			config.steppers[0] = new StepperConfig(StepperFunction.values()[0]);
 			config.steppers[0].serial = "71D1906F18002B00";
 			try {
-//				cfgMgr.save(config);
-				System.out.println(cfgMgr.getText(config));
+				cfgMgr.save(config);
+//				System.out.println(cfgMgr.getText(config));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

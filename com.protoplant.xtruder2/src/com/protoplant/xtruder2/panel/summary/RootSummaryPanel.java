@@ -12,10 +12,13 @@ import com.protoplant.xtruder2.event.PanelFocusEvent;
 
 public class RootSummaryPanel extends Composite {
 
-	protected StatusSummaryPanel pnlStatus;
-	protected ConveyanceSummaryPanel pnlConv;
 	private Logger log;
 	private EventBus eb;
+	
+	protected StatusSummaryPanel pnlStatus;
+	protected ConveyanceSummaryPanel pnlConv;
+	protected TestSummaryPanel pnlTest;
+	protected ConfigSummaryPanel pnlConfig;
 
 	public RootSummaryPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
@@ -25,6 +28,12 @@ public class RootSummaryPanel extends Composite {
 		
 		pnlConv = new ConveyanceSummaryPanel(this, injector);
 		pnlConv.setBounds(10, 98, 171, 94);
+		
+		pnlTest = new TestSummaryPanel(this, injector);
+		pnlTest.setBounds(244, 10, 171, 82);
+		
+		pnlConfig = new ConfigSummaryPanel(this, injector);
+		pnlConfig.setBounds(244, 98, 171, 82);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -44,7 +53,7 @@ public class RootSummaryPanel extends Composite {
 	}
 
 	public void setDefaultFocus() {
-		eb.post(new PanelFocusEvent(this));
+		eb.post(new PanelFocusEvent(pnlConfig));
 	}
 
 }

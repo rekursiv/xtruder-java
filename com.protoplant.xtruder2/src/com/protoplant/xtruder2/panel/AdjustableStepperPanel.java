@@ -36,7 +36,7 @@ public class AdjustableStepperPanel extends StepperPanel {
 		sldSpeed.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				onAdjust();
+				adjust();
 			}
 		});
 		sldSpeed.setPageIncrement(20);
@@ -47,15 +47,8 @@ public class AdjustableStepperPanel extends StepperPanel {
 		btnRunStop.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if (isRunning) {
-					btnRunStop.setText("Run");
-					eb.post(new StepperStopEvent(function));
-					isRunning = false;
-				} else {
-					btnRunStop.setText("Stop");
-					eb.post(new StepperRunEvent(function));
-					isRunning = true;
-				}
+				if (isRunning) stop();
+				else run();
 			}
 		});
 		btnRunStop.setBounds(10, 95, 75, 25);
@@ -65,19 +58,28 @@ public class AdjustableStepperPanel extends StepperPanel {
 	}
 	
 
-	public void onAdjust() {
-		int sliderVal = sldSpeed.getSelection();
-		eb.post(new StepperSpeedChangeEvent(function, sliderVal));
-	}
-
-	
 	@Override
 	public void onSpeedChange(StepperSpeedChangeEvent evt) {
 		super.onSpeedChange(evt);
 //		log.info("");
 	}
 
-
+	protected void adjust() {
+		int sliderVal = sldSpeed.getSelection();
+		eb.post(new StepperSpeedChangeEvent(function, sliderVal));
+	}
+	
+	protected void run() {
+		btnRunStop.setText("Stop");
+		eb.post(new StepperRunEvent(function));
+		isRunning = true;
+	}
+	
+	protected void stop() {
+		btnRunStop.setText("Run");
+		eb.post(new StepperStopEvent(function));
+		isRunning = false;
+	}
 	
 	@Override
 	protected void checkSubclass() {

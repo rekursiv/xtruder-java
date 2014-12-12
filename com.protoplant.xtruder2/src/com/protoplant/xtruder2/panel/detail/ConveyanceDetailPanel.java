@@ -9,7 +9,9 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
+import com.protoplant.xtruder2.event.StepperStopEvent;
 import com.protoplant.xtruder2.panel.StepperPanel;
 import com.protoplant.xtruder2.panel.TrackingStepperPanel;
 
@@ -31,10 +33,11 @@ public class ConveyanceDetailPanel extends Composite {
 	protected Slider slider;
 	protected StepperPanel stepperPinch1;
 	protected StepperPanel stepperPanel;
-	protected Button btnStart;
+	protected Button btnRunStop;
 	protected Group grpTakeupWheels;
 	protected TrackingStepperPanel pnlTopRoller;
 	protected TrackingStepperPanel pnlBtmRoller;
+	private boolean isRunning = false;
 
 	public ConveyanceDetailPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
@@ -54,7 +57,7 @@ public class ConveyanceDetailPanel extends Composite {
 		slider.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				onSpeedChange();
+				adjustSpeed();
 			}
 		});
 		slider.setPageIncrement(20);
@@ -83,14 +86,21 @@ public class ConveyanceDetailPanel extends Composite {
 		fd_stepperPanel.top = new FormAttachment(0, 225);
 		stepperPanel.setLayoutData(fd_stepperPanel);
 		
-		btnStart = new Button(grpPinchRoller, SWT.NONE);
+		btnRunStop = new Button(grpPinchRoller, SWT.NONE);
+		btnRunStop.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (isRunning) stop();
+				else run();
+			}
+		});
 		FormData fd_btnStart = new FormData();
 		fd_btnStart.bottom = new FormAttachment(stepperPinch1, -17);
 		fd_btnStart.top = new FormAttachment(slider, 12);
 		fd_btnStart.left = new FormAttachment(slider, 0, SWT.LEFT);
 		fd_btnStart.right = new FormAttachment(0, 73);
-		btnStart.setLayoutData(fd_btnStart);
-		btnStart.setText("Start");
+		btnRunStop.setLayoutData(fd_btnStart);
+		btnRunStop.setText("Run");
 		
 		grpTakeupWheels = new Group(this, SWT.NONE);
 		grpTakeupWheels.setText("Take-Up Wheels");
@@ -131,14 +141,26 @@ public class ConveyanceDetailPanel extends Composite {
 		this.eb = eb;
 	}
 	
-	public void onSpeedChange() {
+	public void adjustSpeed() {
 		int sliderVal = slider.getSelection();
 		eb.post(new StepperSpeedChangeEvent(StepperFunction.TopRoller, sliderVal));
 		eb.post(new StepperSpeedChangeEvent(StepperFunction.BottomRoller, sliderVal));
 //		lblSliderValue.setText(""+sliderVal);
 	}
 	
-
+	protected void run() {
+		btnRunStop.setText("Stop");
+		eb.post(new StepperRunEvent(StepperFunction.TopRoller));
+		eb.post(new StepperRunEvent(StepperFunction.BottomRoller));
+		isRunning  = true;
+	}
+	
+	protected void stop() {
+		btnRunStop.setText("Run");
+		eb.post(new StepperStopEvent(StepperFunction.TopRoller));
+		eb.post(new StepperStopEvent(StepperFunction.BottomRoller));
+		isRunning = false;
+	}
 
 	@Override
 	protected void checkSubclass() {

@@ -1,14 +1,15 @@
 
-
-complete motor start/stop (tracking, conveyance)
-
-test config
+init from config - stepper speed, scale, etc
 
 ConfigDetail
 
 System Status log window
 
+
+
 test with touch screen
+test motor start/stop (tracking, conveyance)
+test config
 
 
 === stepper uCode

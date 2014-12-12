@@ -16,8 +16,10 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
+import com.protoplant.xtruder2.event.StepperStopEvent;
 
 import org.eclipse.swt.widgets.Slider;
 
@@ -56,7 +58,7 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 	
 	
 	@Override
-	public void onAdjust() {
+	public void adjust() {
 		calcScaleFactor();
 		eb.post(new StepperSpeedChangeEvent(function, sldSpeed.getSelection()));
 	}
@@ -77,14 +79,27 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 	//			log.info(""+evt.getSpeed());
 				int speed = (int)((float)trackedSpeed*speedScaleFactor);
 				sldSpeed.setSelection(speed);
-				super.onAdjust();
+				super.adjust();
 			} else {
 				calcScaleFactor();
 			}
 		}
 	}
+	
+	@Subscribe
+	public void onRun(StepperRunEvent evt) {
+		if (evt.getFunction()==typeToTrack&&typeToTrack!=function) {
+			if (!isRunning) run();
+		}
+	}
 
-
+	@Subscribe
+	public void onStop(StepperStopEvent evt) {
+		if (evt.getFunction()==typeToTrack&&typeToTrack!=function) {
+			if (isRunning) stop();
+		}
+	}
+	
 	
 	@Override
 	protected void checkSubclass() {

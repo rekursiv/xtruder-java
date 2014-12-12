@@ -11,9 +11,11 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.event.PanelFocusEvent;
+import com.protoplant.xtruder2.panel.summary.ConfigSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.ConveyanceSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.RootSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.StatusSummaryPanel;
+import com.protoplant.xtruder2.panel.summary.TestSummaryPanel;
 
 public class RootDetailPanel extends Composite {
 
@@ -24,6 +26,7 @@ public class RootDetailPanel extends Composite {
 	protected TestDetailPanel pnlTest;
 	protected ConveyanceDetailPanel pnlConv;
 	protected StatusDetailPanel pnlStatus;
+	protected ConfigDetailPanel pnlConfig;
 
 
 	
@@ -45,7 +48,7 @@ public class RootDetailPanel extends Composite {
 		Widget w = event.getWidget();
 		if (w==null) return;
 		log.info(w.toString());
-		if (w instanceof RootSummaryPanel) {
+		if (w instanceof TestSummaryPanel) {
 			if (pnlTest == null) pnlTest = new TestDetailPanel(this, injector);
 			stack.topControl = pnlTest;
 			layout();
@@ -56,6 +59,10 @@ public class RootDetailPanel extends Composite {
 		} else if (w instanceof ConveyanceSummaryPanel) {
 			if (pnlConv == null) pnlConv = new ConveyanceDetailPanel(this, injector);
 			stack.topControl = pnlConv;
+			layout();
+		} else if (w instanceof ConfigSummaryPanel) {
+			if (pnlConfig == null) pnlConfig = new ConfigDetailPanel(this, injector);
+			stack.topControl = pnlConfig;
 			layout();
 		}
 	}

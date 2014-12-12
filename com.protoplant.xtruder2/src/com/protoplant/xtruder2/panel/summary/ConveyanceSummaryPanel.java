@@ -18,7 +18,7 @@ public class ConveyanceSummaryPanel extends BaseSummaryPanel {
 
 	public ConveyanceSummaryPanel(Composite parent, Injector injector) {
 		super(parent, injector);
-		setText("Extruder Conveyance");
+		setText("Conveyance");
 		
 		lblIps = new Label(this, SWT.NONE);
 		lblIps.addMouseListener(new MouseAdapter() {
