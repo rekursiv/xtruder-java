@@ -30,7 +30,7 @@ public class ConveyanceDetailPanel extends Composite {
 	private Logger log;
 	private EventBus eb;
 	protected Group grpPinchRoller;
-	protected Slider slider;
+	protected Slider sldSpeedAdjust;
 	protected StepperPanel stepperPinch1;
 	protected StepperPanel stepperPanel;
 	protected Button btnRunStop;
@@ -53,26 +53,26 @@ public class ConveyanceDetailPanel extends Composite {
 		grpPinchRoller.setText("Pinch Rollers");
 		grpPinchRoller.setLayout(new FormLayout());
 		
-		slider = new Slider(grpPinchRoller, SWT.NONE);
-		slider.addSelectionListener(new SelectionAdapter() {
+		sldSpeedAdjust = new Slider(grpPinchRoller, SWT.NONE);
+		sldSpeedAdjust.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				adjustSpeed();
 			}
 		});
-		slider.setPageIncrement(20);
-		slider.setMaximum(32000);
-		slider.setSelection(5000);
+		sldSpeedAdjust.setPageIncrement(20);
+		sldSpeedAdjust.setMaximum(32000);
+		sldSpeedAdjust.setSelection(5000);
 		FormData fd_slider = new FormData();
 		fd_slider.bottom = new FormAttachment(0, 72);
 		fd_slider.right = new FormAttachment(100, -10);
 		fd_slider.top = new FormAttachment(0, 11);
 		fd_slider.left = new FormAttachment(0, 7);
-		slider.setLayoutData(fd_slider);
+		sldSpeedAdjust.setLayoutData(fd_slider);
 		
 		stepperPinch1 = new StepperPanel(grpPinchRoller, injector, StepperFunction.TopRoller);
 		FormData fd_topPinch = new FormData();
-		fd_topPinch.right = new FormAttachment(slider, 0, SWT.RIGHT);
+		fd_topPinch.right = new FormAttachment(sldSpeedAdjust, 0, SWT.RIGHT);
 		fd_topPinch.left = new FormAttachment(0, 10);
 		fd_topPinch.bottom = new FormAttachment(0, 195);
 		fd_topPinch.top = new FormAttachment(0, 136);
@@ -96,8 +96,8 @@ public class ConveyanceDetailPanel extends Composite {
 		});
 		FormData fd_btnStart = new FormData();
 		fd_btnStart.bottom = new FormAttachment(stepperPinch1, -17);
-		fd_btnStart.top = new FormAttachment(slider, 12);
-		fd_btnStart.left = new FormAttachment(slider, 0, SWT.LEFT);
+		fd_btnStart.top = new FormAttachment(sldSpeedAdjust, 12);
+		fd_btnStart.left = new FormAttachment(sldSpeedAdjust, 0, SWT.LEFT);
 		fd_btnStart.right = new FormAttachment(0, 73);
 		btnRunStop.setLayoutData(fd_btnStart);
 		btnRunStop.setText("Run");
@@ -142,9 +142,10 @@ public class ConveyanceDetailPanel extends Composite {
 	}
 	
 	public void adjustSpeed() {
-		int sliderVal = slider.getSelection();
+		int sliderVal = sldSpeedAdjust.getSelection();
 		eb.post(new StepperSpeedChangeEvent(StepperFunction.TopRoller, sliderVal));
 		eb.post(new StepperSpeedChangeEvent(StepperFunction.BottomRoller, sliderVal));
+		
 //		lblSliderValue.setText(""+sliderVal);
 	}
 	

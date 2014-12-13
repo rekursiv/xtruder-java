@@ -12,8 +12,8 @@ public class XtruderConfig extends ConfigBase {
 	// logging
 	public boolean logToConsole=true;
 	public boolean logToFile=false;
-	public boolean showLogView=true;
-	
+	public boolean showLogView=true;   //   FIXME
+ 	
 	public int test = 0;
 	
 	public StepperConfig[] steppers;// = {new StepperConfig(), new StepperConfig()};

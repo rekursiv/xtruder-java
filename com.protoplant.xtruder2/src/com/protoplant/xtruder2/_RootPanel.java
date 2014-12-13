@@ -33,7 +33,7 @@ public class _RootPanel extends Composite {
 
 		int top = 12;
 //		int statusPanelHeight = 25;
-		
+		/*
 		if (true) {  // for WindowBuilder
 //		if (injector!=null) {
 			XtruderConfig cfg = injector.getInstance(XtruderConfig.class);
@@ -49,7 +49,7 @@ public class _RootPanel extends Composite {
 				top = 126;
 			}
 		}
-		
+		*/
 //		statusPanel = new StatusPanel(this, injector);
 //		FormData fd_statusPanel = new FormData();
 //		fd_statusPanel.right = new FormAttachment(100, -12);

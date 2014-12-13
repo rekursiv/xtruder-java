@@ -1,7 +1,12 @@
 
 init from config - stepper speed, scale, etc
 
-ConfigDetail
+store scale factor???
+
+fix scm.init
+
+
+
 
 System Status log window
 
@@ -11,6 +16,19 @@ test with touch screen
 test motor start/stop (tracking, conveyance)
 test config
 
+
+
+================
+ConfigDetail buttons:
+ Edit Current
+ Use Edits
+ Edit File...
+ Save File
+ Save File As...
+
+
+ConfigSetupEvent  - 
+ConfigStoreEvent - 
 
 === stepper uCode
 

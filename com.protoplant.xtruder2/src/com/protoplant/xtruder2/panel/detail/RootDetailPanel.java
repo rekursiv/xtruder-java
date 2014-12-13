@@ -35,6 +35,14 @@ public class RootDetailPanel extends Composite {
 		this.injector = injector;
 		stack = new StackLayout();
 		setLayout(stack);
+		
+		
+		pnlTest = new TestDetailPanel(this, injector);
+		pnlStatus = new StatusDetailPanel(this, injector);
+//		pnlConv = new ConveyanceDetailPanel(this, injector);
+		pnlConfig = new ConfigDetailPanel(this, injector);
+		
+		
 		if (injector!=null) injector.injectMembers(this);
 	}
 
@@ -47,9 +55,9 @@ public class RootDetailPanel extends Composite {
 	public void onPanelFocus(PanelFocusEvent event) {
 		Widget w = event.getWidget();
 		if (w==null) return;
-		log.info(w.toString());
+//		log.info(w.toString());
 		if (w instanceof TestSummaryPanel) {
-			if (pnlTest == null) pnlTest = new TestDetailPanel(this, injector);
+			if (pnlTest == null) pnlTest = new TestDetailPanel(this, injector);  //  FIXME
 			stack.topControl = pnlTest;
 			layout();
 		} else if (w instanceof StatusSummaryPanel) {

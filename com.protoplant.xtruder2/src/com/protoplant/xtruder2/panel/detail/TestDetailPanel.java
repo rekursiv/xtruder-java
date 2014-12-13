@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Label;
 
 public class TestDetailPanel extends Composite {
 
@@ -31,6 +32,7 @@ public class TestDetailPanel extends Composite {
 	protected AdjustableStepperPanel asp;
 	protected TrackingStepperPanel tsp;
 	protected Composite composite;
+	protected Label lblTest;
 
 
 	public TestDetailPanel(Composite parent, Injector injector) {
@@ -47,12 +49,16 @@ public class TestDetailPanel extends Composite {
 		btnTest.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				config.test++;
-				eb.post(new StepperConfigChangeEvent(StepperFunction.TopRoller));
+//				config.test++;
+//				eb.post(new StepperConfigChangeEvent(StepperFunction.TopRoller));
+				lblTest.setText(""+config.test);
 			}
 		});
 		btnTest.setBounds(10, 403, 75, 25);
 		btnTest.setText("TEST");
+		
+		lblTest = new Label(this, SWT.NONE);
+		lblTest.setBounds(134, 413, 55, 15);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}

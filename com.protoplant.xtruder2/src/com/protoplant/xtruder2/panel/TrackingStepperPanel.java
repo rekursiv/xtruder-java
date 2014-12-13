@@ -16,6 +16,8 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.event.ConfigSetupEvent;
+import com.protoplant.xtruder2.event.ConfigStoreEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
@@ -41,6 +43,12 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 		this.typeToTrack = typeToTrack;
 		
 		chkTracking = new Button(this, SWT.CHECK);
+		chkTracking.addSelectionListener(new SelectionAdapter() {  //  FIXME
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+			}
+		});
 		chkTracking.setSelection(true);
 		chkTracking.setBounds(193, 92, 162, 16);
 		chkTracking.setText("Tracking: "+typeToTrack);
@@ -55,6 +63,27 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
+	
+	
+	@Override
+	public void onConfigSetup(ConfigSetupEvent evt) {
+		
+		chkTracking.setSelection(scm.getConfig(function).isTracking);
+//		speedScaleFactor = // FIXME
+		
+		super.onConfigSetup(evt);
+		
+		log.info("-->");
+	}
+	
+	@Override
+	public void onConfigStore(ConfigStoreEvent evt) {
+		super.onConfigStore(evt);
+		scm.getConfig(function).isTracking = chkTracking.getSelection();
+		scm.getConfig(function).trackingScaleFactor = speedScaleFactor;    //  FIXME
+		log.info("--^");
+	}
+	
 	
 	
 	@Override

@@ -15,6 +15,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.StepperConfigManager;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.XtruderConfig;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
@@ -30,12 +31,13 @@ public class StepperPanel extends Group {
 	protected EventBus eb;
 	protected StepperFunction function;
 
-	private Label lblTorque;
-	private Label lblSetpt;
+	protected Label lblTorque;
+	protected Label lblSetpt;
 
-	private Label lblSpeed;
-	private Label lblStatus;
-	private XtruderConfig config;
+	protected Label lblSpeed;
+	protected Label lblStatus;
+	protected StepperConfigManager scm;
+
 
 	public StepperPanel(Composite parent, Injector injector, StepperFunction function) {
 		super(parent, SWT.NONE);
@@ -63,10 +65,10 @@ public class StepperPanel extends Group {
 	
 
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config) {
+	public void inject(Logger log, EventBus eb, StepperConfigManager scm) {
 		this.log = log;
 		this.eb = eb;
-		this.config = config;
+		this.scm = scm;
 		setText(function.name());
 	}
 

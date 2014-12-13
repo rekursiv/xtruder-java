@@ -10,18 +10,14 @@ import com.codeminders.hidapi.HIDDeviceInfo;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-//protected final ConfigManager<StepperConfigList> cfgMgr = new ConfigManager<StepperConfigList>(StepperConfigList.class, "config/steppers.js");
-
-
-
 @Singleton
 public class StepperConfigManager {
 
 	private Logger log;
 	private XtruderConfig config;
 	private ConfigManager<XtruderConfig> cfgMgr;
-	private Map<String, StepperConfig> stepperSerialMap = new HashMap<String, StepperConfig>();
-	private Map<StepperFunction, StepperConfig> stepperFunctionMap = new HashMap<StepperFunction, StepperConfig>();	
+	private Map<String, Integer> stepperSerialMap;
+	private Map<StepperFunction, Integer> stepperFunctionMap;
 
 	@Inject
 	public StepperConfigManager(Logger log, XtruderConfig config, ConfigManager<XtruderConfig> cfgMgr) {
@@ -32,18 +28,24 @@ public class StepperConfigManager {
 		buildStepperMaps();
 	}
 
+	
+	//  TODO:   rebuild on config edit
 	private void buildStepperMaps() {
-		for (StepperConfig sc : config.steppers) {
-			stepperSerialMap.put(sc.serial, sc);
-			stepperFunctionMap.put(sc.function, sc);
+		stepperSerialMap = new HashMap<String, Integer>();
+		stepperFunctionMap = new HashMap<StepperFunction, Integer>();	
+		for (int i=0; i<config.steppers.length; ++i) {
+			stepperSerialMap.put(config.steppers[i].serial, i);
+			stepperFunctionMap.put(config.steppers[i].function, i);
 		}
 	}
 
 	private void initConfig() {
 		if (config.steppers==null) {
-			config.steppers = new StepperConfig[1];
+			config.steppers = new StepperConfig[2];
 			config.steppers[0] = new StepperConfig(StepperFunction.values()[0]);
 			config.steppers[0].serial = "71D1906F18002B00";
+			config.steppers[1] = new StepperConfig(StepperFunction.values()[1]);
+			config.steppers[1].serial = "???";
 			try {
 				cfgMgr.save(config);
 //				System.out.println(cfgMgr.getText(config));
@@ -54,11 +56,11 @@ public class StepperConfigManager {
 	}
 	
 	public StepperConfig getConfig(String serial) {
-		return stepperSerialMap.get(serial);
+		return config.steppers[stepperSerialMap.get(serial)];
 	}
 	
 	public StepperConfig getConfig(StepperFunction function) {
-		return stepperFunctionMap.get(function);
+		return config.steppers[stepperFunctionMap.get(function)];
 	}
 
 	public StepperFunction getFunction(HIDDeviceInfo devInfo) {

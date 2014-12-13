@@ -16,6 +16,8 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.event.ConfigSetupEvent;
+import com.protoplant.xtruder2.event.ConfigStoreEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
@@ -57,6 +59,19 @@ public class AdjustableStepperPanel extends StepperPanel {
 		if (injector!=null) injector.injectMembers(this);
 	}
 	
+	@Subscribe
+	public void onConfigSetup(ConfigSetupEvent evt) {
+		sldSpeed.setSelection(scm.getConfig(function).speedSetPoint);
+		adjust();
+		log.info(">>>"+scm.getConfig(function).speedSetPoint);
+	}
+	
+	@Subscribe
+	public void onConfigStore(ConfigStoreEvent evt) {
+		scm.getConfig(function).speedSetPoint = sldSpeed.getSelection();
+		log.info("^^^");
+	}
+	
 
 	@Override
 	public void onSpeedChange(StepperSpeedChangeEvent evt) {
@@ -65,8 +80,8 @@ public class AdjustableStepperPanel extends StepperPanel {
 	}
 
 	protected void adjust() {
-		int sliderVal = sldSpeed.getSelection();
-		eb.post(new StepperSpeedChangeEvent(function, sliderVal));
+		eb.post(new StepperSpeedChangeEvent(function, sldSpeed.getSelection()));
+
 	}
 	
 	protected void run() {

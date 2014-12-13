@@ -5,6 +5,12 @@ public class StepperConfig {
 	public StepperFunction function;
 	public String serial;
 	
+	// GUI settings
+	public int speedSetPoint = 100;
+	public boolean isTracking = false;
+	public float trackingScaleFactor = 1.0f;
+	
+	// hardware module settings
 	public int stepMode = 4;
 	public int isGain = 3;
 	public int holdingTorque = 0;
