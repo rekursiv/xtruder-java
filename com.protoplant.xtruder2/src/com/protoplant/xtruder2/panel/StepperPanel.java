@@ -18,8 +18,12 @@ import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperConfigManager;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.XtruderConfig;
+import com.protoplant.xtruder2.event.ConfigSetupEvent;
+import com.protoplant.xtruder2.event.ConfigStoreEvent;
+import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
+import com.protoplant.xtruder2.event.StepperStopEvent;
 
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
@@ -37,6 +41,8 @@ public class StepperPanel extends Group {
 	protected Label lblSpeed;
 	protected Label lblStatus;
 	protected StepperConfigManager scm;
+	private boolean isReversed = false;
+	protected boolean isRunning = false;
 
 
 	public StepperPanel(Composite parent, Injector injector, StepperFunction function) {
@@ -72,25 +78,51 @@ public class StepperPanel extends Group {
 		setText(function.name());
 	}
 
-	@Subscribe
-	public void onSpeedChange(StepperSpeedChangeEvent evt) {
-		if (evt.getFunction() == function) {
-			lblSetpt.setText("Setpoint: "+evt.getSpeed());
-			
-//			lblStatus.setText("TEST:  "+config.test);   ///  TEST
-		}
-	}
+//	@Subscribe
+//	public void onSpeedChange(StepperSpeedChangeEvent evt) {
+//		if (evt.getFunction() == function) {
+//			lblSetpt.setText("Setpoint: "+evt.getSpeed());
+//		}
+//	}
 	
 	@Subscribe
 	public void onData(final StepperStatusEvent evt) {
-//		if (config.steppers.length<index) return;
 		if (evt.getFunction()==function) {
 			lblTorque.setText("Torque: "+evt.getTorque());
 			lblSpeed.setText("Speed: "+evt.getSpeed());
 			lblStatus.setText("Status: "+toBinary(evt.getStatus()));
 		}
 	}
+	
+	@Subscribe
+	public void onConfigSetup(ConfigSetupEvent evt) {
+		isReversed = scm.getConfig(function).isReversed;
+	}
+	
+//	@Subscribe
+//	public void onConfigStore(ConfigStoreEvent evt) {
+//		scm.getConfig(function).isReversed = isReversed;
+//	}
+	
 
+	public void adjustSpeed(int speed) {
+		int dirSpeed = speed;
+		if (isReversed) dirSpeed = -speed;
+		lblSetpt.setText("Setpoint: "+dirSpeed);
+		eb.post(new StepperSpeedChangeEvent(function, dirSpeed));
+//		log.info(""+dirSpeed);
+	}
+	
+	public void run() {
+		eb.post(new StepperRunEvent(function));
+		isRunning = true;
+	}
+	
+	public void stop() {
+		eb.post(new StepperStopEvent(function));
+		isRunning = false;
+	}
+	
 	
 	protected String toBinary(int byteData) {
 		String bits = "0000000"+Integer.toBinaryString(byteData)+" ";

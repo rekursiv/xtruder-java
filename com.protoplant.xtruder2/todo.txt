@@ -1,15 +1,6 @@
 
-init from config - stepper speed, scale, etc
-
-store scale factor???
-
-fix scm.init
-
-
-
-
-System Status log window
-
+code cleanup
+ delete:  _, cfgList, etc
 
 
 test with touch screen
@@ -20,15 +11,13 @@ test config
 
 ================
 ConfigDetail buttons:
- Edit Current
- Use Edits
+ *Edit Current
+ *Apply Edits
  Edit File...
- Save File
+ *Save File
  Save File As...
 
 
-ConfigSetupEvent  - 
-ConfigStoreEvent - 
 
 === stepper uCode
 

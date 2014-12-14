@@ -31,12 +31,12 @@ public class ConveyanceDetailPanel extends Composite {
 	private EventBus eb;
 	protected Group grpPinchRoller;
 	protected Slider sldSpeedAdjust;
-	protected StepperPanel stepperPinch1;
-	protected StepperPanel stepperPanel;
+	protected StepperPanel pnlTopRoller;
+	protected StepperPanel pnlBtmRoller;
 	protected Button btnRunStop;
 	protected Group grpTakeupWheels;
-	protected TrackingStepperPanel pnlTopRoller;
-	protected TrackingStepperPanel pnlBtmRoller;
+	protected TrackingStepperPanel pnlTopWheel;
+	protected TrackingStepperPanel pnlBtmWheel;
 	private boolean isRunning = false;
 
 	public ConveyanceDetailPanel(Composite parent, Injector injector) {
@@ -62,7 +62,7 @@ public class ConveyanceDetailPanel extends Composite {
 		});
 		sldSpeedAdjust.setPageIncrement(20);
 		sldSpeedAdjust.setMaximum(32000);
-		sldSpeedAdjust.setSelection(5000);
+//		sldSpeedAdjust.setSelection(5000);
 		FormData fd_slider = new FormData();
 		fd_slider.bottom = new FormAttachment(0, 72);
 		fd_slider.right = new FormAttachment(100, -10);
@@ -70,21 +70,21 @@ public class ConveyanceDetailPanel extends Composite {
 		fd_slider.left = new FormAttachment(0, 7);
 		sldSpeedAdjust.setLayoutData(fd_slider);
 		
-		stepperPinch1 = new StepperPanel(grpPinchRoller, injector, StepperFunction.TopRoller);
+		pnlTopRoller = new StepperPanel(grpPinchRoller, injector, StepperFunction.TopRoller);
 		FormData fd_topPinch = new FormData();
 		fd_topPinch.right = new FormAttachment(sldSpeedAdjust, 0, SWT.RIGHT);
 		fd_topPinch.left = new FormAttachment(0, 10);
 		fd_topPinch.bottom = new FormAttachment(0, 195);
 		fd_topPinch.top = new FormAttachment(0, 136);
-		stepperPinch1.setLayoutData(fd_topPinch);
+		pnlTopRoller.setLayoutData(fd_topPinch);
 		
-		stepperPanel = new StepperPanel(grpPinchRoller, injector, StepperFunction.BottomRoller);
+		pnlBtmRoller = new StepperPanel(grpPinchRoller, injector, StepperFunction.BottomRoller);
 		FormData fd_stepperPanel = new FormData();
-		fd_stepperPanel.right = new FormAttachment(stepperPinch1, 0, SWT.RIGHT);
-		fd_stepperPanel.left = new FormAttachment(stepperPinch1, 0, SWT.LEFT);
+		fd_stepperPanel.right = new FormAttachment(pnlTopRoller, 0, SWT.RIGHT);
+		fd_stepperPanel.left = new FormAttachment(pnlTopRoller, 0, SWT.LEFT);
 		fd_stepperPanel.bottom = new FormAttachment(0, 284);
 		fd_stepperPanel.top = new FormAttachment(0, 225);
-		stepperPanel.setLayoutData(fd_stepperPanel);
+		pnlBtmRoller.setLayoutData(fd_stepperPanel);
 		
 		btnRunStop = new Button(grpPinchRoller, SWT.NONE);
 		btnRunStop.addSelectionListener(new SelectionAdapter() {
@@ -95,7 +95,7 @@ public class ConveyanceDetailPanel extends Composite {
 			}
 		});
 		FormData fd_btnStart = new FormData();
-		fd_btnStart.bottom = new FormAttachment(stepperPinch1, -17);
+		fd_btnStart.bottom = new FormAttachment(pnlTopRoller, -17);
 		fd_btnStart.top = new FormAttachment(sldSpeedAdjust, 12);
 		fd_btnStart.left = new FormAttachment(sldSpeedAdjust, 0, SWT.LEFT);
 		fd_btnStart.right = new FormAttachment(0, 73);
@@ -112,21 +112,21 @@ public class ConveyanceDetailPanel extends Composite {
 		fd_grpTakeupWheels.left = new FormAttachment(grpPinchRoller, 0, SWT.LEFT);
 		grpTakeupWheels.setLayoutData(fd_grpTakeupWheels);
 		
-		pnlTopRoller = new TrackingStepperPanel(grpTakeupWheels, injector, StepperFunction.TopWheel, StepperFunction.TopRoller);
+		pnlTopWheel = new TrackingStepperPanel(grpTakeupWheels, injector, StepperFunction.TopWheel, StepperFunction.TopRoller);
 		FormData fd_topRoller = new FormData();
 		fd_topRoller.bottom = new FormAttachment(0, 147);
 		fd_topRoller.right = new FormAttachment(0, 795);
 		fd_topRoller.top = new FormAttachment(0, 19);
 		fd_topRoller.left = new FormAttachment(0, 7);
-		pnlTopRoller.setLayoutData(fd_topRoller);
+		pnlTopWheel.setLayoutData(fd_topRoller);
 		
-		pnlBtmRoller = new TrackingStepperPanel(grpTakeupWheels, injector, StepperFunction.BottomWheel, StepperFunction.TopWheel);
+		pnlBtmWheel = new TrackingStepperPanel(grpTakeupWheels, injector, StepperFunction.BottomWheel, StepperFunction.TopWheel);
 		FormData fd_btmRoller = new FormData();
 		fd_btmRoller.bottom = new FormAttachment(0, 285);
 		fd_btmRoller.right = new FormAttachment(0, 795);
 		fd_btmRoller.top = new FormAttachment(0, 157);
 		fd_btmRoller.left = new FormAttachment(0, 7);
-		pnlBtmRoller.setLayoutData(fd_btmRoller);
+		pnlBtmWheel.setLayoutData(fd_btmRoller);
 
 		
 		
@@ -142,24 +142,21 @@ public class ConveyanceDetailPanel extends Composite {
 	}
 	
 	public void adjustSpeed() {
-		int sliderVal = sldSpeedAdjust.getSelection();
-		eb.post(new StepperSpeedChangeEvent(StepperFunction.TopRoller, sliderVal));
-		eb.post(new StepperSpeedChangeEvent(StepperFunction.BottomRoller, sliderVal));
-		
-//		lblSliderValue.setText(""+sliderVal);
+		pnlTopRoller.adjustSpeed(sldSpeedAdjust.getSelection());
+		pnlBtmRoller.adjustSpeed(sldSpeedAdjust.getSelection());
 	}
 	
 	protected void run() {
 		btnRunStop.setText("Stop");
-		eb.post(new StepperRunEvent(StepperFunction.TopRoller));
-		eb.post(new StepperRunEvent(StepperFunction.BottomRoller));
+		pnlTopRoller.run();
+		pnlBtmRoller.run();
 		isRunning  = true;
 	}
 	
 	protected void stop() {
 		btnRunStop.setText("Run");
-		eb.post(new StepperStopEvent(StepperFunction.TopRoller));
-		eb.post(new StepperStopEvent(StepperFunction.BottomRoller));
+		pnlTopRoller.stop();
+		pnlBtmRoller.stop();
 		isRunning = false;
 	}
 

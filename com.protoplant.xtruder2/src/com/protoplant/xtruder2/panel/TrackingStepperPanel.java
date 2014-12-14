@@ -67,27 +67,23 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 	
 	@Override
 	public void onConfigSetup(ConfigSetupEvent evt) {
-		
-		chkTracking.setSelection(scm.getConfig(function).isTracking);
-//		speedScaleFactor = // FIXME
-		
 		super.onConfigSetup(evt);
-		
-		log.info("-->");
+		chkTracking.setSelection(scm.getConfig(function).isTracking);
+		speedScaleFactor = scm.getConfig(function).trackingScaleFactor;
+		lblScaleFactor.setText(String.format("%.4f", speedScaleFactor));
+//		log.info("T:"+function.name()+scm.getConfig(function).speedSetPoint);
 	}
 	
 	@Override
 	public void onConfigStore(ConfigStoreEvent evt) {
 		super.onConfigStore(evt);
 		scm.getConfig(function).isTracking = chkTracking.getSelection();
-		scm.getConfig(function).trackingScaleFactor = speedScaleFactor;    //  FIXME
-		log.info("--^");
+		scm.getConfig(function).trackingScaleFactor = speedScaleFactor;
+//		log.info("--^");
 	}
 	
-	
-	
 	@Override
-	public void adjust() {
+	public void adjustSpeed() {
 		calcScaleFactor();
 		eb.post(new StepperSpeedChangeEvent(function, sldSpeed.getSelection()));
 	}
@@ -99,16 +95,16 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 		}
 	}
 	
-	@Override
+	@Subscribe
 	public void onSpeedChange(StepperSpeedChangeEvent evt) {
-		super.onSpeedChange(evt);
+//		super.onSpeedChange(evt);
 		if (evt.getFunction()==typeToTrack&&typeToTrack!=function) {
-			trackedSpeed = evt.getSpeed();
+			trackedSpeed = Math.abs(evt.getSpeed());
 			if (chkTracking.getSelection()) {
 	//			log.info(""+evt.getSpeed());
 				int speed = (int)((float)trackedSpeed*speedScaleFactor);
 				sldSpeed.setSelection(speed);
-				super.adjust();
+				super.adjustSpeed();
 			} else {
 				calcScaleFactor();
 			}

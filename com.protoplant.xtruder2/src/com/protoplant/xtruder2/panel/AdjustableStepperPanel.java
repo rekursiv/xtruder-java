@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Slider;
 public class AdjustableStepperPanel extends StepperPanel {
 	protected Slider sldSpeed;
 	protected Button btnRunStop;
-	protected boolean isRunning = false;
 
 	public AdjustableStepperPanel(Composite parent, Injector injector, StepperFunction type) {
 		super(parent, null, type);
@@ -38,12 +37,12 @@ public class AdjustableStepperPanel extends StepperPanel {
 		sldSpeed.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				adjust();
+				adjustSpeed();
 			}
 		});
 		sldSpeed.setPageIncrement(20);
 		sldSpeed.setMaximum(32000);
-		sldSpeed.setSelection(5000);
+//		sldSpeed.setSelection(5000);
 		
 		btnRunStop = new Button(this, SWT.NONE);
 		btnRunStop.addSelectionListener(new SelectionAdapter() {
@@ -59,41 +58,42 @@ public class AdjustableStepperPanel extends StepperPanel {
 		if (injector!=null) injector.injectMembers(this);
 	}
 	
-	@Subscribe
+//	@Override
+//	public void onSpeedChange(StepperSpeedChangeEvent evt) {
+//		super.onSpeedChange(evt);
+//		log.info("");
+//	}
+	
+	
+	
+	@Override
 	public void onConfigSetup(ConfigSetupEvent evt) {
+		super.onConfigSetup(evt);
 		sldSpeed.setSelection(scm.getConfig(function).speedSetPoint);
-		adjust();
-		log.info(">>>"+scm.getConfig(function).speedSetPoint);
+		adjustSpeed();
+//		log.info("A:"+function.name()+scm.getConfig(function).speedSetPoint);
 	}
 	
 	@Subscribe
 	public void onConfigStore(ConfigStoreEvent evt) {
 		scm.getConfig(function).speedSetPoint = sldSpeed.getSelection();
-		log.info("^^^");
 	}
 	
 
+	protected void adjustSpeed() {
+		super.adjustSpeed(sldSpeed.getSelection());
+	}
+	
 	@Override
-	public void onSpeedChange(StepperSpeedChangeEvent evt) {
-		super.onSpeedChange(evt);
-//		log.info("");
-	}
-
-	protected void adjust() {
-		eb.post(new StepperSpeedChangeEvent(function, sldSpeed.getSelection()));
-
-	}
-	
-	protected void run() {
+	public void run() {
 		btnRunStop.setText("Stop");
-		eb.post(new StepperRunEvent(function));
-		isRunning = true;
+		super.run();
 	}
 	
-	protected void stop() {
+	@Override
+	public void stop() {
 		btnRunStop.setText("Run");
-		eb.post(new StepperStopEvent(function));
-		isRunning = false;
+		super.stop();
 	}
 	
 	@Override

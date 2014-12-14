@@ -8,9 +8,11 @@ import org.eclipse.swt.widgets.Composite;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.StepperConfigManager;
 import com.protoplant.xtruder2.XtruderConfig;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.ConfigStoreEvent;
+
 
 
 import util.config.ConfigManager;
@@ -34,10 +36,11 @@ public class ConfigDetailPanel extends Composite {
 	protected Text txtMainEdit;
 	protected Button btnEditCurrent;
 	protected Button btnSave;
-	protected Button btnUseEdits;
+	protected Button btnApplyEdits;
 	protected Text txtStatus;
 	protected Label lblStatus;
 	private EventBus eb;
+	private StepperConfigManager scm;
 
 	public ConfigDetailPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
@@ -61,13 +64,13 @@ public class ConfigDetailPanel extends Composite {
 		fd_btnLoad.top = new FormAttachment(txtMainEdit, 0, SWT.TOP);
 		fd_btnLoad.left = new FormAttachment(0, 12);
 		btnEditCurrent.setLayoutData(fd_btnLoad);
-		btnEditCurrent.setText("Edit Current  >>");
+		btnEditCurrent.setText("Edit Current >>");
 		
 		btnSave = new Button(this, SWT.NONE);
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				test();		//  FIXME
+				save();
 			}
 		});
 		FormData fd_btnSave = new FormData();
@@ -77,18 +80,18 @@ public class ConfigDetailPanel extends Composite {
 		btnSave.setLayoutData(fd_btnSave);
 		btnSave.setText("Save File");
 		
-		btnUseEdits = new Button(this, SWT.NONE);
-		btnUseEdits.addSelectionListener(new SelectionAdapter() {
+		btnApplyEdits = new Button(this, SWT.NONE);
+		btnApplyEdits.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				useEdits();
+				applyEdits();
 			}
 		});
 		FormData fd_btnUseEdits = new FormData();
 		fd_btnUseEdits.top = new FormAttachment(0, 55);
 		fd_btnUseEdits.left = new FormAttachment(btnEditCurrent, 0, SWT.LEFT);
-		btnUseEdits.setLayoutData(fd_btnUseEdits);
-		btnUseEdits.setText("Use Edits     <<");
+		btnApplyEdits.setLayoutData(fd_btnUseEdits);
+		btnApplyEdits.setText("Apply Edits  <<");
 		
 		txtStatus = new Text(this, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
 		fd_text.bottom = new FormAttachment(txtStatus, -6);
@@ -112,12 +115,12 @@ public class ConfigDetailPanel extends Composite {
 	}
 	
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config, ConfigManager<XtruderConfig> cfgMgr) {
+	public void inject(Logger log, EventBus eb, XtruderConfig config, ConfigManager<XtruderConfig> cfgMgr, StepperConfigManager scm) {
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
 		this.cfgMgr = cfgMgr;
-//		refreshEditText();      ///  FIXME
+		this.scm = scm;
 	}
 
 	
@@ -125,7 +128,6 @@ public class ConfigDetailPanel extends Composite {
 	protected void editCurrent() {
 		try {
 			eb.post(new ConfigStoreEvent());
-			log.info("***");
 			txtMainEdit.setText(cfgMgr.getText(config));
 			txtStatus.setText("Current configuration loaded into text editor.");
 		} catch (Exception e) {
@@ -133,9 +135,10 @@ public class ConfigDetailPanel extends Composite {
 		}		
 	}
 	
-	protected void useEdits() {
+	protected void applyEdits() {
 		try {
 			cfgMgr.update(txtMainEdit.getText(), config);
+			scm.buildStepperMaps();
 			eb.post(new ConfigSetupEvent());
 			txtStatus.setText("Current configuration updated.");
 		} catch (Exception e) {
@@ -143,6 +146,15 @@ public class ConfigDetailPanel extends Composite {
 		}
 	}
 
+	protected void save() {
+		try {
+			cfgMgr.save(cfgMgr.mapConfigFromText(txtMainEdit.getText()));
+			txtStatus.setText("Current configuration saved.");
+		} catch (Exception e) {
+			txtStatus.setText(e.getLocalizedMessage());
+		}
+	}
+	
 	protected void test() {
 		log.info(""+config.steppers[0].speedSetPoint);
 	}

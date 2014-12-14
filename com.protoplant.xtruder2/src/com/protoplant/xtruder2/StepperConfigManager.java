@@ -25,33 +25,30 @@ public class StepperConfigManager {
 		this.config = config;
 		this.cfgMgr = cfgMgr;
 		initConfig();
-		buildStepperMaps();
 	}
 
+	private void initConfig() {
+		if (config.steppers==null) {
+			int numMotors = StepperFunction.values().length-1;  // last enum = "UNDEFINED" 
+			config.steppers = new StepperConfig[numMotors];
+			for (int i=0; i<numMotors; ++i) {
+				config.steppers[i] = new StepperConfig(StepperFunction.values()[i]);
+			}
+			try {
+				cfgMgr.save(config);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		buildStepperMaps();
+	}
 	
-	//  TODO:   rebuild on config edit
-	private void buildStepperMaps() {
+	public void buildStepperMaps() {
 		stepperSerialMap = new HashMap<String, Integer>();
 		stepperFunctionMap = new HashMap<StepperFunction, Integer>();	
 		for (int i=0; i<config.steppers.length; ++i) {
 			stepperSerialMap.put(config.steppers[i].serial, i);
 			stepperFunctionMap.put(config.steppers[i].function, i);
-		}
-	}
-
-	private void initConfig() {
-		if (config.steppers==null) {
-			config.steppers = new StepperConfig[2];
-			config.steppers[0] = new StepperConfig(StepperFunction.values()[0]);
-			config.steppers[0].serial = "71D1906F18002B00";
-			config.steppers[1] = new StepperConfig(StepperFunction.values()[1]);
-			config.steppers[1].serial = "???";
-			try {
-				cfgMgr.save(config);
-//				System.out.println(cfgMgr.getText(config));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	
@@ -77,6 +74,22 @@ public class StepperConfigManager {
 //		else return StepperFunction.BottomRoller;
 	}
 	
-	
+/*
+	private void _initConfig() {
+		if (config.steppers==null) {
+			config.steppers = new StepperConfig[2];
+			config.steppers[0] = new StepperConfig(StepperFunction.values()[0]);
+			config.steppers[0].serial = "71D1906F18002B00";
+			config.steppers[1] = new StepperConfig(StepperFunction.values()[1]);
+			config.steppers[1].serial = "???";
+			try {
+				cfgMgr.save(config);
+//				System.out.println(cfgMgr.getText(config));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}	
+ */
 
 }
