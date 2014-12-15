@@ -79,9 +79,10 @@ public class AdjustableStepperPanel extends StepperPanel {
 		scm.getConfig(function).speedSetPoint = sldSpeed.getSelection();
 	}
 	
-
+	@Override
 	protected void adjustSpeed() {
-		super.adjustSpeed(sldSpeed.getSelection());
+		speed = sldSpeed.getSelection();
+		super.adjustSpeed();
 	}
 	
 	@Override

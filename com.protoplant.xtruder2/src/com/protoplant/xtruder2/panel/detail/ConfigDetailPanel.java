@@ -10,13 +10,14 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperConfigManager;
+import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.XtruderConfig;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.ConfigStoreEvent;
 
 
 
-import com.protoplant.xtruder2.usb.StepperUndefinedEvent;
+import com.protoplant.xtruder2.event.StepperConnectEvent;
 
 import util.config.ConfigManager;
 
@@ -127,8 +128,10 @@ public class ConfigDetailPanel extends Composite {
 	}
 
 	@Subscribe
-	public void onStepperUndefined(StepperUndefinedEvent evt) {
-		txtStatus.setText("Undefined stepper module detected, serial number = \""+evt.getSerial()+"\"");
+	public void onStepperConnect(StepperConnectEvent evt) {
+		if (evt.getFunction()==StepperFunction.UNDEFINED) {
+			txtStatus.setText("Undefined stepper module detected, serial number = \""+evt.getSerial()+"\"");
+		}
 	}
 	
 	protected void editCurrent() {

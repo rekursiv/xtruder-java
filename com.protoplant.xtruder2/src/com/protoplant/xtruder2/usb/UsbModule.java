@@ -28,6 +28,10 @@ public class UsbModule {
 		this.eb = eb;
 	}
 	
+	public void release() {
+		disconnect();
+	}
+	
 	public boolean isConnected() {
 		return dev!=null;
 	}

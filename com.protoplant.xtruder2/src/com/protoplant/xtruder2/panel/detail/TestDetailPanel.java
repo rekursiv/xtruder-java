@@ -10,7 +10,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.XtruderConfig;
-import com.protoplant.xtruder2.event.StepperConfigChangeEvent;
+import com.protoplant.xtruder2.event.StepperDisconnectEvent;
 import com.protoplant.xtruder2.panel.AdjustableStepperPanel;
 import com.protoplant.xtruder2.panel.TrackingStepperPanel;
 

@@ -12,11 +12,13 @@ import com.protoplant.xtruder2.StepperConfig;
 import com.protoplant.xtruder2.StepperConfigManager;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
-import com.protoplant.xtruder2.event.StepperConfigChangeEvent;
+import com.protoplant.xtruder2.event.StepperDisconnectEvent;
+import com.protoplant.xtruder2.event.StepperResetEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 import com.protoplant.xtruder2.event.StepperStopEvent;
+import com.protoplant.xtruder2.event.StepperConnectEvent;
 
 public class StepperModule extends UsbModule {
 
@@ -27,17 +29,20 @@ public class StepperModule extends UsbModule {
 	private boolean isRunning = false;
 	private StepperConfigManager scm;
 	private StepperFunction function = StepperFunction.UNDEFINED;
+	private boolean isActive;
 
 	@Inject
 	public StepperModule(Logger log, EventBus eb, StepperConfigManager scm) {
 		super(log, eb);
 		this.scm = scm;
+		isActive = true;
 	}
 
 	@Subscribe
 	public void onSpeedChange(StepperSpeedChangeEvent evt) {
 		if (evt.getFunction() == function) {
 			runSpeed = evt.getSpeed();
+			log.info(""+runSpeed);
 			if (isRunning) {
 				curSpeed = runSpeed;
 				curCmd = CommandType.SET_SPEED;
@@ -51,21 +56,22 @@ public class StepperModule extends UsbModule {
 			function = scm.getFunction(devInfo);
 			if (function!=StepperFunction.UNDEFINED) {
 				curCmd = CommandType.SET_CONFIG;
-//				log.info("SET_CONFIG");
+				log.info("SET_CONFIG");
 			}
 		}
 	}
 	
 	@Subscribe
-	public void onConfigChange(StepperConfigChangeEvent evt) {   /// ???
+	public void onReset(StepperResetEvent evt) {   
 		if (evt.getFunction() == function) {
-			curCmd = CommandType.SET_CONFIG;
+			curCmd = CommandType.CLEAR_STATUS;
 		}
 	}
 	
 	@Subscribe
 	public void onRun(StepperRunEvent evt) {
 		if (evt.getFunction() == function) {
+			log.info("");
 			curSpeed = runSpeed;
 			curCmd = CommandType.SET_SPEED;
 			isRunning = true;
@@ -75,7 +81,6 @@ public class StepperModule extends UsbModule {
 	@Subscribe
 	public void onStop(StepperStopEvent evt) {
 		if (evt.getFunction() == function) {
-			log.info("");
 			curSpeed = 0;
 			curCmd = CommandType.SET_SPEED;
 			isRunning = false;
@@ -87,10 +92,26 @@ public class StepperModule extends UsbModule {
 		super.connect(devInfo);
 		if (this.devInfo!=null) {
 			function = scm.getFunction(this.devInfo);
-			if (function==StepperFunction.UNDEFINED) eb.post(new StepperUndefinedEvent(this.devInfo.getSerial_number()));
+			eb.post(new StepperConnectEvent(function, this.devInfo.getSerial_number()));
+			curCmd = CommandType.SET_CONFIG;
 		}
 	}
+	
+	@Override
+	public void release() {
+		curSpeed = 0;
+		curCmd = CommandType.SET_SPEED;
+		refreshWrite();
+		isActive = false;
+		super.release();
+	}
 
+	@Override
+	public void disconnect() {
+		if (isActive) eb.post(new StepperDisconnectEvent(function));
+		super.disconnect();
+	}
+	
 	@Override
 	protected byte[] encodePacket() {
 		byte[] pkt;
@@ -100,6 +121,7 @@ public class StepperModule extends UsbModule {
 				if (sc==null) {
 					pkt = new byte[1];
 					pkt[0]=0;
+					curCmd = CommandType.PING;
 				} else {
 					pkt = new byte[9];
 					pkt[0]=1;
@@ -111,7 +133,8 @@ public class StepperModule extends UsbModule {
 					pkt[6]=(byte)(sc.torqueDiv&0xFF);
 					pkt[7]=(byte)(sc.accelDiv&0xFF);
 					pkt[8]=(byte)(sc.accelStep&0xFF);
-//					log.info(""+(sc.maxTorque&0xFF));
+					curCmd = CommandType.SET_SPEED;
+					log.info("CONFIG:  "+(sc.maxTorque&0xFF));
 				}
 			break;
 			case SET_SPEED:
@@ -119,18 +142,20 @@ public class StepperModule extends UsbModule {
 				pkt[0]=2;
 				pkt[1]=(byte)((curSpeed>>8)&0xFF);
 				pkt[2]=(byte)(curSpeed&0xFF);
-//				log.info("#"+curSpeed);
+				curCmd = CommandType.PING;
+				log.info("SPEED:  "+curSpeed);
 			break;
 			case CLEAR_STATUS:
 				pkt = new byte[1];
 				pkt[0]=3;
+				curCmd = CommandType.PING;
 			break;
 			default:
 				pkt = new byte[1];
 				pkt[0]=0;
+				curCmd = CommandType.PING;
 			break;
 		}
-		curCmd = CommandType.PING;
 		return pkt;
 	}
 

@@ -52,15 +52,15 @@ public class UsbManager extends Thread {
 		
 		ioRefreshCount = 0;
 		modules = new TreeMap<String, UsbModule>();
-		refreshConnections();		
-        start();
+		refreshConnections();
         eb.post(new ConfigSetupEvent());
+        start();
 	}
 	
 	public void release() {
 		interrupt();
 		for (UsbModule mod : modules.values()) {
-			mod.disconnect();
+			mod.release();
 		}
 		try {
 			HIDManager.getInstance().release();

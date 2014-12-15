@@ -15,14 +15,8 @@ ConfigDetail buttons:
  Save File As...
 
 
-===============
-code clean up
-  remove StepperConfigChangeEvent?? 
-
 
 === stepper uCode
-
-"reset" cmd - clear status codes
 
 reversing uSwitches for WinderMinder
 

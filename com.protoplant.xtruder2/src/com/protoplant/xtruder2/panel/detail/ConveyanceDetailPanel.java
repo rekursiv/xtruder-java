@@ -142,8 +142,8 @@ public class ConveyanceDetailPanel extends Composite {
 	}
 	
 	public void adjustSpeed() {
-		pnlTopRoller.adjustSpeed(sldSpeedAdjust.getSelection());
-		pnlBtmRoller.adjustSpeed(sldSpeedAdjust.getSelection());
+		pnlTopRoller.setSpeed(sldSpeedAdjust.getSelection());
+		pnlBtmRoller.setSpeed(sldSpeedAdjust.getSelection());
 	}
 	
 	protected void run() {
