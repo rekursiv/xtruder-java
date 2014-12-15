@@ -53,11 +53,15 @@ public class StepperConfigManager {
 	}
 	
 	public StepperConfig getConfig(String serial) {
-		return config.steppers[stepperSerialMap.get(serial)];
+		Integer index = stepperSerialMap.get(serial);
+		if (index==null) return null;
+		else return config.steppers[index];
 	}
 	
 	public StepperConfig getConfig(StepperFunction function) {
-		return config.steppers[stepperFunctionMap.get(function)];
+		Integer index = stepperFunctionMap.get(function);
+		if (index==null) return null;
+		else return config.steppers[index];
 	}
 
 	public StepperFunction getFunction(HIDDeviceInfo devInfo) {
@@ -68,28 +72,7 @@ public class StepperConfigManager {
 			return sc.function;
 		}
 
-		
-//		log.info(devInfo.getSerial_number());
-//		if (devInfo.getSerial_number().equals("71D1906F18002B00")) return StepperFunction.TopRoller;
-//		else return StepperFunction.BottomRoller;
 	}
 	
-/*
-	private void _initConfig() {
-		if (config.steppers==null) {
-			config.steppers = new StepperConfig[2];
-			config.steppers[0] = new StepperConfig(StepperFunction.values()[0]);
-			config.steppers[0].serial = "71D1906F18002B00";
-			config.steppers[1] = new StepperConfig(StepperFunction.values()[1]);
-			config.steppers[1].serial = "???";
-			try {
-				cfgMgr.save(config);
-//				System.out.println(cfgMgr.getText(config));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}	
- */
 
 }

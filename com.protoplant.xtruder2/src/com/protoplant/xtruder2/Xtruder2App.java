@@ -6,6 +6,7 @@ import org.eclipse.swt.layout.FillLayout;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.panel.RootPanel;
+import com.protoplant.xtruder2.usb.UsbManager;
 
 
 
@@ -30,22 +31,14 @@ public class Xtruder2App {
 		shell.setText("Loading Protoplant Xtruder, please wait...");
 		shell.open();
 
-		
 		Injector injector = Guice.createInjector(new XtruderGuice());
-		
 
-		
-		/////////
+		new RootPanel(shell, injector);
 		
 		StepperConfigManager scm = injector.getInstance(StepperConfigManager.class);
 		
-		/////////
-		
 		UsbManager usb = injector.getInstance(UsbManager.class);
 		usb.init();
-
-		
-		new RootPanel(shell, injector);
 		
 		// Dell touchscreen is 1600 X 900
 //		shell.setBounds(0, 0, 1600, 900);
@@ -53,13 +46,9 @@ public class Xtruder2App {
 		shell.setText("Protoplant Xtruder V2.x");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		
 		shell.init();  // main loop
 		
-		
 		usb.release();
-
-
 	}
 
 	

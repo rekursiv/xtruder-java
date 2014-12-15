@@ -1,4 +1,4 @@
-package com.protoplant.xtruder2;
+package com.protoplant.xtruder2.usb;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,14 +10,18 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.bind.DatatypeConverter;
+
 import org.eclipse.swt.widgets.Display;
 
 import com.codeminders.hidapi.ClassPathLibraryLoader;
 import com.codeminders.hidapi.HIDDeviceInfo;
 import com.codeminders.hidapi.HIDManager;
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.protoplant.xtruder2.event.ConfigSetupEvent;
 
 @Singleton
 public class UsbManager extends Thread {
@@ -28,13 +32,16 @@ public class UsbManager extends Thread {
 	protected static final int vendorId = 0x2047;
 	
 	private Logger log;
+	private EventBus eb;
 	private Injector injector;
 	private Map<String, UsbModule> modules;
 	private int ioRefreshCount;
 
+
 	@Inject
-	public UsbManager(Logger log, Injector injector) {
+	public UsbManager(Logger log, EventBus eb, Injector injector) {
 		this.log = log;
+		this.eb = eb;
 		this.injector = injector;
 	}
 	
@@ -43,13 +50,11 @@ public class UsbManager extends Thread {
 			log.warning("Failed to load native HID library.");
 		}
 		
-		listDevs();
-		
 		ioRefreshCount = 0;
 		modules = new TreeMap<String, UsbModule>();
-		refreshConnectionAsync();
+		refreshConnections();		
         start();
-		
+        eb.post(new ConfigSetupEvent());
 	}
 	
 	public void release() {
@@ -120,8 +125,7 @@ public class UsbManager extends Thread {
 							if (mod!=null) {
 								mod.connect(info);
 								if (mod.isConnected()&&info.getSerial_number()!=null) {
-									log.info("*USB* "+info.getProduct_string()+":"+info.getSerial_number());
-									log.info(info.toString());
+									prettyPrintInfo(info);
 									modules.put(info.getSerial_number(), mod);
 								}
 							}
@@ -134,7 +138,6 @@ public class UsbManager extends Thread {
 		}
 	}
 	
-
 
 	@Override
 	public void run() {
@@ -173,6 +176,22 @@ public class UsbManager extends Thread {
 			});
 
 		}
+	}
+	
+	private void prettyPrintInfo(HIDDeviceInfo info) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("*USB* <Vendor: ");
+		sb.append(info.getManufacturer_string()+", ");
+		sb.append(String.format("0x%x", info.getVendor_id()));
+		sb.append(">  <Product: ");
+		sb.append(info.getProduct_string()+", ");
+		sb.append(String.format("0x%x", info.getProduct_id()));
+		sb.append(">  <Serial: ");
+		sb.append(info.getSerial_number());
+		sb.append(">  <Version: ");
+		sb.append(info.getRelease_number());
+		sb.append(">");
+		log.info(sb.toString());
 	}
 
 }

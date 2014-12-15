@@ -22,7 +22,6 @@ public class StepperConfig {
 	public int accelStep = 8;
 
 	
-	
 	public StepperConfig() {
 		this(StepperFunction.UNDEFINED);
 	}

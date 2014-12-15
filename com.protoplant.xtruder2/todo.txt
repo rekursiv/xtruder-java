@@ -1,7 +1,4 @@
 
-code cleanup
- delete:  _, cfgList, etc
-
 
 test with touch screen
 test motor start/stop (tracking, conveyance)
@@ -17,6 +14,10 @@ ConfigDetail buttons:
  *Save File
  Save File As...
 
+
+===============
+code clean up
+  remove StepperConfigChangeEvent?? 
 
 
 === stepper uCode

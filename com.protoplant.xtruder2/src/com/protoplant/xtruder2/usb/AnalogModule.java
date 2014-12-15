@@ -1,4 +1,4 @@
-package com.protoplant.xtruder2;
+package com.protoplant.xtruder2.usb;
 
 import java.io.IOException;
 import java.util.logging.Logger;

@@ -35,7 +35,8 @@ public class RootPanel extends SashForm {
 	@Inject
 	public void inject(Logger log, EventBus eb) {
 		this.log = log;
-		eb.post(new ConfigSetupEvent());
+//		log.info("");
+//		eb.post(new ConfigSetupEvent());
 	}
 
 	@Override

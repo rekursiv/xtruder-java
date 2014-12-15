@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperConfigManager;
@@ -14,6 +15,8 @@ import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.ConfigStoreEvent;
 
 
+
+import com.protoplant.xtruder2.usb.StepperUndefinedEvent;
 
 import util.config.ConfigManager;
 
@@ -123,7 +126,10 @@ public class ConfigDetailPanel extends Composite {
 		this.scm = scm;
 	}
 
-	
+	@Subscribe
+	public void onStepperUndefined(StepperUndefinedEvent evt) {
+		txtStatus.setText("Undefined stepper module detected, serial number = \""+evt.getSerial()+"\"");
+	}
 	
 	protected void editCurrent() {
 		try {

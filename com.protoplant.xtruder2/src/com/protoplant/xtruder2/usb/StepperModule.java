@@ -1,4 +1,4 @@
-package com.protoplant.xtruder2;
+package com.protoplant.xtruder2.usb;
 
 import java.util.logging.Logger;
 
@@ -8,6 +8,10 @@ import com.codeminders.hidapi.HIDDeviceInfo;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
+import com.protoplant.xtruder2.StepperConfig;
+import com.protoplant.xtruder2.StepperConfigManager;
+import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.StepperConfigChangeEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
@@ -42,7 +46,18 @@ public class StepperModule extends UsbModule {
 	}
 
 	@Subscribe
-	public void onConfigChange(StepperConfigChangeEvent evt) {
+	public void onConfigSetup(ConfigSetupEvent evt) {
+		if (devInfo!=null) {
+			function = scm.getFunction(devInfo);
+			if (function!=StepperFunction.UNDEFINED) {
+				curCmd = CommandType.SET_CONFIG;
+//				log.info("SET_CONFIG");
+			}
+		}
+	}
+	
+	@Subscribe
+	public void onConfigChange(StepperConfigChangeEvent evt) {   /// ???
 		if (evt.getFunction() == function) {
 			curCmd = CommandType.SET_CONFIG;
 		}
@@ -51,7 +66,6 @@ public class StepperModule extends UsbModule {
 	@Subscribe
 	public void onRun(StepperRunEvent evt) {
 		if (evt.getFunction() == function) {
-			log.info("");
 			curSpeed = runSpeed;
 			curCmd = CommandType.SET_SPEED;
 			isRunning = true;
@@ -73,6 +87,7 @@ public class StepperModule extends UsbModule {
 		super.connect(devInfo);
 		if (this.devInfo!=null) {
 			function = scm.getFunction(this.devInfo);
+			if (function==StepperFunction.UNDEFINED) eb.post(new StepperUndefinedEvent(this.devInfo.getSerial_number()));
 		}
 	}
 
@@ -96,6 +111,7 @@ public class StepperModule extends UsbModule {
 					pkt[6]=(byte)(sc.torqueDiv&0xFF);
 					pkt[7]=(byte)(sc.accelDiv&0xFF);
 					pkt[8]=(byte)(sc.accelStep&0xFF);
+//					log.info(""+(sc.maxTorque&0xFF));
 				}
 			break;
 			case SET_SPEED:
@@ -103,7 +119,7 @@ public class StepperModule extends UsbModule {
 				pkt[0]=2;
 				pkt[1]=(byte)((curSpeed>>8)&0xFF);
 				pkt[2]=(byte)(curSpeed&0xFF);
-				log.info("#"+curSpeed);
+//				log.info("#"+curSpeed);
 			break;
 			case CLEAR_STATUS:
 				pkt = new byte[1];
