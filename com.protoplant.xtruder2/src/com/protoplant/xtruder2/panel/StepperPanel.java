@@ -109,7 +109,7 @@ public class StepperPanel extends Group {
 	}
 	
 	@Subscribe
-	public void onData(final StepperStatusEvent evt) {
+	public void onStatus(final StepperStatusEvent evt) {
 		if (evt.getFunction()==function) {
 			lblTorque.setText("Torque: "+evt.getTorque());
 			lblSpeed.setText("Speed: "+evt.getSpeed());

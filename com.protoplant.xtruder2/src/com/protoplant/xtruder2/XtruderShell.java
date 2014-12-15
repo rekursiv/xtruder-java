@@ -16,7 +16,7 @@ public class XtruderShell extends Shell {
 				display.sleep();
 			}
 		}
-		try {Thread.sleep(200);} catch (InterruptedException e) {}  // give things a chance to shut down
+//		try {Thread.sleep(200);} catch (InterruptedException e) {}  // give things a chance to shut down
 		SWTResourceManager.dispose();
 	}
 

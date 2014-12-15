@@ -20,7 +20,7 @@ public class BaseSummaryPanel extends Group {
 
 
 	protected RGB focusColor = new RGB(230, 190, 190);
-	private Logger log;
+	protected Logger log;
 	private EventBus eb;
 	private boolean isFocused = false;
 

@@ -1,13 +1,21 @@
 
 
+Config:
+ roller dia.
+ stepper slider max
+
+
 test with touch screen
 test motor start/stop (tracking, conveyance)
 test config
 
 
 
-================
-ConfigDetail buttons:
+================  ConfigDetail
+
+color status bg
+
+buttons:
  *Edit Current
  *Apply Edits
  Edit File...
