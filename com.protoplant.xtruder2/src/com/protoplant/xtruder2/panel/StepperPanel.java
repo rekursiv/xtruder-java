@@ -50,17 +50,17 @@ public class StepperPanel extends Group {
 		setLayout(null);
 
 		lblSetpt = new Label(this, SWT.NONE);
-		lblSetpt.setBounds(25, 22, 110, 15);
+		lblSetpt.setBounds(25, 22, 110, 20);
 		lblSetpt.setText("Setpoint:");
 		
 		lblTorque = new Label(this, SWT.NONE);
-		lblTorque.setBounds(257, 22, 110, 15);
+		lblTorque.setBounds(257, 22, 110, 20);
 
 		lblSpeed = new Label(this, SWT.NONE);
-		lblSpeed.setBounds(141, 22, 110, 15);
+		lblSpeed.setBounds(141, 22, 110, 20);
 		
 		lblStatus = new Label(this, SWT.NONE);
-		lblStatus.setBounds(373, 22, 134, 15);
+		lblStatus.setBounds(373, 22, 171, 20);
 		
 		btnReset = new Button(this, SWT.NONE);
 		btnReset.addSelectionListener(new SelectionAdapter() {
@@ -69,7 +69,7 @@ public class StepperPanel extends Group {
 				reset();
 			}
 		});
-		btnReset.setBounds(540, 12, 46, 25);
+		btnReset.setBounds(572, 17, 62, 25);
 		btnReset.setText("Reset");
 
 		showDisconnectState();

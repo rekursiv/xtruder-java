@@ -32,6 +32,7 @@ public class RootDetailPanel extends Composite {
 	
 	public RootDetailPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
+		setTouchEnabled(true);
 		this.injector = injector;
 		stack = new StackLayout();
 		setLayout(stack);
@@ -56,6 +57,7 @@ public class RootDetailPanel extends Composite {
 		Widget w = event.getWidget();
 		if (w==null) return;
 //		log.info(w.toString());
+		
 		if (w instanceof TestSummaryPanel) {
 			if (pnlTest == null) pnlTest = new TestDetailPanel(this, injector);  //  FIXME
 			stack.topControl = pnlTest;
@@ -71,7 +73,8 @@ public class RootDetailPanel extends Composite {
 		} else if (w instanceof ConfigSummaryPanel) {
 			if (pnlConfig == null) pnlConfig = new ConfigDetailPanel(this, injector);
 			stack.topControl = pnlConfig;
-			layout();
+			layout(true, true);
+			layout(true, true);  // gotta do this TWICE on Linux to force layout of text editors, no idea why...
 		}
 	}
 	

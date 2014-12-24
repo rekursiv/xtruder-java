@@ -24,6 +24,8 @@ import com.protoplant.xtruder2.event.StepperStatusEvent;
 import com.protoplant.xtruder2.event.StepperStopEvent;
 
 import org.eclipse.swt.widgets.Slider;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
 
 public class TrackingStepperPanel extends AdjustableStepperPanel {
 	
@@ -39,10 +41,20 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 
 	public TrackingStepperPanel(Composite parent, Injector injector, StepperFunction type, StepperFunction typeToTrack) {
 		super(parent, null, type);
+		btnReset.setTouchEnabled(true);
+		btnRunStop.setTouchEnabled(true);
+		sldSpeed.setTouchEnabled(true);
 		
 		this.typeToTrack = typeToTrack;
 		
 		chkTracking = new Button(this, SWT.CHECK);
+		chkTracking.setTouchEnabled(true);
+		FormData fd_chkTracking = new FormData();
+		fd_chkTracking.bottom = new FormAttachment(btnRunStop, 25);
+		fd_chkTracking.top = new FormAttachment(btnRunStop, 0, SWT.TOP);
+		fd_chkTracking.right = new FormAttachment(0, 375);
+		fd_chkTracking.left = new FormAttachment(0, 100);
+		chkTracking.setLayoutData(fd_chkTracking);
 		chkTracking.addSelectionListener(new SelectionAdapter() {  //  FIXME
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -54,10 +66,22 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 		chkTracking.setText("Tracking: "+typeToTrack);
 		
 		lblSF_title = new Label(this, SWT.NONE);
+		FormData fd_lblSF_title = new FormData();
+		fd_lblSF_title.bottom = new FormAttachment(chkTracking, 0, SWT.BOTTOM);
+		fd_lblSF_title.top = new FormAttachment(chkTracking, 0, SWT.TOP);
+		lblSF_title.setLayoutData(fd_lblSF_title);
 		lblSF_title.setBounds(380, 92, 101, 15);
 		lblSF_title.setText("Scale Factor:");
 		
 		lblScaleFactor = new Label(this, SWT.NONE);
+		fd_lblSF_title.left = new FormAttachment(0, 416);
+		fd_lblSF_title.right = new FormAttachment(0, 520);
+		FormData fd_lblScaleFactor = new FormData();
+		fd_lblScaleFactor.bottom = new FormAttachment(lblSF_title, 0, SWT.BOTTOM);
+		fd_lblScaleFactor.left = new FormAttachment(btnReset, 0, SWT.LEFT);
+		fd_lblScaleFactor.right = new FormAttachment(btnReset, 0, SWT.RIGHT);
+		fd_lblScaleFactor.top = new FormAttachment(sldSpeed, 6);
+		lblScaleFactor.setLayoutData(fd_lblScaleFactor);
 		lblScaleFactor.setBounds(487, 93, 55, 15);
 		lblScaleFactor.setText("1.0");
 		

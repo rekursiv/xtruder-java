@@ -24,6 +24,7 @@ public class RootSummaryPanel extends Composite {
 
 	public RootSummaryPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
+		setTouchEnabled(true);
 		
 		pnlStatus = new StatusSummaryPanel(this, injector);
 		pnlStatus.setBounds(10, 10, 171, 82);
@@ -37,8 +38,8 @@ public class RootSummaryPanel extends Composite {
 		pnlConfig = new ConfigSummaryPanel(this, injector);
 		pnlConfig.setBounds(244, 98, 171, 82);
 		
-		pnlTestDetail = new TestDetailPanel(this, injector);
-		pnlTestDetail.setBounds(10, 211, 631, 409);
+//		pnlTestDetail = new TestDetailPanel(this, injector);
+//		pnlTestDetail.setBounds(10, 211, 703, 544);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}

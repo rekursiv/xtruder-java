@@ -48,7 +48,7 @@ public class ConveyanceSummaryPanel extends BaseSummaryPanel {
 				setFocus();
 			}
 		});
-		lblIpsTitle.setBounds(32, 62, 116, 15);
+		lblIpsTitle.setBounds(20, 62, 128, 20);
 		lblIpsTitle.setText("Inches Per Second");
 		
 		if (injector!=null) injector.injectMembers(this);

@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 
 
@@ -51,12 +52,16 @@ public class ConfigDetailPanel extends Composite {
 		setLayout(new FormLayout());
 		
 		txtMainEdit = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		txtMainEdit.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		txtMainEdit.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		txtMainEdit.setTouchEnabled(true);
 		FormData fd_text = new FormData();
 		fd_text.right = new FormAttachment(100, -11);
 		fd_text.top = new FormAttachment(0, 12);
 		txtMainEdit.setLayoutData(fd_text);
 		
 		btnEditCurrent = new Button(this, SWT.NONE);
+		btnEditCurrent.setTouchEnabled(true);
 		fd_text.left = new FormAttachment(btnEditCurrent, 6);
 		btnEditCurrent.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -71,6 +76,7 @@ public class ConfigDetailPanel extends Composite {
 		btnEditCurrent.setText("Edit Current >>");
 		
 		btnSave = new Button(this, SWT.NONE);
+		btnSave.setTouchEnabled(true);
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -78,13 +84,14 @@ public class ConfigDetailPanel extends Composite {
 			}
 		});
 		FormData fd_btnSave = new FormData();
-		fd_btnSave.right = new FormAttachment(0, 70);
 		fd_btnSave.top = new FormAttachment(0, 125);
 		fd_btnSave.left = new FormAttachment(0, 13);
 		btnSave.setLayoutData(fd_btnSave);
 		btnSave.setText("Save File");
 		
 		btnApplyEdits = new Button(this, SWT.NONE);
+		btnApplyEdits.setTouchEnabled(true);
+		fd_btnSave.right = new FormAttachment(btnApplyEdits, 0, SWT.RIGHT);
 		btnApplyEdits.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -98,6 +105,9 @@ public class ConfigDetailPanel extends Composite {
 		btnApplyEdits.setText("Apply Edits  <<");
 		
 		txtStatus = new Text(this, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
+		txtStatus.setTouchEnabled(true);
+		txtStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		txtStatus.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		fd_text.bottom = new FormAttachment(txtStatus, -6);
 		FormData fd_text_1 = new FormData();
 		fd_text_1.top = new FormAttachment(100, -52);
@@ -125,6 +135,7 @@ public class ConfigDetailPanel extends Composite {
 		this.config = config;
 		this.cfgMgr = cfgMgr;
 		this.scm = scm;
+		
 	}
 
 	@Subscribe

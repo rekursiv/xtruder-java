@@ -17,6 +17,7 @@ import com.protoplant.xtruder2.panel.TrackingStepperPanel;
 
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
@@ -30,7 +31,7 @@ public class ConveyanceDetailPanel extends Composite {
 	private Logger log;
 	private EventBus eb;
 	protected Group grpPinchRoller;
-	protected Slider sldSpeedAdjust;
+	protected Scale sldSpeedAdjust;
 	protected StepperPanel pnlTopRoller;
 	protected StepperPanel pnlBtmRoller;
 	protected Button btnRunStop;
@@ -53,7 +54,7 @@ public class ConveyanceDetailPanel extends Composite {
 		grpPinchRoller.setText("Pinch Rollers");
 		grpPinchRoller.setLayout(new FormLayout());
 		
-		sldSpeedAdjust = new Slider(grpPinchRoller, SWT.NONE);
+		sldSpeedAdjust = new Scale(grpPinchRoller, SWT.NONE);
 		sldSpeedAdjust.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -115,7 +116,7 @@ public class ConveyanceDetailPanel extends Composite {
 		pnlTopWheel = new TrackingStepperPanel(grpTakeupWheels, injector, StepperFunction.TopWheel, StepperFunction.TopRoller);
 		FormData fd_topRoller = new FormData();
 		fd_topRoller.bottom = new FormAttachment(0, 147);
-		fd_topRoller.right = new FormAttachment(0, 795);
+		fd_topRoller.right = new FormAttachment(100, -10);
 		fd_topRoller.top = new FormAttachment(0, 19);
 		fd_topRoller.left = new FormAttachment(0, 7);
 		pnlTopWheel.setLayoutData(fd_topRoller);
@@ -123,7 +124,7 @@ public class ConveyanceDetailPanel extends Composite {
 		pnlBtmWheel = new TrackingStepperPanel(grpTakeupWheels, injector, StepperFunction.BottomWheel, StepperFunction.TopWheel);
 		FormData fd_btmRoller = new FormData();
 		fd_btmRoller.bottom = new FormAttachment(0, 285);
-		fd_btmRoller.right = new FormAttachment(0, 795);
+		fd_btmRoller.right = new FormAttachment(100, -10);
 		fd_btmRoller.top = new FormAttachment(0, 157);
 		fd_btmRoller.left = new FormAttachment(0, 7);
 		pnlBtmWheel.setLayoutData(fd_btmRoller);

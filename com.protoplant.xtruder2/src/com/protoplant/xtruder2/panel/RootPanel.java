@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -23,11 +24,12 @@ public class RootPanel extends SashForm {
 	
 	public RootPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
+		setTouchEnabled(true);
 
 		rsp = new RootSummaryPanel(this, injector);
 		rdp = new RootDetailPanel(this, injector);
 		
-		rsp.setDefaultFocus();
+		setWeights(new int[] { 4, 6});
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -35,8 +37,15 @@ public class RootPanel extends SashForm {
 	@Inject
 	public void inject(Logger log, EventBus eb) {
 		this.log = log;
-//		log.info("");
-//		eb.post(new ConfigSetupEvent());
+		
+		
+		Display.getDefault().asyncExec(new Runnable() {     /////////////   FIXME
+			@Override
+			public void run() {
+				rsp.setDefaultFocus();
+			}
+		});
+		
 	}
 
 	@Override

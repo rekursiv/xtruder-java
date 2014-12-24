@@ -10,7 +10,8 @@ public class XtruderShell extends Shell {
 		Display display = Display.getDefault();
 		setBackgroundMode(SWT.INHERIT_FORCE);
 		open();
-		layout();		
+		layout();
+		System.out.println("Entering main loop...");
 		while (!isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();

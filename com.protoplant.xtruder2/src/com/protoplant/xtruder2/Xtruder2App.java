@@ -1,5 +1,8 @@
 package com.protoplant.xtruder2;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 
@@ -14,6 +17,8 @@ public class Xtruder2App {
 	
 	
 	public static void main(String[] args) {
+		System.out.println("Xtruder2App Entry Point");
+		runRemote();
 		System.getProperties().setProperty("java.util.logging.config.class", "util.logging.LogSetup");
 		Xtruder2App instance = new Xtruder2App();
 		instance.init();
@@ -22,6 +27,20 @@ public class Xtruder2App {
 		System.exit(0);
 	}
 	
+	private static void runRemote() {
+		if (System.getProperty("os.name").contains("Windows")) {
+			System.out.println("Detected Windows, will attempt to run on remote system...");
+			ProcessBuilder pb = new ProcessBuilder("java", "-jar", "runremote.jar");
+			pb.directory(new File("C:/projects/eclipse_workspace/_deploy/runremote/"));
+			pb.inheritIO();
+			try {
+				pb.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.exit(0);
+		}
+	}
 
 	protected void init() {
 		XtruderShell shell = new XtruderShell();

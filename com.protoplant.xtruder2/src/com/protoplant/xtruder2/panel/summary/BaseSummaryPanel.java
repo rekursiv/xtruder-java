@@ -27,6 +27,7 @@ public class BaseSummaryPanel extends Group {
 	
 	public BaseSummaryPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
+		setTouchEnabled(true);
 		setText("Base");
 
 		addMouseListener(new MouseAdapter() {
