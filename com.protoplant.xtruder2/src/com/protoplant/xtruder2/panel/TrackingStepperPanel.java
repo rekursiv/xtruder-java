@@ -107,7 +107,8 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 	}
 	
 	@Override
-	public void adjustSpeed() {
+	public void adjustSpeed() {   //  FIXME:  call super???
+		log.info("FIXME");
 		calcScaleFactor();
 		eb.post(new StepperSpeedChangeEvent(function, sldSpeed.getSelection()));
 	}

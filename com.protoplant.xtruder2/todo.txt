@@ -1,19 +1,16 @@
 
 
-Config:
- roller dia.
- stepper slider max
+*** finish ConveyanceDetailPanel#onConfigSetup
 
 
-test with touch screen
-test motor start/stop (tracking, conveyance)
-test config
+Bugs:
 
-
+ TrackingStepperPanel#adjustSpeed  does not update setpt label, call super??
 
 ================  ConfigDetail
 
 color status bg
+
 
 buttons:
  *Edit Current
@@ -21,7 +18,7 @@ buttons:
  Edit File...
  *Save File
  Save File As...
-
+ ?? assign stepper...
 
 
 === stepper uCode

@@ -38,9 +38,9 @@ public class RootDetailPanel extends Composite {
 		setLayout(stack);
 		
 		
-//		pnlTest = new TestDetailPanel(this, injector);
+		pnlTest = new TestDetailPanel(this, injector);
 		pnlStatus = new StatusDetailPanel(this, injector);
-//		pnlConv = new ConveyanceDetailPanel(this, injector);
+		pnlConv = new ConveyanceDetailPanel(this, injector);
 		pnlConfig = new ConfigDetailPanel(this, injector);
 		
 		

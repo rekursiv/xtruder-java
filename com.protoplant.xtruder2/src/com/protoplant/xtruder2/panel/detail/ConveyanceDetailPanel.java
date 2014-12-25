@@ -6,9 +6,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.XtruderConfig;
+import com.protoplant.xtruder2.event.ConfigSetupEvent;
+import com.protoplant.xtruder2.event.ConfigStoreEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStopEvent;
@@ -39,6 +43,7 @@ public class ConveyanceDetailPanel extends Composite {
 	protected TrackingStepperPanel pnlTopWheel;
 	protected TrackingStepperPanel pnlBtmWheel;
 	private boolean isRunning = false;
+	private XtruderConfig config;
 
 	public ConveyanceDetailPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
@@ -55,6 +60,7 @@ public class ConveyanceDetailPanel extends Composite {
 		grpPinchRoller.setLayout(new FormLayout());
 		
 		sldSpeedAdjust = new Scale(grpPinchRoller, SWT.NONE);
+		sldSpeedAdjust.setTouchEnabled(true);
 		sldSpeedAdjust.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -62,8 +68,7 @@ public class ConveyanceDetailPanel extends Composite {
 			}
 		});
 		sldSpeedAdjust.setPageIncrement(20);
-		sldSpeedAdjust.setMaximum(32000);
-//		sldSpeedAdjust.setSelection(5000);
+
 		FormData fd_slider = new FormData();
 		fd_slider.bottom = new FormAttachment(0, 72);
 		fd_slider.right = new FormAttachment(100, -10);
@@ -130,16 +135,29 @@ public class ConveyanceDetailPanel extends Composite {
 		pnlBtmWheel.setLayoutData(fd_btmRoller);
 
 		
-		
-		
 		if (injector!=null) injector.injectMembers(this);
 		
 	}
 	
 	@Inject
-	public void inject(Logger log, EventBus eb) {
+	public void inject(Logger log, EventBus eb, XtruderConfig config) {
 		this.log = log;
 		this.eb = eb;
+		this.config = config;
+	}
+	
+	@Subscribe
+	public void onConfigSetup(ConfigSetupEvent evt) {
+		sldSpeedAdjust.setMinimum(config.conveyance.speedSliderMin);
+		sldSpeedAdjust.setSelection(config.conveyance.speedSliderInit);
+		sldSpeedAdjust.setMaximum(config.conveyance.speedSliderMax);
+		adjustSpeed();
+		log.info(""+config.conveyance.speedSliderInit);
+	}
+	
+	@Subscribe
+	public void onConfigStore(ConfigStoreEvent evt) {
+		config.conveyance.speedSliderInit = sldSpeedAdjust.getSelection();
 	}
 	
 	public void adjustSpeed() {

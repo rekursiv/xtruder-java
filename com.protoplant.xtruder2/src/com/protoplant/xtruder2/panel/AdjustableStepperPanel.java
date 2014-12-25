@@ -29,46 +29,15 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 
 public class AdjustableStepperPanel extends StepperPanel {
-//	protected Slider sldSpeed;
 	
-	protected Scale sldSpeed;
-	
+	protected Scale sldSpeed;	
 	protected Button btnRunStop;
 
 	public AdjustableStepperPanel(Composite parent, Injector injector, StepperFunction type) {
 		super(parent, null, type);
-		
-		/*
-		FormData formData_4 = new FormData();
-		formData_4.right = new FormAttachment(0, 583);
-		formData_4.top = new FormAttachment(0, -3);
-		formData_4.left = new FormAttachment(0, 537);
-		btnReset.setLayoutData(formData_4);
-		FormData formData_3 = new FormData();
-		formData_3.right = new FormAttachment(0, 504);
-		formData_3.top = new FormAttachment(0, 7);
-		formData_3.left = new FormAttachment(0, 370);
-		lblStatus.setLayoutData(formData_3);
-		FormData formData_2 = new FormData();
-		formData_2.right = new FormAttachment(0, 248);
-		formData_2.top = new FormAttachment(0, 7);
-		formData_2.left = new FormAttachment(0, 138);
-		lblSpeed.setLayoutData(formData_2);
-		FormData formData_1 = new FormData();
-		formData_1.right = new FormAttachment(0, 364);
-		formData_1.top = new FormAttachment(0, 7);
-		formData_1.left = new FormAttachment(0, 254);
-		lblTorque.setLayoutData(formData_1);
-		FormData formData = new FormData();
-		formData.right = new FormAttachment(0, 132);
-		formData.top = new FormAttachment(0, 7);
-		formData.left = new FormAttachment(0, 22);
-		lblSetpt.setLayoutData(formData);
-		setLayout(new FormLayout());
-		*/
-		
-		
+
 		sldSpeed = new Scale(this, SWT.NONE);
+		sldSpeed.setTouchEnabled(true);
 		FormData fd_sldSpeed = new FormData();
 		fd_sldSpeed.bottom = new FormAttachment(0, 74);
 		fd_sldSpeed.right = new FormAttachment(100, -12);
@@ -114,14 +83,16 @@ public class AdjustableStepperPanel extends StepperPanel {
 	@Override
 	public void onConfigSetup(ConfigSetupEvent evt) {
 		super.onConfigSetup(evt);
-		sldSpeed.setSelection(scm.getConfig(function).speedSetPoint);
+		sldSpeed.setMinimum(scm.getConfig(function).speedSliderMin);
+		sldSpeed.setSelection(scm.getConfig(function).speedSliderInit);
+		sldSpeed.setMaximum(scm.getConfig(function).speedSliderMax);
 		adjustSpeed();
-//		log.info("A:"+function.name()+scm.getConfig(function).speedSetPoint);
+//		log.info("A:"+function.name()+"   "+scm.getConfig(function).speedSliderInit);
 	}
 	
 	@Subscribe
 	public void onConfigStore(ConfigStoreEvent evt) {
-		scm.getConfig(function).speedSetPoint = sldSpeed.getSelection();
+		scm.getConfig(function).speedSliderInit = sldSpeed.getSelection();
 	}
 	
 	@Override

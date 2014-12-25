@@ -174,10 +174,6 @@ public class ConfigDetailPanel extends Composite {
 			txtStatus.setText(e.getLocalizedMessage());
 		}
 	}
-	
-	protected void test() {
-		log.info(""+config.steppers[0].speedSetPoint);
-	}
 
 	@Override
 	protected void checkSubclass() {

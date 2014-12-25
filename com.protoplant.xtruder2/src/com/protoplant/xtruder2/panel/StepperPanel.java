@@ -24,6 +24,9 @@ import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 import com.protoplant.xtruder2.event.StepperStopEvent;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
 
 
 public class StepperPanel extends Group {
@@ -47,29 +50,53 @@ public class StepperPanel extends Group {
 	public StepperPanel(Composite parent, Injector injector, StepperFunction function) {
 		super(parent, SWT.NONE);
 		this.function = function;
-		setLayout(null);
+		setLayout(new FormLayout());
 
 		lblSetpt = new Label(this, SWT.NONE);
-		lblSetpt.setBounds(25, 22, 110, 20);
+		FormData fd_lblSetpt = new FormData();
+		fd_lblSetpt.bottom = new FormAttachment(0, 27);
+		fd_lblSetpt.right = new FormAttachment(0, 132);
+		fd_lblSetpt.top = new FormAttachment(0, 7);
+		fd_lblSetpt.left = new FormAttachment(0, 22);
+		lblSetpt.setLayoutData(fd_lblSetpt);
 		lblSetpt.setText("Setpoint:");
 		
 		lblTorque = new Label(this, SWT.NONE);
-		lblTorque.setBounds(257, 22, 110, 20);
+		FormData fd_lblTorque = new FormData();
+		fd_lblTorque.bottom = new FormAttachment(0, 27);
+		fd_lblTorque.right = new FormAttachment(0, 364);
+		fd_lblTorque.top = new FormAttachment(0, 7);
+		fd_lblTorque.left = new FormAttachment(0, 254);
+		lblTorque.setLayoutData(fd_lblTorque);
 
 		lblSpeed = new Label(this, SWT.NONE);
-		lblSpeed.setBounds(141, 22, 110, 20);
+		FormData fd_lblSpeed = new FormData();
+		fd_lblSpeed.bottom = new FormAttachment(0, 27);
+		fd_lblSpeed.right = new FormAttachment(0, 248);
+		fd_lblSpeed.top = new FormAttachment(0, 7);
+		fd_lblSpeed.left = new FormAttachment(0, 138);
+		lblSpeed.setLayoutData(fd_lblSpeed);
 		
 		lblStatus = new Label(this, SWT.NONE);
-		lblStatus.setBounds(373, 22, 171, 20);
+		FormData fd_lblStatus = new FormData();
+		fd_lblStatus.bottom = new FormAttachment(0, 27);
+		fd_lblStatus.right = new FormAttachment(0, 541);
+		fd_lblStatus.top = new FormAttachment(0, 7);
+		fd_lblStatus.left = new FormAttachment(0, 370);
+		lblStatus.setLayoutData(fd_lblStatus);
 		
 		btnReset = new Button(this, SWT.NONE);
+		FormData fd_btnReset = new FormData();
+		fd_btnReset.right = new FormAttachment(0, 631);
+		fd_btnReset.top = new FormAttachment(0, 2);
+		fd_btnReset.left = new FormAttachment(0, 569);
+		btnReset.setLayoutData(fd_btnReset);
 		btnReset.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				reset();
 			}
 		});
-		btnReset.setBounds(572, 17, 62, 25);
 		btnReset.setText("Reset");
 
 		showDisconnectState();

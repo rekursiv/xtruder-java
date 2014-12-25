@@ -6,7 +6,9 @@ public class StepperConfig {
 	public String serial;
 	
 	// GUI settings
-	public int speedSetPoint = 900;
+	public int speedSliderMin = 900;
+	public int speedSliderInit = 2000;
+	public int speedSliderMax = 8000;
 	public boolean isReversed = false;
 	public boolean isTracking = false;
 	public float trackingScaleFactor = 1.0f;
