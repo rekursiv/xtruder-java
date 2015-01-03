@@ -2,10 +2,12 @@
 
 *** finish ConveyanceDetailPanel#onConfigSetup
 
+test config defaults with actual stepper motors
+
+
 
 Bugs:
-
- TrackingStepperPanel#adjustSpeed  does not update setpt label, call super??
+  conveyance slider set to 100??  min at 0??
 
 ================  ConfigDetail
 

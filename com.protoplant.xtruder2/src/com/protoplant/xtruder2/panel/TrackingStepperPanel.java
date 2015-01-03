@@ -55,13 +55,6 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 		fd_chkTracking.right = new FormAttachment(0, 375);
 		fd_chkTracking.left = new FormAttachment(0, 100);
 		chkTracking.setLayoutData(fd_chkTracking);
-		chkTracking.addSelectionListener(new SelectionAdapter() {  //  FIXME
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				
-			}
-		});
-		chkTracking.setSelection(true);
 		chkTracking.setBounds(193, 92, 162, 16);
 		chkTracking.setText("Tracking: "+typeToTrack);
 		
@@ -107,10 +100,9 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 	}
 	
 	@Override
-	public void adjustSpeed() {   //  FIXME:  call super???
-		log.info("FIXME");
+	public void adjustSpeed() {
+		super.adjustSpeed();
 		calcScaleFactor();
-		eb.post(new StepperSpeedChangeEvent(function, sldSpeed.getSelection()));
 	}
 	
 	public void calcScaleFactor() {
@@ -126,7 +118,7 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 		if (evt.getFunction()==typeToTrack&&typeToTrack!=function) {
 			trackedSpeed = Math.abs(evt.getSpeed());
 			if (chkTracking.getSelection()) {
-	//			log.info(""+evt.getSpeed());
+//				log.info(""+evt.getSpeed());
 				int speed = (int)((float)trackedSpeed*speedScaleFactor);
 				sldSpeed.setSelection(speed);
 				super.adjustSpeed();
