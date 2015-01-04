@@ -42,7 +42,7 @@ public class StepperModule extends UsbModule {
 	public void onSpeedChange(StepperSpeedChangeEvent evt) {
 		if (evt.getFunction() == function) {
 			runSpeed = evt.getSpeed();
-			log.info(""+runSpeed);
+//			log.info(""+runSpeed);
 			if (isRunning) {
 				curSpeed = runSpeed;
 				curCmd = CommandType.SET_SPEED;

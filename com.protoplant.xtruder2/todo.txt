@@ -1,13 +1,11 @@
 
 
-*** finish ConveyanceDetailPanel#onConfigSetup
-
 test config defaults with actual stepper motors
 
 
 
 Bugs:
-  conveyance slider set to 100??  min at 0??
+
 
 ================  ConfigDetail
 

@@ -39,10 +39,8 @@ public class AdjustableStepperPanel extends StepperPanel {
 		sldSpeed = new Scale(this, SWT.NONE);
 		sldSpeed.setTouchEnabled(true);
 		FormData fd_sldSpeed = new FormData();
+		fd_sldSpeed.top = new FormAttachment(lblSetpt);
 		fd_sldSpeed.bottom = new FormAttachment(0, 74);
-		fd_sldSpeed.right = new FormAttachment(100, -12);
-		fd_sldSpeed.top = new FormAttachment(0, 28);
-		fd_sldSpeed.left = new FormAttachment(0, 7);
 		sldSpeed.setLayoutData(fd_sldSpeed);
 		sldSpeed.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -51,13 +49,13 @@ public class AdjustableStepperPanel extends StepperPanel {
 			}
 		});
 		sldSpeed.setPageIncrement(20);
-		sldSpeed.setMaximum(32000);
+//		sldSpeed.setMaximum(32000);
 //		sldSpeed.setSelection(5000);
 		
 		btnRunStop = new Button(this, SWT.NONE);
 		FormData fd_btnRunStop = new FormData();
+		fd_btnRunStop.top = new FormAttachment(sldSpeed, 6);
 		fd_btnRunStop.right = new FormAttachment(0, 82);
-		fd_btnRunStop.top = new FormAttachment(0, 80);
 		fd_btnRunStop.left = new FormAttachment(0, 7);
 		btnRunStop.setLayoutData(fd_btnRunStop);
 		btnRunStop.addSelectionListener(new SelectionAdapter() {
@@ -68,6 +66,42 @@ public class AdjustableStepperPanel extends StepperPanel {
 			}
 		});
 		btnRunStop.setText("Run");
+		
+		Button btnLeft = new Button(this, SWT.NONE);
+		btnLeft.setTouchEnabled(true);
+		btnLeft.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				sldSpeed.setSelection(sldSpeed.getSelection()-1);
+				adjustSpeed();
+			}
+		});
+		fd_sldSpeed.left = new FormAttachment(btnLeft);
+		FormData fd_btnNewButton = new FormData();
+		fd_btnNewButton.bottom = new FormAttachment(sldSpeed, 0, SWT.BOTTOM);
+		fd_btnNewButton.top = new FormAttachment(lblSetpt);
+		fd_btnNewButton.right = new FormAttachment(btnRunStop, 25);
+		fd_btnNewButton.left = new FormAttachment(btnRunStop, 0, SWT.LEFT);
+		btnLeft.setLayoutData(fd_btnNewButton);
+		btnLeft.setText("<");
+		
+		Button btnRight = new Button(this, SWT.NONE);
+		btnRight.setTouchEnabled(true);
+		btnRight.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				sldSpeed.setSelection(sldSpeed.getSelection()+1);
+				adjustSpeed();
+			}
+		});
+		fd_sldSpeed.right = new FormAttachment(btnRight);
+		btnRight.setText(">");
+		FormData fd_button = new FormData();
+		fd_button.top = new FormAttachment(sldSpeed, -47);
+		fd_button.bottom = new FormAttachment(sldSpeed, 0, SWT.BOTTOM);
+		fd_button.right = new FormAttachment(100, -12);
+		fd_button.left = new FormAttachment(100, -37);
+		btnRight.setLayoutData(fd_button);
 
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -83,9 +117,9 @@ public class AdjustableStepperPanel extends StepperPanel {
 	@Override
 	public void onConfigSetup(ConfigSetupEvent evt) {
 		super.onConfigSetup(evt);
+		sldSpeed.setMaximum(scm.getConfig(function).speedSliderMax);
 		sldSpeed.setMinimum(scm.getConfig(function).speedSliderMin);
 		sldSpeed.setSelection(scm.getConfig(function).speedSliderInit);
-		sldSpeed.setMaximum(scm.getConfig(function).speedSliderMax);
 		adjustSpeed();
 //		log.info("A:"+function.name()+"   "+scm.getConfig(function).speedSliderInit);
 	}

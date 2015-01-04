@@ -52,9 +52,8 @@ public class ConfigDetailPanel extends Composite {
 		setLayout(new FormLayout());
 		
 		txtMainEdit = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		txtMainEdit.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		txtMainEdit.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		txtMainEdit.setTouchEnabled(true);
+//		txtMainEdit.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+//		txtMainEdit.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		FormData fd_text = new FormData();
 		fd_text.right = new FormAttachment(100, -11);
 		fd_text.top = new FormAttachment(0, 12);
@@ -106,8 +105,8 @@ public class ConfigDetailPanel extends Composite {
 		
 		txtStatus = new Text(this, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
 		txtStatus.setTouchEnabled(true);
-		txtStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		txtStatus.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+//		txtStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+//		txtStatus.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		fd_text.bottom = new FormAttachment(txtStatus, -6);
 		FormData fd_text_1 = new FormData();
 		fd_text_1.top = new FormAttachment(100, -52);

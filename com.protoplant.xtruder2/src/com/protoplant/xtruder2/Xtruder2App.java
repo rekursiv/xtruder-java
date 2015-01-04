@@ -18,7 +18,7 @@ public class Xtruder2App {
 	
 	public static void main(String[] args) {
 		System.out.println("Xtruder2App Entry Point");
-//		runRemote();
+		runRemote();
 		System.getProperties().setProperty("java.util.logging.config.class", "util.logging.LogSetup");
 		Xtruder2App instance = new Xtruder2App();
 		instance.init();

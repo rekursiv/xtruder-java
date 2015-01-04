@@ -44,6 +44,8 @@ public class ConveyanceDetailPanel extends Composite {
 	protected TrackingStepperPanel pnlBtmWheel;
 	private boolean isRunning = false;
 	private XtruderConfig config;
+	private Button btnLeft;
+	private Button btnRight;
 
 	public ConveyanceDetailPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
@@ -70,10 +72,8 @@ public class ConveyanceDetailPanel extends Composite {
 		sldSpeedAdjust.setPageIncrement(20);
 
 		FormData fd_slider = new FormData();
-		fd_slider.bottom = new FormAttachment(0, 72);
-		fd_slider.right = new FormAttachment(100, -10);
+		fd_slider.bottom = new FormAttachment(0, 75);
 		fd_slider.top = new FormAttachment(0, 11);
-		fd_slider.left = new FormAttachment(0, 7);
 		sldSpeedAdjust.setLayoutData(fd_slider);
 		
 		pnlTopRoller = new StepperPanel(grpPinchRoller, injector, StepperFunction.TopRoller);
@@ -103,7 +103,7 @@ public class ConveyanceDetailPanel extends Composite {
 		FormData fd_btnStart = new FormData();
 		fd_btnStart.bottom = new FormAttachment(pnlTopRoller, -17);
 		fd_btnStart.top = new FormAttachment(sldSpeedAdjust, 12);
-		fd_btnStart.left = new FormAttachment(sldSpeedAdjust, 0, SWT.LEFT);
+		fd_btnStart.left = new FormAttachment(0, 10);
 		fd_btnStart.right = new FormAttachment(0, 73);
 		btnRunStop.setLayoutData(fd_btnStart);
 		btnRunStop.setText("Run");
@@ -116,6 +116,42 @@ public class ConveyanceDetailPanel extends Composite {
 		fd_grpTakeupWheels.right = new FormAttachment(grpPinchRoller, 0, SWT.RIGHT);
 		fd_grpTakeupWheels.top = new FormAttachment(0, 350);
 		fd_grpTakeupWheels.left = new FormAttachment(grpPinchRoller, 0, SWT.LEFT);
+		
+		btnLeft = new Button(grpPinchRoller, SWT.NONE);
+		btnLeft.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				sldSpeedAdjust.setSelection(sldSpeedAdjust.getSelection()-1);
+				adjustSpeed();
+			}
+		});
+		fd_slider.left = new FormAttachment(btnLeft);
+		btnLeft.setTouchEnabled(true);
+		btnLeft.setText("<");
+		FormData fd_btnLeft = new FormData();
+		fd_btnLeft.bottom = new FormAttachment(0, 73);
+		fd_btnLeft.right = new FormAttachment(0, 38);
+		fd_btnLeft.top = new FormAttachment(sldSpeedAdjust, 0, SWT.TOP);
+		fd_btnLeft.left = new FormAttachment(btnRunStop, 0, SWT.LEFT);
+		btnLeft.setLayoutData(fd_btnLeft);
+		
+		btnRight = new Button(grpPinchRoller, SWT.NONE);
+		btnRight.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				sldSpeedAdjust.setSelection(sldSpeedAdjust.getSelection()+1);
+				adjustSpeed();
+			}
+		});
+		fd_slider.right = new FormAttachment(btnRight);
+		btnRight.setTouchEnabled(true);
+		btnRight.setText(">");
+		FormData fd_btnRight = new FormData();
+		fd_btnRight.bottom = new FormAttachment(sldSpeedAdjust, 62);
+		fd_btnRight.top = new FormAttachment(sldSpeedAdjust, 0, SWT.TOP);
+		fd_btnRight.right = new FormAttachment(100, -8);
+		fd_btnRight.left = new FormAttachment(100, -33);
+		btnRight.setLayoutData(fd_btnRight);
 		grpTakeupWheels.setLayoutData(fd_grpTakeupWheels);
 		
 		pnlTopWheel = new TrackingStepperPanel(grpTakeupWheels, injector, StepperFunction.TopWheel, StepperFunction.TopRoller);
@@ -144,15 +180,16 @@ public class ConveyanceDetailPanel extends Composite {
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
+		log.info("");
 	}
 	
 	@Subscribe
 	public void onConfigSetup(ConfigSetupEvent evt) {
+		sldSpeedAdjust.setMaximum(config.conveyance.speedSliderMax);
 		sldSpeedAdjust.setMinimum(config.conveyance.speedSliderMin);
 		sldSpeedAdjust.setSelection(config.conveyance.speedSliderInit);
-		sldSpeedAdjust.setMaximum(config.conveyance.speedSliderMax);
 		adjustSpeed();
-		log.info(""+config.conveyance.speedSliderInit);
+		log.info(""+config.conveyance.speedSliderMin);
 	}
 	
 	@Subscribe
