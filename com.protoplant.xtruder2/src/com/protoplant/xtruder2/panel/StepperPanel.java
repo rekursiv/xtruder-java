@@ -87,6 +87,7 @@ public class StepperPanel extends Group {
 		
 		btnReset = new Button(this, SWT.NONE);
 		FormData fd_btnReset = new FormData();
+		fd_btnReset.bottom = new FormAttachment(0, 25);
 		fd_btnReset.right = new FormAttachment(0, 631);
 		fd_btnReset.top = new FormAttachment(0, 2);
 		fd_btnReset.left = new FormAttachment(0, 569);

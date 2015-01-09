@@ -38,11 +38,11 @@ public class TestDetailPanel extends Composite {
 	public TestDetailPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
 		
-		asp = new AdjustableStepperPanel(this, injector, StepperFunction.TopRoller);
-		asp.setBounds(10, 10, 723, 156);
+//		asp = new AdjustableStepperPanel(this, injector, StepperFunction.TopRoller);
+//		asp.setBounds(10, 10, 723, 156);
 		
-		tsp = new TrackingStepperPanel(this, injector, StepperFunction.BottomRoller, StepperFunction.TopRoller);
-		tsp.setBounds(10, 191, 723, 156);
+//		tsp = new TrackingStepperPanel(this, injector, StepperFunction.BottomRoller, StepperFunction.TopRoller);
+//		tsp.setBounds(10, 191, 723, 156);
 
 		
 		btnTest = new Button(this, SWT.NONE);
