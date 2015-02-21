@@ -43,7 +43,6 @@ public class UsbModule {
 			if (dev==null) return;
 			dev.disableBlocking();
 			this.devInfo = devInfo;
-			log.info("Connected");
 		} catch (HIDDeviceNotFoundException e) {
 			dev = null;
 		} catch (IOException e) {
@@ -55,7 +54,6 @@ public class UsbModule {
 		if (isConnected()) {
 			try {
 				dev.close();
-				log.info("Lost connection");
 			} catch (IOException e) {
 			} finally {
 				dev = null;
@@ -118,6 +116,7 @@ public class UsbModule {
 		}
 //		log.info(DatatypeConverter.printHexBinary(data));
 		dev.write(data);
+//		log.info("^^^");
 	}
 	
 	private void readUsb() throws IOException {

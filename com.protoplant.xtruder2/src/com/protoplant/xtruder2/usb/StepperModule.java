@@ -94,6 +94,7 @@ public class StepperModule extends UsbModule {
 			function = scm.getFunction(this.devInfo);
 			eb.post(new StepperConnectEvent(function, this.devInfo.getSerial_number()));
 			curCmd = CommandType.SET_CONFIG;
+			log.info("Stepper "+function.name()+" connected.");
 		}
 	}
 	
@@ -109,9 +110,10 @@ public class StepperModule extends UsbModule {
 	@Override
 	public void disconnect() {
 		if (isActive) eb.post(new StepperDisconnectEvent(function));
+		log.info("Stepper "+function.name()+" disconnected.");
 		super.disconnect();
 	}
-	
+
 	@Override
 	protected byte[] encodePacket() {
 		byte[] pkt;
@@ -134,7 +136,7 @@ public class StepperModule extends UsbModule {
 					pkt[7]=(byte)(sc.accelDiv&0xFF);
 					pkt[8]=(byte)(sc.accelStep&0xFF);
 					curCmd = CommandType.SET_SPEED;
-					log.info("CONFIG:  "+(sc.maxTorque&0xFF));
+//					log.info("CONFIG:  "+(sc.maxTorque&0xFF));
 				}
 			break;
 			case SET_SPEED:
@@ -143,7 +145,7 @@ public class StepperModule extends UsbModule {
 				pkt[1]=(byte)((curSpeed>>8)&0xFF);
 				pkt[2]=(byte)(curSpeed&0xFF);
 				curCmd = CommandType.PING;
-				log.info("SPEED:  "+curSpeed);
+//				log.info("SPEED:  "+curSpeed);
 			break;
 			case CLEAR_STATUS:
 				pkt = new byte[1];
@@ -163,6 +165,8 @@ public class StepperModule extends UsbModule {
 	protected void decodePacket(byte[] pkt) {
         eb.post(new StepperStatusEvent(function, extractInt16(pkt, 3), pkt[5]&0xFF, pkt[6]&0xFF));
 
+//        log.info("pktSize="+(pkt[7]&0xFF));
+        
 //        log.info(devInfo.getSerial_number()+":"+extractInt16(pkt, 3)+":"+(pkt[5]&0xFF)+":"+(pkt[6]&0xFF));
         
 //        log.info(DatatypeConverter.printHexBinary(pkt));

@@ -20,26 +20,34 @@ public class RootSummaryPanel extends Composite {
 	protected ConveyanceSummaryPanel pnlConv;
 	protected TestSummaryPanel pnlTest;
 	protected ConfigSummaryPanel pnlConfig;
-	protected TestDetailPanel pnlTestDetail;
+	protected DataSummaryPanel pnlPressure;
+	protected SpoolingSummaryPanel pnlSpooling;
 
 	public RootSummaryPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
 		setTouchEnabled(true);
 		
 		pnlStatus = new StatusSummaryPanel(this, injector);
-		pnlStatus.setBounds(10, 10, 171, 82);
+		pnlStatus.setBounds(10, 10, 180, 90);
 		
 		pnlConv = new ConveyanceSummaryPanel(this, injector);
-		pnlConv.setBounds(10, 98, 171, 94);
-		
-		pnlTest = new TestSummaryPanel(this, injector);
-		pnlTest.setBounds(244, 10, 171, 82);
+		pnlConv.setBounds(10, 106, 180, 90);
 		
 		pnlConfig = new ConfigSummaryPanel(this, injector);
-		pnlConfig.setBounds(244, 98, 171, 82);
+		pnlConfig.setBounds(196, 10, 180, 90);
 		
-//		pnlTestDetail = new TestDetailPanel(this, injector);
-//		pnlTestDetail.setBounds(10, 211, 703, 544);
+		pnlPressure = new DataSummaryPanel(this, injector);
+		pnlPressure.setBounds(10, 202, 180, 90);
+
+		pnlSpooling = new SpoolingSummaryPanel(this, injector);
+		pnlSpooling.setBounds(196, 106, 180, 90);
+		
+		
+		
+		
+		pnlTest = new TestSummaryPanel(this, injector);
+		pnlTest.setBounds(10, 357, 180, 90);
+		
 		
 		if (injector!=null) injector.injectMembers(this);
 	}

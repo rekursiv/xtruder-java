@@ -26,7 +26,7 @@ import com.protoplant.xtruder2.event.ConfigSetupEvent;
 @Singleton
 public class UsbManager extends Thread {
 
-	private static final int IO_REFRESH_PERIOD = 200;
+	private static final int IO_REFRESH_PERIOD = 100;
 	private static final int CONNECT_REFRESH_PERIOD = 2000;
 	
 	protected static final int vendorId = 0x2047;
@@ -120,6 +120,9 @@ public class UsbManager extends Thread {
 							case 0x03E2:  
 								mod = injector.getInstance(StepperModule.class);
 								break;
+							case 0x0301:   //  TEST
+								mod = injector.getInstance(TestModule.class);
+								break;
 							}
 
 							if (mod!=null) {
@@ -149,6 +152,7 @@ public class UsbManager extends Thread {
 			} else {
 				++ioRefreshCount;
 			}
+
 			
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override

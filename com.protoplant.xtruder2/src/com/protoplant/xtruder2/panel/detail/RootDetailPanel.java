@@ -13,7 +13,9 @@ import com.google.inject.Injector;
 import com.protoplant.xtruder2.event.PanelFocusEvent;
 import com.protoplant.xtruder2.panel.summary.ConfigSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.ConveyanceSummaryPanel;
+import com.protoplant.xtruder2.panel.summary.DataSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.RootSummaryPanel;
+import com.protoplant.xtruder2.panel.summary.SpoolingSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.StatusSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.TestSummaryPanel;
 
@@ -27,7 +29,9 @@ public class RootDetailPanel extends Composite {
 	protected ConveyanceDetailPanel pnlConv;
 	protected StatusDetailPanel pnlStatus;
 	protected ConfigDetailPanel pnlConfig;
-
+	protected DataDetailPanel pnlPressure;
+	protected SpoolingDetailPanel pnlSpooling;
+	
 
 	
 	public RootDetailPanel(Composite parent, Injector injector) {
@@ -37,12 +41,13 @@ public class RootDetailPanel extends Composite {
 		stack = new StackLayout();
 		setLayout(stack);
 		
-		
+
+		pnlPressure = new DataDetailPanel(this, injector);
 		pnlTest = new TestDetailPanel(this, injector);
 		pnlStatus = new StatusDetailPanel(this, injector);
 		pnlConv = new ConveyanceDetailPanel(this, injector);
 		pnlConfig = new ConfigDetailPanel(this, injector);
-		
+		pnlSpooling = new SpoolingDetailPanel(this, injector);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -57,8 +62,16 @@ public class RootDetailPanel extends Composite {
 		Widget w = event.getWidget();
 		if (w==null) return;
 //		log.info(w.toString());
-		
-		if (w instanceof TestSummaryPanel) {
+
+		if (w instanceof SpoolingSummaryPanel) {
+			if (pnlSpooling == null) pnlSpooling = new SpoolingDetailPanel(this, injector);
+			stack.topControl = pnlSpooling;
+			layout();
+		} else if (w instanceof DataSummaryPanel) {
+			if (pnlPressure == null) pnlPressure = new DataDetailPanel(this, injector);
+			stack.topControl = pnlPressure;
+			layout();
+		} else if (w instanceof TestSummaryPanel) {
 			if (pnlTest == null) pnlTest = new TestDetailPanel(this, injector);  //  FIXME
 			stack.topControl = pnlTest;
 			layout();
