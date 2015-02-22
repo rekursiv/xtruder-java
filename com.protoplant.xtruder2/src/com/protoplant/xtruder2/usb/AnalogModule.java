@@ -34,7 +34,7 @@ public class AnalogModule extends UsbModule {
         ade.data3 = extractInt16(pkt, 7);
         ade.data4 = extractInt16(pkt, 9);
         eb.post(ade);
-        
+//        log.info(""+ade.data1);
 	}
 	
 	

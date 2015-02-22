@@ -41,15 +41,25 @@ public class StepperConfigManager {
 			}
 		}
 		buildStepperMaps();
+		debugStepperMaps();
 	}
 	
 	public void buildStepperMaps() {
 		stepperSerialMap = new HashMap<String, Integer>();
 		stepperFunctionMap = new HashMap<StepperFunction, Integer>();	
 		for (int i=0; i<config.steppers.length; ++i) {
-			stepperSerialMap.put(config.steppers[i].serial, i);
+			if (config.steppers[i].serial!=null) stepperSerialMap.put(config.steppers[i].serial, i);
 			stepperFunctionMap.put(config.steppers[i].function, i);
 		}
+	}
+	
+	public void debugStepperMaps() {
+		System.out.println(stepperSerialMap.toString());
+		System.out.println(stepperFunctionMap.toString());
+	}
+	
+	public int getNumMappedSteppers() {
+		return stepperSerialMap.size();
 	}
 	
 	public StepperConfig getConfig(String serial) {

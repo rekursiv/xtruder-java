@@ -18,8 +18,6 @@ import com.protoplant.xtruder2.event.PanelFocusEvent;
 
 public class BaseSummaryPanel extends Group {
 
-
-	protected RGB focusColor = new RGB(230, 190, 190);
 	protected Logger log;
 	protected EventBus eb;
 	private boolean isFocused = false;
@@ -51,7 +49,7 @@ public class BaseSummaryPanel extends Group {
 	public void onPanelFocus(PanelFocusEvent event) {
 		if (event.getWidget()==this) {
 			isFocused  = true;
-			setBackground(SWTResourceManager.getColor(focusColor));
+			setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND));   //new RGB(230, 190, 190);
 		} else {
 			isFocused = false;
 			setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));

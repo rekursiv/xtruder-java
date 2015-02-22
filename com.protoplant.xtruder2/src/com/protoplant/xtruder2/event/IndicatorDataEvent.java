@@ -7,7 +7,7 @@ public class IndicatorDataEvent {
 	private float max;
 	
 	
-	public IndicatorDataEvent(float min, float cur, float max) {
+	public IndicatorDataEvent(float cur, float min, float max) {
 		this.min = min;
 		this.cur = cur;
 		this.max = max;

@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
+import com.protoplant.xtruder2.event.UsbStatusEvent;
 
 @Singleton
 public class UsbManager extends Thread {
@@ -94,12 +95,16 @@ public class UsbManager extends Thread {
 	}
 	
 	private void refreshConnections() {
+//		System.out.println(modules.toString());
 //		log.info(modules.size()+"");
 		Iterator<Entry<String, UsbModule>> it = modules.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, UsbModule> entry = (Map.Entry<String, UsbModule>)it.next();
 //			System.out.println(entry.getKey() + " = " + entry.getValue().isConnected());
-			if (!entry.getValue().isConnected()) it.remove();
+			if (!entry.getValue().isConnected()) {
+				it.remove();
+				eb.post(new UsbStatusEvent(modules.size()));
+			}
 		}
 //		log.info(modules.size()+"");
 
@@ -130,6 +135,7 @@ public class UsbManager extends Thread {
 								if (mod.isConnected()&&info.getSerial_number()!=null) {
 									prettyPrintInfo(info);
 									modules.put(info.getSerial_number(), mod);
+									eb.post(new UsbStatusEvent(modules.size()));
 								}
 							}
 						}

@@ -20,7 +20,7 @@ public class RootSummaryPanel extends Composite {
 	protected ConveyanceSummaryPanel pnlConv;
 	protected TestSummaryPanel pnlTest;
 	protected ConfigSummaryPanel pnlConfig;
-	protected DataSummaryPanel pnlPressure;
+	protected DataSummaryPanel pnlData;
 	protected SpoolingSummaryPanel pnlSpooling;
 
 	public RootSummaryPanel(Composite parent, Injector injector) {
@@ -36,18 +36,14 @@ public class RootSummaryPanel extends Composite {
 		pnlConfig = new ConfigSummaryPanel(this, injector);
 		pnlConfig.setBounds(196, 10, 180, 90);
 		
-		pnlPressure = new DataSummaryPanel(this, injector);
-		pnlPressure.setBounds(10, 202, 180, 90);
+		pnlData = new DataSummaryPanel(this, injector);
+		pnlData.setBounds(10, 202, 366, 90);
 
 		pnlSpooling = new SpoolingSummaryPanel(this, injector);
 		pnlSpooling.setBounds(196, 106, 180, 90);
 		
-		
-		
-		
 		pnlTest = new TestSummaryPanel(this, injector);
 		pnlTest.setBounds(10, 357, 180, 90);
-		
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -56,9 +52,7 @@ public class RootSummaryPanel extends Composite {
 	public void inject(Logger log, EventBus eb) {
 		this.log = log;
 		this.eb = eb;
-		
 	}
-
 
 	@Override
 	protected void checkSubclass() {
@@ -66,6 +60,6 @@ public class RootSummaryPanel extends Composite {
 	}
 
 	public void setDefaultFocus() {
-		eb.post(new PanelFocusEvent(pnlConv));
+		eb.post(new PanelFocusEvent(pnlData));
 	}
 }

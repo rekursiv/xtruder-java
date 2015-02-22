@@ -9,5 +9,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/util.config"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util.logging"/>
 	<classpathentry kind="lib" path="C:/projects/javalib/hidapi-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/org.eclipse.draw2d_3.9.101.201408150207.jar"/>
+	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/org.eclipse.nebula.visualization.xygraph_1.0.0.201412230843.jar"/>
+	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar" sourcepath="C:/projects/eclipse/plugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

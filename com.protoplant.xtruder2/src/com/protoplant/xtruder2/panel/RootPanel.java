@@ -29,7 +29,7 @@ public class RootPanel extends SashForm {
 		rsp = new RootSummaryPanel(this, injector);
 		rdp = new RootDetailPanel(this, injector);
 		
-		setWeights(new int[] { 4, 6});
+		setWeights(new int[] { 3, 9});
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
