@@ -22,8 +22,10 @@ import com.protoplant.xtruder2.event.StepperDisconnectEvent;
 import com.protoplant.xtruder2.event.StepperResetEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
+import com.protoplant.xtruder2.event.StepperSpeedNudgeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 import com.protoplant.xtruder2.event.StepperStopEvent;
+
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
@@ -148,6 +150,7 @@ public class StepperPanel extends Group {
 	@Subscribe
 	public void onConfigSetup(ConfigSetupEvent evt) {
 		isReversed = scm.getConfig(function).isReversed;
+		adjustSpeed();
 	}
 	
 	public void setSpeed(int speed) {  //  FIXME:  set slider in Adjustable subclass
@@ -160,7 +163,7 @@ public class StepperPanel extends Group {
 		if (isReversed) dirSpeed = -speed;
 		lblSetpt.setText("Setpoint: "+dirSpeed);
 		eb.post(new StepperSpeedChangeEvent(function, dirSpeed));
-//		log.info(""+dirSpeed);
+//		log.info("####   "+dirSpeed+"   "+function.name());
 	}
 	
 	public void run() {

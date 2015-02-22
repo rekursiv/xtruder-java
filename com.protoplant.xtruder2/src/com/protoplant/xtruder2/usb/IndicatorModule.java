@@ -47,10 +47,9 @@ public class IndicatorModule extends UsbModule {
         IndicatorDataEvent ide = new IndicatorDataEvent(cur, min, max);
         eb.post(ide);
        
-        float up = max-cur;
-        float dn = cur-min;
-        
-        log.info(cur+"  :  "+min+"  :  "+max+"  :  "+up+"  :  "+dn);
+//        float up = max-cur;
+//        float dn = cur-min;
+//        log.info(cur+"  :  "+min+"  :  "+max+"  :  "+up+"  :  "+dn);
         
 //      log.info(bufLen+":"+buf[1]+":"+buf[2]+":"+buf[3]+"     "+extractInt16(buf, 4)+":"+extractInt16(buf, 6)+":"+extractInt16(buf, 8));
 //        log.info(DatatypeConverter.printHexBinary(pkt));

@@ -6,8 +6,11 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.SWTResourceManager;
+import com.protoplant.xtruder2.event.CoilMassEvent;
+import com.protoplant.xtruder2.event.IndicatorDataEvent;
 
 public class SpoolingSummaryPanel extends BaseSummaryPanel {
 
@@ -30,7 +33,7 @@ public class SpoolingSummaryPanel extends BaseSummaryPanel {
 		lblMass.setBackground(null);
 		lblMass.setFont(SWTResourceManager.getFont("Segoe UI", 18, SWT.NORMAL));
 		lblMass.setBounds(10, 24, 116, 32);
-		lblMass.setText("0");
+		lblMass.setText("0.00");
 		
 		
 		lblMassTitle = new Label(this, SWT.NONE);
@@ -46,6 +49,10 @@ public class SpoolingSummaryPanel extends BaseSummaryPanel {
 		if (injector!=null) injector.injectMembers(this);
 	}
 
+	@Subscribe
+	public void onInidcatorData(final CoilMassEvent evt) {
+		lblMass.setText(String.format("%.2f", evt.getMass()));
+	}
 
 	@Override
 	protected void checkSubclass() {

@@ -42,8 +42,8 @@ public class RootSummaryPanel extends Composite {
 		pnlSpooling = new SpoolingSummaryPanel(this, injector);
 		pnlSpooling.setBounds(196, 106, 180, 90);
 		
-		pnlTest = new TestSummaryPanel(this, injector);
-		pnlTest.setBounds(10, 357, 180, 90);
+//		pnlTest = new TestSummaryPanel(this, injector);
+//		pnlTest.setBounds(10, 357, 180, 90);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -60,6 +60,6 @@ public class RootSummaryPanel extends Composite {
 	}
 
 	public void setDefaultFocus() {
-		eb.post(new PanelFocusEvent(pnlData));
+		eb.post(new PanelFocusEvent(pnlSpooling));
 	}
 }

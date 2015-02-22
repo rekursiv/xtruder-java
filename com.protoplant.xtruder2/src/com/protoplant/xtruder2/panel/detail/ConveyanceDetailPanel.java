@@ -15,6 +15,7 @@ import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.ConfigStoreEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
+import com.protoplant.xtruder2.event.StepperSpeedNudgeEvent;
 import com.protoplant.xtruder2.event.StepperStopEvent;
 import com.protoplant.xtruder2.panel.StepperPanel;
 import com.protoplant.xtruder2.panel.TrackingStepperPanel;
@@ -189,12 +190,18 @@ public class ConveyanceDetailPanel extends Composite {
 		sldSpeedAdjust.setMinimum(config.conveyance.speedSliderMin);
 		sldSpeedAdjust.setSelection(config.conveyance.speedSliderInit);
 		adjustSpeed();
-		log.info(""+config.conveyance.speedSliderMin);
+//		log.info(""+config.conveyance.speedSliderMin);
 	}
 	
 	@Subscribe
 	public void onConfigStore(ConfigStoreEvent evt) {
 		config.conveyance.speedSliderInit = sldSpeedAdjust.getSelection();
+	}
+	
+	@Subscribe
+	public void onNudge(StepperSpeedNudgeEvent evt) {
+		sldSpeedAdjust.setSelection(sldSpeedAdjust.getSelection()+evt.getDelta());
+		adjustSpeed();
 	}
 	
 	public void adjustSpeed() {

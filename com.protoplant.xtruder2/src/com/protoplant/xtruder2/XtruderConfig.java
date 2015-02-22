@@ -12,10 +12,10 @@ public class XtruderConfig extends ConfigBase {
 	public boolean logToConsole=true;
 	public boolean logToFile=false;
 
-	
 	public ConveyanceConfig conveyance = new ConveyanceConfig();
+	public FeedbackConfig feedback = new FeedbackConfig();
 	
 	public StepperConfig[] steppers;
 	
-	
+
 }
