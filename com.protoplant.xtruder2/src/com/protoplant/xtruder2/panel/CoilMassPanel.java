@@ -310,8 +310,8 @@ public class CoilMassPanel extends Group {
 		});
 		btnFeedback.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.NORMAL));
 		FormData fd_btnFeedback = new FormData();
-		fd_btnFeedback.right = new FormAttachment(100, -250);
-		fd_btnFeedback.left = new FormAttachment(100, -349);
+		fd_btnFeedback.right = new FormAttachment(100, -272);
+		fd_btnFeedback.left = new FormAttachment(100, -411);
 		btnFeedback.setLayoutData(fd_btnFeedback);
 		btnFeedback.setText("Feedback");
 		
@@ -321,18 +321,18 @@ public class CoilMassPanel extends Group {
 		lblFbPrevNudge.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblFbPrevNudge.setText("-");
 		FormData fd_lblFbPrevNudge = new FormData();
+		fd_lblFbPrevNudge.right = new FormAttachment(100, -15);
 		fd_lblFbPrevNudge.bottom = new FormAttachment(grpTargetDiameter, -6);
 		fd_lblFbPrevNudge.top = new FormAttachment(btnResetCount, -15);
 		lblFbPrevNudge.setLayoutData(fd_lblFbPrevNudge);
 		
 		lblFbCnt = new Label(this, SWT.NONE);
 		lblFbCnt.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		fd_lblFbPrevNudge.right = new FormAttachment(lblFbCnt, 95);
 		fd_lblFbPrevNudge.left = new FormAttachment(lblFbCnt, 0, SWT.LEFT);
 		FormData fd_lblFbCnt = new FormData();
+		fd_lblFbCnt.right = new FormAttachment(100, -15);
 		fd_lblFbCnt.bottom = new FormAttachment(lblFbPrevNudge, -6);
 		fd_lblFbCnt.top = new FormAttachment(btnResetCount, 0, SWT.TOP);
-		fd_lblFbCnt.right = new FormAttachment(btnResetCoil, 101, SWT.RIGHT);
 		fd_lblFbCnt.left = new FormAttachment(btnResetCoil, 6);
 		lblFbCnt.setLayoutData(fd_lblFbCnt);
 		lblFbCnt.setText("-");

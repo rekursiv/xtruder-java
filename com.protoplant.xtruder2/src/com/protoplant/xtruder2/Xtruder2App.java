@@ -15,10 +15,12 @@ import com.protoplant.xtruder2.usb.UsbManager;
 
 public class Xtruder2App {
 	
+	static final String appVersion = "2.00";
+	
 	
 	public static void main(String[] args) {
 		System.out.println("Xtruder2App Entry Point");
-//		runRemote();
+		runRemote();
 		System.getProperties().setProperty("java.util.logging.config.class", "util.logging.LogSetup");
 		Xtruder2App instance = new Xtruder2App();
 		instance.init();
@@ -62,7 +64,7 @@ public class Xtruder2App {
 		// Dell touchscreen is 1600 X 900
 		shell.setBounds(0, 0, 1600, 900);
 //		shell.setSize(1600, 900);
-		shell.setText("Protoplant Xtruder V2.x");
+		shell.setText("Protoplant Xtruder V"+appVersion);
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		shell.init();  // main loop
