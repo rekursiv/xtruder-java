@@ -8,13 +8,15 @@ public class StepperStatusEvent {
 	private int speed;
 	private int torque;
 	private int status;
+	private int position;
 
 	
-	public StepperStatusEvent(StepperFunction type, int speed, int torque, int status) {
+	public StepperStatusEvent(StepperFunction type, int speed, int torque, int status, int position) {
 		this.function = type;
 		this.speed = speed;
 		this.torque = torque;
 		this.status = status;
+		this.position = position;
 	}
 	
 	public int getSpeed() {
@@ -31,6 +33,10 @@ public class StepperStatusEvent {
 	
 	public StepperFunction getFunction() {
 		return function;
+	}
+
+	public int getPosition() {
+		return position;
 	}
 
 

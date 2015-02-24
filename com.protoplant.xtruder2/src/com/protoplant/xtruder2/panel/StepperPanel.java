@@ -43,7 +43,7 @@ public class StepperPanel extends Group {
 	protected Label lblSpeed;
 	protected Label lblStatus;
 	protected StepperConfigManager scm;
-	private boolean isReversed = false;
+	protected boolean isReversed = false;
 	protected boolean isRunning = false;
 	protected Button btnReset;
 	protected int speed;
@@ -144,6 +144,7 @@ public class StepperPanel extends Group {
 			lblTorque.setText("Torque: "+evt.getTorque());
 			lblSpeed.setText("Speed: "+evt.getSpeed());
 			lblStatus.setText("Status: "+toBinary(evt.getStatus()));
+			updatePos(evt.getPosition());  //  FIXME
 		}
 	}
 	
@@ -151,6 +152,10 @@ public class StepperPanel extends Group {
 	public void onConfigSetup(ConfigSetupEvent evt) {
 		isReversed = scm.getConfig(function).isReversed;
 		adjustSpeed();
+	}
+	
+	public void updatePos(int position) {
+		//  FIXME:  this is a hack to get position info to Adjustable subclass
 	}
 	
 	public void setSpeed(int speed) {  //  FIXME:  set slider in Adjustable subclass

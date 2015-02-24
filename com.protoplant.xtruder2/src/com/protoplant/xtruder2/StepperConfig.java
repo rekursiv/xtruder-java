@@ -22,6 +22,9 @@ public class StepperConfig {
 	public int torqueDiv = 255;
 	public int accelDiv = 1;
 	public int accelStep = 8;
+	public int loPos = 100;
+	public int hiPos = 1000;
+	public int posCountDiv = 0;   // set to "0" to disable "flip flop mode"
 
 	
 	public StepperConfig() {

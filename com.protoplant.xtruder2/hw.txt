@@ -18,3 +18,45 @@ Test Vendor ID:
 VirtualBox
 
 
+======
+
+=== pressure gauge
+
+at 10v input, will output 33.3mv at full pressure (3000 psi)
+
+
+
+
+
+============  Stepper in WinderMinder Mode
+
+1.  the direction MUST be set to "reversed" in the config file
+
+2.  N/O homing switch, active when grounded, is on P6.0  (next to GND on inside left header, near the top) 
+
+
+
+
+ {
+    "function" : "WinderMinder",
+    "serial" : "114D0C4725002100",
+    "speedSliderMin" : 1000,
+    "speedSliderInit" : 4112,
+    "speedSliderMax" : 16000,
+    "isReversed" : true,
+    "isTracking" : false,
+    "trackingScaleFactor" : 1.0,
+    "stepMode" : 4,
+    "isGain" : 3,
+    "holdingTorque" : 0,
+    "minTorque" : 127,
+    "maxTorque" : 255,
+    "torqueDiv" : 255,
+    "accelDiv" : 1,
+    "accelStep" : 8,
+    "loPos" : 200,
+    "hiPos" : 1400,
+    "posCountDiv" : 1
+  }
+  
+  

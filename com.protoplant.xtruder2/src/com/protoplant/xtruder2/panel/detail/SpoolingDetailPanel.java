@@ -39,14 +39,14 @@ public class SpoolingDetailPanel extends Composite {
 		fd_pnlWinderMinderStepper.right = new FormAttachment(100, -12);
 		fd_pnlWinderMinderStepper.left = new FormAttachment(pnlWinderStepper, 0, SWT.LEFT);
 		fd_pnlWinderMinderStepper.top = new FormAttachment(0, 145);
-		fd_pnlWinderMinderStepper.bottom = new FormAttachment(0, 273);
 		pnlWinderMinderStepper.setLayoutData(fd_pnlWinderMinderStepper);
 		
 		Composite pnlCoilMass = new CoilMassPanel(this, injector);
+		fd_pnlWinderMinderStepper.bottom = new FormAttachment(pnlCoilMass, -6);
 		FormData fd_pnlCoilMass = new FormData();
 		fd_pnlCoilMass.bottom = new FormAttachment(100, -14);
 		fd_pnlCoilMass.right = new FormAttachment(100, -12);
-		fd_pnlCoilMass.top = new FormAttachment(0, 309);
+		fd_pnlCoilMass.top = new FormAttachment(0, 335);
 		fd_pnlCoilMass.left = new FormAttachment(0, 17);
 		pnlCoilMass.setLayoutData(fd_pnlCoilMass);
 		

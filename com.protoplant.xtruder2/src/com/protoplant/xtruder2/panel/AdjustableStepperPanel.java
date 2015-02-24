@@ -32,6 +32,7 @@ public class AdjustableStepperPanel extends StepperPanel {
 	
 	protected Scale sldSpeed;	
 	protected Button btnRunStop;
+	private Label lblPosition;
 
 	public AdjustableStepperPanel(Composite parent, Injector injector, StepperFunction type) {
 		super(parent, null, type);
@@ -73,6 +74,7 @@ public class AdjustableStepperPanel extends StepperPanel {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				sldSpeed.setSelection(sldSpeed.getSelection()-1);
+//				isReversed=!isReversed;                                       //   TEST
 				adjustSpeed();
 			}
 		});
@@ -102,6 +104,15 @@ public class AdjustableStepperPanel extends StepperPanel {
 		fd_button.right = new FormAttachment(100, -12);
 		fd_button.left = new FormAttachment(100, -37);
 		btnRight.setLayoutData(fd_button);
+		
+		lblPosition = new Label(this, SWT.NONE);
+		FormData fd_lblPosition = new FormData();
+		fd_lblPosition.bottom = new FormAttachment(0, 160);
+		fd_lblPosition.right = new FormAttachment(0, 280);
+		fd_lblPosition.top = new FormAttachment(0, 125);
+		fd_lblPosition.left = new FormAttachment(0, 7);
+		lblPosition.setLayoutData(fd_lblPosition);
+		lblPosition.setText("Position:");
 
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -145,6 +156,12 @@ public class AdjustableStepperPanel extends StepperPanel {
 	public void stop() {
 		btnRunStop.setText("Run");
 		super.stop();
+	}
+	
+	@Override
+	public void updatePos(int position) {
+		//  FIXME:  this is a hack to get position info to Adjustable subclass
+		lblPosition.setText("Position: "+position);
 	}
 	
 	@Override
