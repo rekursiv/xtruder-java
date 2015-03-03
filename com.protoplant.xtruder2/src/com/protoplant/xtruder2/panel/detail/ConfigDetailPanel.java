@@ -9,9 +9,9 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.protoplant.xtruder2.StepperConfigManager;
 import com.protoplant.xtruder2.StepperFunction;
-import com.protoplant.xtruder2.XtruderConfig;
+import com.protoplant.xtruder2.config.StepperConfigManager;
+import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.ConfigStoreEvent;
 

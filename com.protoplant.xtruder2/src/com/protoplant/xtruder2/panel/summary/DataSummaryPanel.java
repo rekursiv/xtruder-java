@@ -1,5 +1,7 @@
 package com.protoplant.xtruder2.panel.summary;
 
+import java.util.logging.Logger;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -7,8 +9,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.ConversionManager;
 import com.protoplant.xtruder2.SWTResourceManager;
 import com.protoplant.xtruder2.event.AnalogDataEvent;
 import com.protoplant.xtruder2.event.IndicatorDataEvent;
@@ -19,6 +24,7 @@ public class DataSummaryPanel extends BaseSummaryPanel {
 	protected Label lblPsiTitle;
 	protected Label lblMm;
 	protected Label lblMmTitle;
+	private ConversionManager convert;
 	
 	
 	public DataSummaryPanel(Composite parent, Injector injector) {
@@ -78,6 +84,12 @@ public class DataSummaryPanel extends BaseSummaryPanel {
 		if (injector!=null) injector.injectMembers(this);
 	}
 
+	@Inject
+	public void inject(Logger log, EventBus eb, ConversionManager convert) {
+		this.log = log;
+		this.eb = eb;
+		this.convert = convert;
+	}
 	
 	@Subscribe
 	public void onInidcatorData(final IndicatorDataEvent evt) {
@@ -86,7 +98,7 @@ public class DataSummaryPanel extends BaseSummaryPanel {
 	
 	@Subscribe
 	public void onAnalogData(final AnalogDataEvent evt) {
-		lblPsi.setText(String.format("%.0f", evt.data1*0.3f));
+		lblPsi.setText(String.format("%.0f", convert.toPsi(evt.getPressure())));
 	}
 
 	@Override

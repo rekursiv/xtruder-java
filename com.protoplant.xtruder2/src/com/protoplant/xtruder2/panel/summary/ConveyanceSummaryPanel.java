@@ -8,9 +8,10 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.ConversionManager;
 import com.protoplant.xtruder2.SWTResourceManager;
 import com.protoplant.xtruder2.StepperFunction;
-import com.protoplant.xtruder2.XtruderConfig;
+import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 
 import org.eclipse.swt.widgets.Label;
@@ -23,7 +24,8 @@ import org.eclipse.swt.events.MouseEvent;
 public class ConveyanceSummaryPanel extends BaseSummaryPanel {
 	protected Label lblIps;
 	protected Label lblIpsTitle;
-	private XtruderConfig config;
+	protected ConversionManager convert;
+
 
 	public ConveyanceSummaryPanel(Composite parent, Injector injector) {
 		super(parent, null);
@@ -58,21 +60,17 @@ public class ConveyanceSummaryPanel extends BaseSummaryPanel {
 	
 	
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config) {
+	public void inject(Logger log, EventBus eb, ConversionManager convert) {
 		this.log = log;
 		this.eb = eb;
-		this.config = config;
+		this.convert = convert;
 	}
 			
 	
 	@Subscribe
 	public void onStatus(final StepperStatusEvent evt) {
 		if (evt.getFunction()==StepperFunction.TopRoller) {
-			int speed = Math.abs(evt.getSpeed());
-			int microStepsPerRev = config.conveyance.stepsPerRev*config.conveyance.microStepsPerStep;
-			float rollerCircumference = config.conveyance.rollerDiameter*(float)Math.PI;
-			float ips = ((float)speed/(float)microStepsPerRev)*rollerCircumference;
-			lblIps.setText(String.format("%.2f", ips));
+			lblIps.setText(String.format("%.2f", convert.toIps(evt.getSpeed())));
 		}
 	}
 

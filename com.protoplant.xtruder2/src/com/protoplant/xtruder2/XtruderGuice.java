@@ -15,6 +15,7 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeListener;
 import com.google.inject.spi.TypeEncounter;
+import com.protoplant.xtruder2.config.XtruderConfig;
 
 public class XtruderGuice extends AbstractModule {
 

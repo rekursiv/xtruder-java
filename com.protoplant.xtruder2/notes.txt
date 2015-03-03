@@ -1,6 +1,12 @@
 
+==== text-to-speech:
+copy from C:\projects\javalib\freetts-1.2.2-bin\freetts-1.2\lib:
+ cmu_us_kal.jar
+ cmulex.jar
+ en_us.jar
+ freetts.jar
 
-
+========
 
 
 

@@ -1,4 +1,4 @@
-package com.protoplant.xtruder2;
+package com.protoplant.xtruder2.test;
 
 import java.util.logging.Logger;
 
@@ -64,11 +64,13 @@ public class AnalogPanel extends Group {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
+/*				
 				lblData1.setText(""+evt.data1);
 				lblData2.setText(""+evt.data2);
 				lblData3.setText(""+evt.data3);
 				lblData4.setText(""+evt.data4);
 				lblTest.setText(String.format("%.2f", evt.data1*3.363288f)+" psi");
+				*/
 			}
 		});
 	}

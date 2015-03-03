@@ -8,11 +8,16 @@ import org.eclipse.swt.widgets.Composite;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.AudioManager;
 import com.protoplant.xtruder2.StepperFunction;
-import com.protoplant.xtruder2.XtruderConfig;
+import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.StepperDisconnectEvent;
+import com.protoplant.xtruder2.event.StepperRunEvent;
+import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.panel.AdjustableStepperPanel;
 import com.protoplant.xtruder2.panel.TrackingStepperPanel;
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
 
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Group;
@@ -20,6 +25,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 public class TestDetailPanel extends Composite {
 
@@ -33,43 +39,101 @@ public class TestDetailPanel extends Composite {
 	protected TrackingStepperPanel tsp;
 	protected Composite composite;
 	protected Label lblTest;
+	private Text txtTheHopperIs;
+	private volatile boolean isTalking = false;
+	private AudioManager am;
+	private int count;
 
 
 	public TestDetailPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
 		
-//		asp = new AdjustableStepperPanel(this, injector, StepperFunction.TopRoller);
-//		asp.setBounds(10, 10, 723, 156);
-		
-//		tsp = new TrackingStepperPanel(this, injector, StepperFunction.BottomRoller, StepperFunction.TopRoller);
-//		tsp.setBounds(10, 191, 723, 156);
-
 		
 		btnTest = new Button(this, SWT.NONE);
 		btnTest.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-//				config.test++;
-//				eb.post(new StepperConfigChangeEvent(StepperFunction.TopRoller));
-				lblTest.setText("testing...");
+//				lblTest.setText("testing...");
+				test();
 			}
 		});
-		btnTest.setBounds(10, 403, 75, 25);
-		btnTest.setText("TEST");
+		btnTest.setBounds(20, 229, 75, 25);
+		btnTest.setText("Speak");
 		
 		lblTest = new Label(this, SWT.NONE);
 		lblTest.setBounds(134, 413, 55, 15);
+		
+		txtTheHopperIs = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		txtTheHopperIs.setText("50 grams to go");
+		txtTheHopperIs.setBounds(10, 10, 616, 213);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
 
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config) {
+	public void inject(Logger log, EventBus eb, XtruderConfig config, AudioManager am) {
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
+		this.am = am;
 	}
 
+	public void test_mass() {
+		eb.post(new StepperSpeedChangeEvent(StepperFunction.TopRoller, 4000));
+		eb.post(new StepperRunEvent(StepperFunction.TopRoller));
+	}
+	
+	
+	public void test() {
+		am.speak(txtTheHopperIs.getText());
+//		am.listVoices();
+//		listAllVoices();
+/*		
+	     if (!isTalking) {
+	 		final String txt = txtTheHopperIs.getText();
+			final boolean is16bit = btnBit16.getSelection();
+		    Runnable r = new Runnable() {
+		         public void run() {
+		     		speak(txt, is16bit);
+		         }
+		     };
+	    	 new Thread(r).start();
+	     }
+*/
+	}
+	
+	
+	public void speak(String text, boolean is16bit) {
+		isTalking = true;
+		String voiceName = "kevin";
+		if (is16bit) voiceName = "kevin16";
+		
+		VoiceManager voiceManager = VoiceManager.getInstance();
+		Voice helloVoice = voiceManager.getVoice(voiceName);
+
+		if (helloVoice == null) {
+			log.warning("Cannot find a voice named " + voiceName + ".  Please specify a different voice.");
+			return;
+		}
+
+		helloVoice.allocate();
+		helloVoice.speak(text);
+		helloVoice.deallocate();
+		isTalking = false;
+	}
+	
+	public void listAllVoices() {
+		System.out.println();
+		System.out.println("All voices available:");
+		VoiceManager voiceManager = VoiceManager.getInstance();
+		Voice[] voices = voiceManager.getVoices();
+		
+		for (int i = 0; i < voices.length; i++) {
+			System.out.println("    " + voices[i].getName() + " (" + voices[i].getDomain() + " domain)");
+		}
+		
+	}
+	
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components

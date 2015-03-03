@@ -22,9 +22,10 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.ConversionManager;
 import com.protoplant.xtruder2.SWTResourceManager;
 import com.protoplant.xtruder2.StepperFunction;
-import com.protoplant.xtruder2.XtruderConfig;
+import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.AnalogDataEvent;
 import com.protoplant.xtruder2.event.IndicatorDataEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
@@ -44,7 +45,7 @@ public class ChartPanel extends Composite {
 
 	private Logger log;
 	private EventBus eb;
-	private XtruderConfig config;	
+//	private XtruderConfig config;	
 	
 	private XYGraph graph = new XYGraph();
 	private CircularBufferDataProvider diameterData = new CircularBufferDataProvider(true);
@@ -53,6 +54,7 @@ public class ChartPanel extends Composite {
 	
 	private float prevDiaMin=0;
 	private float prevDiaMax=0;
+	private ConversionManager convert;
 
 
 	public ChartPanel(Composite parent, Injector injector) {
@@ -118,10 +120,10 @@ public class ChartPanel extends Composite {
 	}
 	
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config) {
+	public void inject(Logger log, EventBus eb, ConversionManager convert) {
 		this.log = log;
 		this.eb = eb;
-		this.config = config;
+		this.convert = convert;
 	}
 	
 	@Subscribe
@@ -140,17 +142,17 @@ public class ChartPanel extends Composite {
 	
 	@Subscribe
 	public void onAnalogData(final AnalogDataEvent evt) {
-		pressureData.addSample(new Sample(System.currentTimeMillis(), evt.data1*0.3f));
+		pressureData.addSample(new Sample(System.currentTimeMillis(), convert.toPsi(evt.getPressure())));
 	}
 	
 	@Subscribe
 	public void onStepperStatus(final StepperStatusEvent evt) {
 		if (evt.getFunction()==StepperFunction.TopRoller) {
-			int speed = Math.abs(evt.getSpeed());
-			int microStepsPerRev = config.conveyance.stepsPerRev*config.conveyance.microStepsPerStep;
-			float rollerCircumference = config.conveyance.rollerDiameter*(float)Math.PI;
-			float ips = ((float)speed/(float)microStepsPerRev)*rollerCircumference;
-			velocityData.addSample(new Sample(System.currentTimeMillis(), ips));
+//			int speed = Math.abs(evt.getSpeed());
+//			int microStepsPerRev = config.conveyance.stepsPerRev*config.conveyance.microStepsPerStep;
+//			float rollerCircumference = config.conveyance.rollerDiameter*(float)Math.PI;
+//			float ips = ((float)speed/(float)microStepsPerRev)*rollerCircumference;
+			velocityData.addSample(new Sample(System.currentTimeMillis(), convert.toIps(evt.getSpeed())));
 		}
 	}
 	

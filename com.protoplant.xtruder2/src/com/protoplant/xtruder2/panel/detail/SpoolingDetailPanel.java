@@ -7,7 +7,6 @@ import org.eclipse.swt.widgets.Composite;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.panel.AdjustableStepperPanel;
-import com.protoplant.xtruder2.panel.CoilMassPanel;
 
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormLayout;

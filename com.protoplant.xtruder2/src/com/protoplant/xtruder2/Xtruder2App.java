@@ -8,6 +8,7 @@ import org.eclipse.swt.layout.FillLayout;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.config.StepperConfigManager;
 import com.protoplant.xtruder2.panel.RootPanel;
 import com.protoplant.xtruder2.usb.UsbManager;
 
@@ -15,7 +16,7 @@ import com.protoplant.xtruder2.usb.UsbManager;
 
 public class Xtruder2App {
 	
-	static final String appVersion = "2.00";
+	static final String appVersion = "2.02";
 	
 	
 	public static void main(String[] args) {
@@ -54,6 +55,9 @@ public class Xtruder2App {
 
 		Injector injector = Guice.createInjector(new XtruderGuice());
 
+		AudioManager am = injector.getInstance(AudioManager.class);
+		am.init();
+		
 		new RootPanel(shell, injector);
 		
 		StepperConfigManager scm = injector.getInstance(StepperConfigManager.class);
@@ -70,6 +74,7 @@ public class Xtruder2App {
 		shell.init();  // main loop
 		
 		usb.release();
+		am.release();
 	}
 
 	

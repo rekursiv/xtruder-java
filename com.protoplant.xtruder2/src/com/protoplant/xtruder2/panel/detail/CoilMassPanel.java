@@ -1,7 +1,8 @@
-package com.protoplant.xtruder2.panel;
+package com.protoplant.xtruder2.panel.detail;
 
 import java.util.logging.Logger;
 
+import org.eclipse.nebula.visualization.xygraph.dataprovider.Sample;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -22,8 +23,10 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.AudioManager;
+import com.protoplant.xtruder2.ConversionManager;
 import com.protoplant.xtruder2.StepperFunction;
-import com.protoplant.xtruder2.XtruderConfig;
+import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.CoilMassEvent;
 import com.protoplant.xtruder2.event.IndicatorDataEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
@@ -95,6 +98,8 @@ public class CoilMassPanel extends Group {
 	private Button rbcg;
 	private Spinner spnCustomMass;
 	private XtruderConfig config;
+	private ConversionManager convert;
+	private AudioManager am;
 
 
 	public CoilMassPanel(Composite parent, Injector injector) {   //  350 x 327
@@ -350,12 +355,13 @@ public class CoilMassPanel extends Group {
 
 
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config) {  //, DataLogger dl, AudioManager am) {
+	public void inject(Logger log, EventBus eb, XtruderConfig config, ConversionManager convert, AudioManager am) {//, DataLogger dl
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
+		this.convert = convert;
 //		this.dl = dl;
-//		this.am = am;
+		this.am = am;
 		this.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
@@ -426,14 +432,9 @@ public class CoilMassPanel extends Group {
 		delay = (System.currentTimeMillis()-prevStepTime)/1000.0f;  // convert to seconds
 		prevStepTime=System.currentTimeMillis();
 		if (delay>1) return;
-
-		//  convert speed to in/sec (TODO:  put this in central location to adhere to DRY principle)
-		int speed = Math.abs(curMotorSpeed);
-		int microStepsPerRev = config.conveyance.stepsPerRev*config.conveyance.microStepsPerStep;
-		float rollerCircumference = config.conveyance.rollerDiameter*(float)Math.PI;
-		float ips = ((float)speed/(float)microStepsPerRev)*rollerCircumference;
+		float ips = convert.toIps(curMotorSpeed);
 		
-		
+		// TODO:  put this in ConversionManager
 		float length = (ips*delay)*2.54f;     // convert inch/second to cm    
 		float radius = diameter/20;                           // convert to cm
 		float volume = length*(radius*radius*3.14159f);
@@ -465,9 +466,10 @@ public class CoilMassPanel extends Group {
 	private void resetCoil(boolean isWrapAround) {
 //		dl.write("Coil", "RESET", ""+spnCount.getSelection(), String.format("%.2f", grams));
 		grams=0;
+//		grams=440;                             //////////////////////////////////////////////////////////////////////      TEST
 		if (isWrapAround) {
 			incrementCount();
-//			am.playClip("mark");
+			am.speak("mark");
 		} else {
 			lblData.setText("0.00 g");
 		}
@@ -475,16 +477,14 @@ public class CoilMassPanel extends Group {
 	}
 
 	private void updateAudio(int total) {
-		/*
-		if (checkpoint(total-50)) am.playClip("50gtg");
-		else if (checkpoint(total-30)) am.playClip("30gtg");
-		else if (checkpoint(total-10)) am.playClip("10gtg");
-		else if (checkpoint(total-5)) am.playClip("5");
-		else if (checkpoint(total-4)) am.playClip("4");
-		else if (checkpoint(total-3)) am.playClip("3");
-		else if (checkpoint(total-2)) am.playClip("2");
-		else if (checkpoint(total-1)) am.playClip("1");
-		*/
+		if (checkpoint(total-50)) am.speak("50 grams to go");
+		else if (checkpoint(total-30)) am.speak("30 grams to go");
+		else if (checkpoint(total-10)) am.speak("10 grams to go");
+		else if (checkpoint(total-5)) am.speak("5");
+		else if (checkpoint(total-4)) am.speak("4");
+		else if (checkpoint(total-3)) am.speak("3");
+		else if (checkpoint(total-2)) am.speak("2");
+		else if (checkpoint(total-1)) am.speak("1");
 	}
 	
 	private boolean checkpoint(float ref) {
