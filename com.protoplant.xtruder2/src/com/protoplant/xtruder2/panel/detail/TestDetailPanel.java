@@ -6,11 +6,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.AudioManager;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.config.XtruderConfig;
+import com.protoplant.xtruder2.event.AnalogDataEvent;
 import com.protoplant.xtruder2.event.StepperDisconnectEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
@@ -26,6 +28,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class TestDetailPanel extends Composite {
 
@@ -58,14 +61,15 @@ public class TestDetailPanel extends Composite {
 			}
 		});
 		btnTest.setBounds(20, 229, 75, 25);
-		btnTest.setText("Speak");
+		btnTest.setText("TEST");
 		
 		lblTest = new Label(this, SWT.NONE);
-		lblTest.setBounds(134, 413, 55, 15);
+		lblTest.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
+		lblTest.setBounds(20, 108, 569, 45);
 		
 		txtTheHopperIs = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		txtTheHopperIs.setText("50 grams to go");
-		txtTheHopperIs.setBounds(10, 10, 616, 213);
+		txtTheHopperIs.setBounds(10, 10, 616, 56);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -78,13 +82,24 @@ public class TestDetailPanel extends Composite {
 		this.am = am;
 	}
 
+	
+	@Subscribe
+	public void onAnalogData(final AnalogDataEvent evt) {
+		lblTest.setText(""+evt.getPressure());
+	}
+	
+	
+	public void test() {
+		
+	}
+	
 	public void test_mass() {
 		eb.post(new StepperSpeedChangeEvent(StepperFunction.TopRoller, 4000));
 		eb.post(new StepperRunEvent(StepperFunction.TopRoller));
 	}
 	
 	
-	public void test() {
+	public void test_audio() {
 		am.speak(txtTheHopperIs.getText());
 //		am.listVoices();
 //		listAllVoices();

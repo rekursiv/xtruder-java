@@ -1,11 +1,12 @@
 
-
-
-merge config file changes
-
+put "tolerance lines" on chart, sync with dia. setting
 
 
 ================  ConfigDetail
+
+** problem: config file stays "in memory" and will overwrite settings 
+
+----
 
 color status bg
 

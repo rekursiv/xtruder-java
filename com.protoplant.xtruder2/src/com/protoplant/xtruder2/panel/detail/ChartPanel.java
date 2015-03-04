@@ -171,7 +171,8 @@ public class ChartPanel extends Composite {
 
 	private void setupDiameterTrace() {
 		Axis diameterAxis = new Axis("Diameter, mm", true);
-		diameterAxis.setAutoScale(true);  //setRange(1.5, 1.9);
+//		diameterAxis.setAutoScale(true);  //setRange(1.5, 1.9);
+		diameterAxis.setRange(0, 4.0);
 		diameterAxis.setForegroundColor(getDiameterColor());
 		graph.addAxis(diameterAxis);
 		
@@ -188,7 +189,8 @@ public class ChartPanel extends Composite {
 	
 	private void setupPressureTrace() {
 		Axis pressureAxis = new Axis("Pressure, psi", true);
-		pressureAxis.setAutoScale(true);  //setRange(500, 2000);
+//		pressureAxis.setAutoScale(true);
+		pressureAxis.setRange(0, 3200);
 		pressureAxis.setForegroundColor(getPressureColor());
 		pressureAxis.setPrimarySide(false);
 		graph.addAxis(pressureAxis);
@@ -201,7 +203,8 @@ public class ChartPanel extends Composite {
 	private void setupVelocityTrace() {
 		Axis velocityAxis = new Axis("Velocity, in/sec", true);
 		velocityAxis.setForegroundColor(getVelocityColor());
-		velocityAxis.setAutoScale(true);    //setRange(5, 12);
+//		velocityAxis.setAutoScale(true);
+		velocityAxis.setRange(0, 30);
 		graph.addAxis(velocityAxis);
 		
 		Trace velocityTrace = new Trace("Velocity", graph.primaryXAxis, velocityAxis, velocityData);
