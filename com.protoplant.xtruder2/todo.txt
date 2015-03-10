@@ -1,6 +1,15 @@
 
+
+
+
+
+---------
+
 put "tolerance lines" on chart, sync with dia. setting
 
+more data in graph, mark new spool
+
+fix touch screen
 
 ================  ConfigDetail
 

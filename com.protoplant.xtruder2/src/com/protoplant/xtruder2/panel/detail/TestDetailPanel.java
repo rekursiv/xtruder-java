@@ -32,20 +32,34 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class TestDetailPanel extends Composite {
 
+	private static final int fullThreshold = 1800;
+	private static final int disconnectThreshold = 4000;
+	
+	private static final int repeatTime = 200;  // 20 seconds
+	
+	private int fullCount;
+	private int emptyCount;
+	private int disconnectCount;
+
+	
+	
+	
+	
+	
+	
 	private Logger log;
 	private EventBus eb;
 	private XtruderConfig config;
 	
 	protected Button btnTest;
-	
 	protected AdjustableStepperPanel asp;
 	protected TrackingStepperPanel tsp;
 	protected Composite composite;
 	protected Label lblTest;
 	private Text txtTheHopperIs;
-	private volatile boolean isTalking = false;
 	private AudioManager am;
-	private int count;
+	
+	
 
 
 	public TestDetailPanel(Composite parent, Injector injector) {
@@ -56,7 +70,6 @@ public class TestDetailPanel extends Composite {
 		btnTest.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-//				lblTest.setText("testing...");
 				test();
 			}
 		});
@@ -68,7 +81,7 @@ public class TestDetailPanel extends Composite {
 		lblTest.setBounds(20, 108, 569, 45);
 		
 		txtTheHopperIs = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		txtTheHopperIs.setText("50 grams to go");
+//		txtTheHopperIs.setText("50 grams to go");
 		txtTheHopperIs.setBounds(10, 10, 616, 56);
 		
 		if (injector!=null) injector.injectMembers(this);
@@ -85,8 +98,35 @@ public class TestDetailPanel extends Composite {
 	
 	@Subscribe
 	public void onAnalogData(final AnalogDataEvent evt) {
-		lblTest.setText(""+evt.getPressure());
+
+		int curValue = evt.getMainHopper();
+		lblTest.setText(""+curValue);		
+		if (curValue>disconnectThreshold) ++disconnectCount;
+		else if (curValue>fullThreshold) ++fullCount;
+		else ++emptyCount;
+		
+		if (disconnectCount+emptyCount+fullCount>repeatTime) {
+			if (disconnectCount>emptyCount) soundDisconnectedAlarm();
+			else if (emptyCount>fullCount) soundEmptyAlarm();
+			disconnectCount=0;
+			emptyCount=0;
+			fullCount=0;
+		}
+		
 	}
+
+	public void soundDisconnectedAlarm() {
+		log.info("the hopper sensor is disconnected");
+		am.speak("the hopper sensor is disconnected");
+	}
+	
+	public void soundEmptyAlarm() {
+		log.info("the hopper is almost empty");
+		am.speak("the hopper is almost empty");
+	}
+	
+	
+	
 	
 	
 	public void test() {
@@ -98,56 +138,6 @@ public class TestDetailPanel extends Composite {
 		eb.post(new StepperRunEvent(StepperFunction.TopRoller));
 	}
 	
-	
-	public void test_audio() {
-		am.speak(txtTheHopperIs.getText());
-//		am.listVoices();
-//		listAllVoices();
-/*		
-	     if (!isTalking) {
-	 		final String txt = txtTheHopperIs.getText();
-			final boolean is16bit = btnBit16.getSelection();
-		    Runnable r = new Runnable() {
-		         public void run() {
-		     		speak(txt, is16bit);
-		         }
-		     };
-	    	 new Thread(r).start();
-	     }
-*/
-	}
-	
-	
-	public void speak(String text, boolean is16bit) {
-		isTalking = true;
-		String voiceName = "kevin";
-		if (is16bit) voiceName = "kevin16";
-		
-		VoiceManager voiceManager = VoiceManager.getInstance();
-		Voice helloVoice = voiceManager.getVoice(voiceName);
-
-		if (helloVoice == null) {
-			log.warning("Cannot find a voice named " + voiceName + ".  Please specify a different voice.");
-			return;
-		}
-
-		helloVoice.allocate();
-		helloVoice.speak(text);
-		helloVoice.deallocate();
-		isTalking = false;
-	}
-	
-	public void listAllVoices() {
-		System.out.println();
-		System.out.println("All voices available:");
-		VoiceManager voiceManager = VoiceManager.getInstance();
-		Voice[] voices = voiceManager.getVoices();
-		
-		for (int i = 0; i < voices.length; i++) {
-			System.out.println("    " + voices[i].getName() + " (" + voices[i].getDomain() + " domain)");
-		}
-		
-	}
 	
 	@Override
 	protected void checkSubclass() {

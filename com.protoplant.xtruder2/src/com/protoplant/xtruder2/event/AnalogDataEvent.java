@@ -3,15 +3,15 @@ package com.protoplant.xtruder2.event;
 public class AnalogDataEvent {
 	
 	private int pressure=0;
-	private int polyHopper=0;
-	private int addHopper=0;
+	private int mainHopper=0;
+	private int auxHopper=0;
 	private int aux=0;
 	
 	
 	public AnalogDataEvent(int pressure, int polyHopper, int addHopper, int aux) {
 		this.pressure=pressure;
-		this.polyHopper=polyHopper;
-		this.addHopper=addHopper;
+		this.mainHopper=polyHopper;
+		this.auxHopper=addHopper;
 		this.aux=aux;
 	}
 	
@@ -19,5 +19,9 @@ public class AnalogDataEvent {
 		return pressure;
 	}
 	
+	public int getMainHopper() {
+		return mainHopper;
+	}
 	
+
 }

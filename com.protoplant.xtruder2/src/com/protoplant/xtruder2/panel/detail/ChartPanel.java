@@ -6,10 +6,12 @@ import java.util.logging.Logger;
 import org.eclipse.draw2d.LightweightSystem;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.nebula.visualization.xygraph.dataprovider.CircularBufferDataProvider;
 import org.eclipse.nebula.visualization.xygraph.dataprovider.Sample;
 import org.eclipse.nebula.visualization.xygraph.figures.Axis;
 import org.eclipse.nebula.visualization.xygraph.figures.Trace;
+import org.eclipse.nebula.visualization.xygraph.figures.ZoomType;
 import org.eclipse.nebula.visualization.xygraph.figures.Trace.ErrorBarType;
 import org.eclipse.nebula.visualization.xygraph.figures.Trace.PointStyle;
 import org.eclipse.nebula.visualization.xygraph.figures.XYGraph;
@@ -27,6 +29,7 @@ import com.protoplant.xtruder2.SWTResourceManager;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.AnalogDataEvent;
+import com.protoplant.xtruder2.event.CoilResetEvent;
 import com.protoplant.xtruder2.event.IndicatorDataEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 
@@ -39,6 +42,7 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Group;
 
 
 public class ChartPanel extends Composite {
@@ -52,18 +56,29 @@ public class ChartPanel extends Composite {
 	private CircularBufferDataProvider pressureData = new CircularBufferDataProvider(true);
 	private CircularBufferDataProvider velocityData = new CircularBufferDataProvider(true);
 	
-	private float prevDiaMin=0;
-	private float prevDiaMax=0;
+	private float samplePrevDiaMin=0;
+	private float samplePrevDiaMax=0;
 	private ConversionManager convert;
 
-
+	private float curDiaMin=0;
+	private float curDiaMax=0;
+//	private float prevDiaMin=0;
+//	private float prevDiaMax=0;
+	private Label lblPrevMax;
+	private Label lblPrevMin;
+	private Label lblMax;
+	private Label lblMin;
+	private Button btnResetDia;
+	
+	
+	
+	
 	public ChartPanel(Composite parent, Injector injector) {
-		super(parent, SWT.BORDER);
+		super(parent, SWT.NONE);
 		setLayout(new FormLayout());
 		
 		Canvas canvas = new Canvas(this, SWT.NONE);
 		FormData fd_canvas = new FormData();
-		fd_canvas.bottom = new FormAttachment(100, -55);
 		fd_canvas.right = new FormAttachment(100, -12);
 		fd_canvas.top = new FormAttachment(0, 12);
 		fd_canvas.left = new FormAttachment(0, 12);
@@ -79,12 +94,59 @@ public class ChartPanel extends Composite {
 			}
 		});
 		FormData fd_btnReset = new FormData();
-		fd_btnReset.bottom = new FormAttachment(100, -12);
 		fd_btnReset.right = new FormAttachment(0, 105);
-		fd_btnReset.top = new FormAttachment(100, -46);
 		fd_btnReset.left = new FormAttachment(0, 15);
 		btnReset.setLayoutData(fd_btnReset);
-		btnReset.setText("Reset");
+		btnReset.setText("Reset Chart");
+		
+		Button btnTest = new Button(this, SWT.NONE);
+		fd_btnReset.top = new FormAttachment(100, -55);
+		fd_btnReset.bottom = new FormAttachment(100, -21);
+		btnTest.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				test();
+			}
+		});
+		FormData fd_btnTest = new FormData();
+		fd_btnTest.bottom = new FormAttachment(0, 844);
+		fd_btnTest.top = new FormAttachment(0, 810);
+		fd_btnTest.right = new FormAttachment(0, 600);
+		fd_btnTest.left = new FormAttachment(0, 525);
+		btnTest.setLayoutData(fd_btnTest);
+		btnTest.setText("TEST");
+		
+		Group grpDiameterMinmax = new Group(this, SWT.NONE);
+		fd_canvas.bottom = new FormAttachment(100, -105);
+		grpDiameterMinmax.setText("Diameter Min/Max");
+		FormData fd_grpDiameterMinmax = new FormData();
+		fd_grpDiameterMinmax.top = new FormAttachment(100, -99);
+		fd_grpDiameterMinmax.bottom = new FormAttachment(100, -12);
+		fd_grpDiameterMinmax.right = new FormAttachment(0, 465);
+		fd_grpDiameterMinmax.left = new FormAttachment(0, 130);
+		grpDiameterMinmax.setLayoutData(fd_grpDiameterMinmax);
+		
+		lblPrevMax = new Label(grpDiameterMinmax, SWT.BORDER);
+		lblPrevMax.setBounds(10, 20, 100, 25);
+		
+		lblPrevMin = new Label(grpDiameterMinmax, SWT.BORDER);
+		lblPrevMin.setBounds(10, 51, 100, 25);
+		
+		lblMax = new Label(grpDiameterMinmax, SWT.BORDER);
+		lblMax.setBounds(130, 20, 100, 25);
+		
+		lblMin = new Label(grpDiameterMinmax, SWT.BORDER);
+		lblMin.setBounds(130, 51, 100, 25);
+		
+		btnResetDia = new Button(grpDiameterMinmax, SWT.NONE);
+		btnResetDia.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				resetDia();
+			}
+		});
+		btnResetDia.setBounds(236, 20, 87, 35);
+		btnResetDia.setText("Reset Dia");
 		lws.setContents(graph);
 
 		
@@ -102,11 +164,39 @@ public class ChartPanel extends Composite {
 		setupPressureTrace();
 		setupVelocityTrace();
 		
-		
 		if (injector!=null) injector.injectMembers(this);
 
 	}
 	
+	@Subscribe
+	public void onCoilReset(CoilResetEvent event) {
+		resetDia();
+	}
+	
+	
+	protected void resetDia() {
+		lblPrevMin.setText(lblMin.getText());
+		lblPrevMax.setText(lblMax.getText());
+		curDiaMin=0;
+		curDiaMax=0;
+		lblMin.setText(String.format("%.3f", curDiaMin));
+		lblMax.setText(String.format("%.3f", curDiaMax));
+	}
+
+	protected void test() {
+//		graph.setZoomType(ZoomType.PANNING);
+//		Dimension size = graph.getPlotArea().getSize();
+//		graph.getPlotArea().zoomInOut(true, false, size.width, size.height/2, 0.1);
+		
+//		graph.setZoomType(ZoomType.NONE);
+		
+//		long present = System.currentTimeMillis();
+//		long past = present-1000;
+//		graph.primaryXAxis.setRange(past, present);
+
+		
+	}
+
 	private void reset() {
 		diameterData.clearTrace();
 		pressureData.clearTrace();
@@ -133,11 +223,21 @@ public class ChartPanel extends Composite {
 		float min = evt.getMin();
 		float plus = 0;
 		float minus = 0;
-		if (max>prevDiaMax) plus=max-cur;
-		if (min<prevDiaMin) minus=cur-min;
-		prevDiaMax=max;
-		prevDiaMin=min;
+		if (max>samplePrevDiaMax) plus=max-cur;
+		if (min<samplePrevDiaMin) minus=cur-min;
+		samplePrevDiaMax=max;
+		samplePrevDiaMin=min;
 		diameterData.addSample(new Sample(System.currentTimeMillis(), cur, plus, minus, 0, 0));
+		
+		if (max>curDiaMax) {
+			curDiaMax=max;
+			lblMax.setText(String.format("%.3f", max));
+		}
+		if (curDiaMin<0.1||min<curDiaMin) {
+			curDiaMin=min;
+			lblMin.setText(String.format("%.3f", min));
+		}
+		
 	}
 	
 	@Subscribe
@@ -148,10 +248,6 @@ public class ChartPanel extends Composite {
 	@Subscribe
 	public void onStepperStatus(final StepperStatusEvent evt) {
 		if (evt.getFunction()==StepperFunction.TopRoller) {
-//			int speed = Math.abs(evt.getSpeed());
-//			int microStepsPerRev = config.conveyance.stepsPerRev*config.conveyance.microStepsPerStep;
-//			float rollerCircumference = config.conveyance.rollerDiameter*(float)Math.PI;
-//			float ips = ((float)speed/(float)microStepsPerRev)*rollerCircumference;
 			velocityData.addSample(new Sample(System.currentTimeMillis(), convert.toIps(evt.getSpeed())));
 		}
 	}

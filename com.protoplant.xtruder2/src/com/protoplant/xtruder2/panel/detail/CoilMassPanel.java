@@ -28,6 +28,7 @@ import com.protoplant.xtruder2.ConversionManager;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.CoilMassEvent;
+import com.protoplant.xtruder2.event.CoilResetEvent;
 import com.protoplant.xtruder2.event.IndicatorDataEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
@@ -473,7 +474,7 @@ public class CoilMassPanel extends Group {
 		} else {
 			lblData.setText("0.00 g");
 		}
-//		eb.post(new CoilResetEvent(isWrapAround));
+		eb.post(new CoilResetEvent(isWrapAround));
 	}
 
 	private void updateAudio(int total) {

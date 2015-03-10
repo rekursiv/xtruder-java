@@ -60,6 +60,6 @@ public class RootSummaryPanel extends Composite {
 	}
 
 	public void setDefaultFocus() {
-		eb.post(new PanelFocusEvent(pnlStatus));  //pnlSpooling
+		eb.post(new PanelFocusEvent(pnlTest));  //pnlSpooling
 	}
 }
