@@ -74,7 +74,7 @@ public class StatusSummaryPanel extends BaseSummaryPanel {
 	}
 	
 	public void updateDisplay() {
-		lblUsbCons.setText(curNumDevs+"/"+(scm.getNumMappedSteppers()+2));
+		lblUsbCons.setText(curNumDevs+"/"+(scm.getNumDefinedSteppers()+2));
 	}
 	
 

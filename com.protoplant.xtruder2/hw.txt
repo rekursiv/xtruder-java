@@ -24,6 +24,8 @@ VirtualBox
 
 at 10v input, will output 33.3mv at full pressure (3000 psi)
 
+conv. factor = 1.1
+
 
 
 

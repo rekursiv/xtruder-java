@@ -270,6 +270,7 @@ public class ChartPanel extends Composite {
 //		diameterAxis.setAutoScale(true);  //setRange(1.5, 1.9);
 		diameterAxis.setRange(0, 4.0);
 		diameterAxis.setForegroundColor(getDiameterColor());
+		diameterAxis.setPrimarySide(false);
 		graph.addAxis(diameterAxis);
 		
 		Trace diameterTrace = new Trace("Diameter", graph.primaryXAxis, diameterAxis, diameterData);
@@ -288,7 +289,7 @@ public class ChartPanel extends Composite {
 //		pressureAxis.setAutoScale(true);
 		pressureAxis.setRange(0, 3200);
 		pressureAxis.setForegroundColor(getPressureColor());
-		pressureAxis.setPrimarySide(false);
+//		pressureAxis.setPrimarySide(false);
 		graph.addAxis(pressureAxis);
 		
 		Trace pressureTrace = new Trace("Pressure", graph.primaryXAxis, pressureAxis, pressureData);
@@ -301,6 +302,7 @@ public class ChartPanel extends Composite {
 		velocityAxis.setForegroundColor(getVelocityColor());
 //		velocityAxis.setAutoScale(true);
 		velocityAxis.setRange(0, 30);
+//		velocityAxis.setPrimarySide(false);
 		graph.addAxis(velocityAxis);
 		
 		Trace velocityTrace = new Trace("Velocity", graph.primaryXAxis, velocityAxis, velocityData);

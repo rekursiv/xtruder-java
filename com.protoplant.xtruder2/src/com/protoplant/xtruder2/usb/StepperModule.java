@@ -48,16 +48,16 @@ public class StepperModule extends UsbModule {
 	}
 
 	@Subscribe
-	public void onConfigSetup(ConfigSetupEvent evt) {
+	public void onConfigSetup(ConfigSetupEvent evt) {   //  FIXME:  does this matter that it sets command on undefined steppers????
 		if (devInfo!=null) {
-			function = scm.getFunction(devInfo);
-			if (function!=StepperFunction.UNDEFINED) {
+//			function = scm.getFunction(devInfo);
+//			if (function!=StepperFunction.UNDEFINED) {
 				curCmd = CommandType.SET_CONFIG;
 				log.info("SET_CONFIG");
-			}
+//			}
 		}
 	}
-	
+
 	@Subscribe
 	public void onReset(StepperResetEvent evt) {   
 		if (evt.getFunction() == function) {
@@ -87,7 +87,7 @@ public class StepperModule extends UsbModule {
 	public void connect(HIDDeviceInfo devInfo) {
 		super.connect(devInfo);
 		if (this.devInfo!=null) {
-			function = scm.getFunction(this.devInfo);
+			function = scm.getFunction(this.devInfo.getSerial_number());
 			eb.post(new StepperConnectEvent(function, this.devInfo.getSerial_number()));
 			curCmd = CommandType.SET_CONFIG;
 			log.info("Stepper "+function.name()+" connected.");

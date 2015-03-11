@@ -1,15 +1,25 @@
 package com.protoplant.xtruder2.panel.detail;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.config.MachineState;
 import com.protoplant.xtruder2.config.StepperConfigManager;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
@@ -30,6 +40,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.List;
 
 
 
@@ -39,13 +50,14 @@ public class ConfigDetailPanel extends Composite {
 	private XtruderConfig config;
 	private ConfigManager<XtruderConfig> cfgMgr;
 	protected Text txtMainEdit;
-	protected Button btnEditCurrent;
-	protected Button btnSave;
-	protected Button btnApplyEdits;
+	protected Button btnPull;
+	protected Button btnSaveFile;
+	protected Button btnNewFile;
 	protected Text txtStatus;
 	protected Label lblStatus;
 	private EventBus eb;
 	private StepperConfigManager scm;
+	private List lstFiles;
 
 	public ConfigDetailPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
@@ -59,49 +71,53 @@ public class ConfigDetailPanel extends Composite {
 		fd_text.top = new FormAttachment(0, 12);
 		txtMainEdit.setLayoutData(fd_text);
 		
-		btnEditCurrent = new Button(this, SWT.NONE);
-		btnEditCurrent.setTouchEnabled(true);
-		fd_text.left = new FormAttachment(btnEditCurrent, 6);
-		btnEditCurrent.addSelectionListener(new SelectionAdapter() {
+		btnPull = new Button(this, SWT.NONE);
+		btnPull.setTouchEnabled(true);
+		fd_text.left = new FormAttachment(0, 225);
+		btnPull.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				editCurrent();
+//				editCurrent();
+				mergeMachineState();
 			}
 		});
-		FormData fd_btnLoad = new FormData();
-		fd_btnLoad.top = new FormAttachment(txtMainEdit, 0, SWT.TOP);
-		fd_btnLoad.left = new FormAttachment(0, 12);
-		btnEditCurrent.setLayoutData(fd_btnLoad);
-		btnEditCurrent.setText("Edit Current >>");
+		FormData fd_btnPull = new FormData();
+		fd_btnPull.right = new FormAttachment(0, 140);
+		fd_btnPull.top = new FormAttachment(txtMainEdit, 0, SWT.TOP);
+		fd_btnPull.left = new FormAttachment(0, 12);
+		btnPull.setLayoutData(fd_btnPull);
+		btnPull.setText("Pull Machine State");
 		
-		btnSave = new Button(this, SWT.NONE);
-		btnSave.setTouchEnabled(true);
-		btnSave.addSelectionListener(new SelectionAdapter() {
+		btnSaveFile = new Button(this, SWT.NONE);
+		btnSaveFile.setTouchEnabled(true);
+		btnSaveFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				save();
+//				save();
+//				test();
 			}
 		});
-		FormData fd_btnSave = new FormData();
-		fd_btnSave.top = new FormAttachment(0, 125);
-		fd_btnSave.left = new FormAttachment(0, 13);
-		btnSave.setLayoutData(fd_btnSave);
-		btnSave.setText("Save File");
+		FormData fd_btnSaveFile = new FormData();
+		btnSaveFile.setLayoutData(fd_btnSaveFile);
+		btnSaveFile.setText("Save File");
 		
-		btnApplyEdits = new Button(this, SWT.NONE);
-		btnApplyEdits.setTouchEnabled(true);
-		fd_btnSave.right = new FormAttachment(btnApplyEdits, 0, SWT.RIGHT);
-		btnApplyEdits.addSelectionListener(new SelectionAdapter() {
+		btnNewFile = new Button(this, SWT.NONE);
+		fd_btnSaveFile.top = new FormAttachment(btnNewFile, -25);
+		fd_btnSaveFile.bottom = new FormAttachment(btnNewFile, 0, SWT.BOTTOM);
+		btnNewFile.setTouchEnabled(true);
+		btnNewFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				applyEdits();
+//				applyEdits();
+				newFile();
 			}
 		});
-		FormData fd_btnUseEdits = new FormData();
-		fd_btnUseEdits.top = new FormAttachment(0, 55);
-		fd_btnUseEdits.left = new FormAttachment(btnEditCurrent, 0, SWT.LEFT);
-		btnApplyEdits.setLayoutData(fd_btnUseEdits);
-		btnApplyEdits.setText("Apply Edits  <<");
+		FormData fd_btnNewFile = new FormData();
+		fd_btnNewFile.right = new FormAttachment(0, 90);
+		fd_btnNewFile.top = new FormAttachment(0, 55);
+		fd_btnNewFile.left = new FormAttachment(btnPull, 0, SWT.LEFT);
+		btnNewFile.setLayoutData(fd_btnNewFile);
+		btnNewFile.setText("New File...");
 		
 		txtStatus = new Text(this, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
 		txtStatus.setTouchEnabled(true);
@@ -124,6 +140,37 @@ public class ConfigDetailPanel extends Composite {
 		lblStatus.setLayoutData(fd_lblStatus);
 		lblStatus.setText("Status:");
 		
+		lstFiles = new List(this, SWT.BORDER);
+		lstFiles.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				log.info(lstFiles.getItem(lstFiles.getSelectionIndex()));
+			}
+		});
+		FormData fd_lstFiles = new FormData();
+		fd_lstFiles.right = new FormAttachment(btnNewFile, 198);
+		fd_lstFiles.left = new FormAttachment(0, 12);
+		fd_lstFiles.bottom = new FormAttachment(100, -292);
+		fd_lstFiles.top = new FormAttachment(0, 169);
+		lstFiles.setLayoutData(fd_lstFiles);
+		
+		Button btnTest = new Button(this, SWT.NONE);
+		fd_btnSaveFile.left = new FormAttachment(0, 108);
+		fd_btnSaveFile.right = new FormAttachment(0, 185);
+		btnTest.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				test();
+			}
+		});
+		FormData fd_btnTest = new FormData();
+		fd_btnTest.bottom = new FormAttachment(0, 125);
+		fd_btnTest.right = new FormAttachment(0, 110);
+		fd_btnTest.top = new FormAttachment(0, 100);
+		fd_btnTest.left = new FormAttachment(0, 52);
+		btnTest.setLayoutData(fd_btnTest);
+		btnTest.setText("TEST");
+		
 		if (injector!=null) injector.injectMembers(this);
 	}
 	
@@ -134,7 +181,6 @@ public class ConfigDetailPanel extends Composite {
 		this.config = config;
 		this.cfgMgr = cfgMgr;
 		this.scm = scm;
-		
 	}
 
 	@Subscribe
@@ -142,6 +188,88 @@ public class ConfigDetailPanel extends Composite {
 		if (evt.getFunction()==StepperFunction.UNDEFINED) {
 			txtStatus.setText("Undefined stepper module detected, serial number = \""+evt.getSerial()+"\"");
 		}
+	}
+	
+	public void onPanelFocus() {   //  TODO:  call editCurrent()
+		log.info("");
+	}
+	
+	
+	//mapper.readerForUpdating(model).readValue(text);
+//	return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(model).replace("\r", "");
+	public void mergeMachineState() {
+		eb.post(new ConfigStoreEvent());  //  update current machine state	
+		ObjectMapper om = new ObjectMapper();
+		try {
+			JsonNode edit = om.readTree(txtMainEdit.getText().replace("\r", ""));
+			JsonNode ms = om.valueToTree(scm.getMachineState());
+			edit = merge(edit, ms);
+			txtMainEdit.setText(cfgMgr.getText(edit));
+			txtStatus.setText("");
+		} catch (Exception e) {
+			txtStatus.setText(e.getLocalizedMessage());
+		}
+	}
+	
+	protected void newFile() {
+		eb.post(new ConfigStoreEvent());
+		try {
+			txtMainEdit.setText(cfgMgr.getText(scm.getMachineState()));
+			txtStatus.setText("");
+		} catch (Exception e) {
+			txtStatus.setText(e.getLocalizedMessage());
+		}
+	}
+	
+	
+	// http://stackoverflow.com/questions/9895041/merging-two-json-documents-using-jackson
+	public JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
+	    Iterator<String> fieldNames = updateNode.fieldNames();
+	    while (fieldNames.hasNext()) {
+	        String fieldName = fieldNames.next();
+	        JsonNode jsonNode = mainNode.get(fieldName);
+	        // if field exists and is an embedded object
+	        if (jsonNode != null && jsonNode.isObject()) {
+	            merge(jsonNode, updateNode.get(fieldName));
+	        }
+	        else {
+	            if (mainNode instanceof ObjectNode) {
+	                // Overwrite field
+	                JsonNode value = updateNode.get(fieldName);
+	                ((ObjectNode) mainNode).put(fieldName, value);
+	            }
+	        }
+	    }
+	    return mainNode;
+	}
+	
+	public void test_files() {
+		lstFiles.removeAll();
+		File cfgDir = new File(System.getProperty("user.dir")+"/config/");
+		File[] fileList = cfgDir.listFiles();
+		for (File file : fileList) {
+			lstFiles.add(stripExt(file.getName()));
+		}
+	}
+	
+	
+	protected void test() {
+		eb.post(new ConfigStoreEvent());
+		try {
+			txtMainEdit.setText(cfgMgr.getText(scm.getMachineState()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+	
+	
+	protected String stripExt(String fileName) {
+		int pos = fileName.lastIndexOf('.');
+		if (pos==-1) return fileName;
+		return fileName.substring(0, pos);
 	}
 	
 	protected void editCurrent() {
@@ -157,7 +285,7 @@ public class ConfigDetailPanel extends Composite {
 	protected void applyEdits() {
 		try {
 			cfgMgr.update(txtMainEdit.getText(), config);
-			scm.buildStepperMaps();
+//			scm.buildStepperMaps();
 			eb.post(new ConfigSetupEvent());
 			txtStatus.setText("Current configuration updated.");
 		} catch (Exception e) {

@@ -64,30 +64,25 @@ public class RootDetailPanel extends Composite {
 //		log.info(w.toString());
 
 		if (w instanceof SpoolingSummaryPanel) {
-			if (pnlSpooling == null) pnlSpooling = new SpoolingDetailPanel(this, injector);
 			stack.topControl = pnlSpooling;
 			layout();
 		} else if (w instanceof DataSummaryPanel) {
-			if (pnlPressure == null) pnlPressure = new DataDetailPanel(this, injector);
 			stack.topControl = pnlPressure;
 			layout();
 		} else if (w instanceof TestSummaryPanel) {
-			if (pnlTest == null) pnlTest = new TestDetailPanel(this, injector);  //  FIXME
 			stack.topControl = pnlTest;
 			layout();
 		} else if (w instanceof StatusSummaryPanel) {
-			if (pnlStatus == null) pnlStatus = new StatusDetailPanel(this, injector);
 			stack.topControl = pnlStatus;
 			layout();
 		} else if (w instanceof ConveyanceSummaryPanel) {
-			if (pnlConv == null) pnlConv = new ConveyanceDetailPanel(this, injector);
 			stack.topControl = pnlConv;
 			layout();
 		} else if (w instanceof ConfigSummaryPanel) {
-			if (pnlConfig == null) pnlConfig = new ConfigDetailPanel(this, injector);
 			stack.topControl = pnlConfig;
 			layout(true, true);
 			layout(true, true);  // gotta do this TWICE on Linux to force layout of text editors, no idea why...
+			pnlConfig.onPanelFocus();
 		}
 	}
 	

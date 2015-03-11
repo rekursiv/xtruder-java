@@ -19,5 +19,8 @@
 			<accessrule ignoreifbetter="true" kind="nonaccessible" pattern="**/*"/>
 		</accessrules>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/projects/javalib/jackson-databind-2.3.3.jar" sourcepath="C:/Users/Aaron/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.3.3/jackson-databind-2.3.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/projects/javalib/jackson-annotations-2.3.3.jar"/>
+	<classpathentry kind="lib" path="C:/projects/javalib/jackson-core-2.3.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

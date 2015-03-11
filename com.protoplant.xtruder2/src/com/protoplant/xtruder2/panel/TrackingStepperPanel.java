@@ -93,10 +93,7 @@ public class TrackingStepperPanel extends AdjustableStepperPanel {
 	
 	@Override
 	public void onConfigStore(ConfigStoreEvent evt) {
-		super.onConfigStore(evt);
-		scm.getConfig(function).isTracking = chkTracking.getSelection();
-		scm.getConfig(function).trackingScaleFactor = speedScaleFactor;
-//		log.info("--^");
+		scm.storeStepperState(function, sldSpeed.getSelection(), chkTracking.getSelection(), speedScaleFactor);
 	}
 	
 	@Override

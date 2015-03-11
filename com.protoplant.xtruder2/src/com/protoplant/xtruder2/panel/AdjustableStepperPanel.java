@@ -137,7 +137,7 @@ public class AdjustableStepperPanel extends StepperPanel {
 	
 	@Subscribe
 	public void onConfigStore(ConfigStoreEvent evt) {
-		scm.getConfig(function).speedSliderInit = sldSpeed.getSelection();
+		scm.storeStepperState(function, sldSpeed.getSelection());
 	}
 	
 	@Override

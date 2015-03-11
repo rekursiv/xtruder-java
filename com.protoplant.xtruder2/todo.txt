@@ -1,17 +1,29 @@
 
 
 
+dia out-of-bounds alarm
 
+==========   new system
 
----------
+research computers
+  all-in-one
+  touchscreen
+  dual-hdmi
+  
+buy MSP430s
+
+=============   Chart
+
+hack source
+  find where buffer size determines graph width
 
 put "tolerance lines" on chart, sync with dia. setting
 
 more data in graph, mark new spool
 
-fix touch screen
-
 ================  ConfigDetail
+
+ask Dustin:  extents for stepper motor speed sliders
 
 ** problem: config file stays "in memory" and will overwrite settings 
 
@@ -29,7 +41,18 @@ buttons:
  ?? assign stepper...
 
 
-=== stepper uCode
+----
 
-reversing uSwitches for WinderMinder
+Pull Machine Setup
+Save File
+New File...   >  name
+
+
+=== BUGS
+
+random 0 data from indicator
+
+touchscreen flakey
+
+
 
