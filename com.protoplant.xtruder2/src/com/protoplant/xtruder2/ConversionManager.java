@@ -33,5 +33,12 @@ public class ConversionManager {
 	}
 	
 	
+	public float toGrams(float diameter, float delay, int curMotorSpeed) {
+		float ips = toIps(curMotorSpeed);
+		float length = (ips*delay)*2.54f;     // convert inch/second to cm    
+		float radius = diameter/20;                           // convert to cm
+		float volume = length*(radius*radius*3.14159f);
+		return volume*config.conversion.density;
+	}
 	
 }

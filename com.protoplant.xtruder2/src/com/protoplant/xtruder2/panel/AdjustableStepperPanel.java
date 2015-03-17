@@ -132,7 +132,6 @@ public class AdjustableStepperPanel extends StepperPanel {
 		sldSpeed.setMinimum(scm.getConfig(function).speedSliderMin);
 		sldSpeed.setSelection(scm.getConfig(function).speedSliderInit);
 		adjustSpeed();
-//		log.info("A:"+function.name()+"   "+scm.getConfig(function).speedSliderInit);
 	}
 	
 	@Subscribe

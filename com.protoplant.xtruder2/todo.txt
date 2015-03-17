@@ -1,5 +1,7 @@
 
 
+rename StepperConfigManager ->  XtruderConfigManager
+
 
 dia out-of-bounds alarm
 

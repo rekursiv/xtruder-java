@@ -12,8 +12,8 @@ import com.protoplant.xtruder2.StepperFunction;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MachineState {
 
+	public ConversionState conversion = new ConversionState();
 	public ConveyanceState conveyance = new ConveyanceState();
-	
 	public TreeMap<StepperFunction, StepperState> steppers = new TreeMap<StepperFunction, StepperState>();
 	
 

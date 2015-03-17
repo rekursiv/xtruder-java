@@ -26,9 +26,12 @@ import com.google.inject.Injector;
 import com.protoplant.xtruder2.AudioManager;
 import com.protoplant.xtruder2.ConversionManager;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.config.StepperConfigManager;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.CoilMassEvent;
 import com.protoplant.xtruder2.event.CoilResetEvent;
+import com.protoplant.xtruder2.event.ConfigSetupEvent;
+import com.protoplant.xtruder2.event.ConfigStoreEvent;
 import com.protoplant.xtruder2.event.IndicatorDataEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
@@ -50,9 +53,9 @@ import org.eclipse.swt.events.ModifyEvent;
 
 public class CoilMassPanel extends Group {
 
-	private static final float pcabsDensity=1.13f;
-	private static final float htplaDensity=1.28f;
-	private static final float cfplaDensity=1.20f;
+//	private static final float pcabsDensity=1.13f;
+//	private static final float htplaDensity=1.28f;
+//	private static final float cfplaDensity=1.20f;
 	
 	private Logger log;
 	private Label lblData;
@@ -65,7 +68,7 @@ public class CoilMassPanel extends Group {
 	private volatile int curMotorSpeed = 0;
 	
 	private volatile long prevStepTime = 0;
-	private volatile float density=0;
+//	private volatile float density=0;
 	private volatile float diameter=0;
 	private volatile float diameterUpdateCount=0;
 	private volatile int fbCenterCount=0;
@@ -73,9 +76,6 @@ public class CoilMassPanel extends Group {
 	
 	private Button rb125g;
 	private Button rb1kg;
-	private Button rbPcabs;
-	private Button rbHtpla;
-	private Button rbCfpla;
 	private Button btnResetCoil;
 	private Button btnResetCount;
 	private Group grpMaterial;
@@ -101,6 +101,7 @@ public class CoilMassPanel extends Group {
 	private XtruderConfig config;
 	private ConversionManager convert;
 	private AudioManager am;
+	private StepperConfigManager scm;
 
 
 	public CoilMassPanel(Composite parent, Injector injector) {   //  350 x 327
@@ -144,37 +145,6 @@ public class CoilMassPanel extends Group {
 		fl_grpMaterial.marginWidth = 5;
 		fl_grpMaterial.spacing = 4;
 		grpMaterial.setLayout(fl_grpMaterial);
-		
-		rbPcabs = new Button(grpMaterial, SWT.RADIO);
-		rbPcabs.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				setDensity(pcabsDensity);
-			}
-		});
-		rbPcabs.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		rbPcabs.setText("PCABS");
-		
-		rbHtpla = new Button(grpMaterial, SWT.RADIO);
-		rbHtpla.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				setDensity(htplaDensity);
-			}
-		});
-		rbHtpla.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		rbHtpla.setText("HTPLA");
-		
-		rbCfpla = new Button(grpMaterial, SWT.RADIO);
-		rbCfpla.setSelection(true);
-		rbCfpla.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				setDensity(cfplaDensity);
-			}
-		});
-		rbCfpla.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		rbCfpla.setText("CFPLA");
 		
 		grpReset = new Group(this, SWT.NONE);
 		grpReset.setText("Target Mass");
@@ -243,7 +213,7 @@ public class CoilMassPanel extends Group {
 		spnDensity.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				density=(float)spnDensity.getSelection()/100.0f;
+				config.conversion.density=(float)spnDensity.getSelection()/100.0f;
 //				dl.write("Density", ""+density);
 			}
 		});
@@ -348,34 +318,38 @@ public class CoilMassPanel extends Group {
 	}
 	
 	
-	protected void setDensity(float density) {
-		this.density = density;
-		spnDensity.setSelection((int)(density*100));
-//		dl.write("Density", ""+density);
-	}
-
-
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config, ConversionManager convert, AudioManager am) {//, DataLogger dl
+	public void inject(Logger log, EventBus eb, XtruderConfig config, ConversionManager convert, StepperConfigManager scm, AudioManager am) {//, DataLogger dl
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
 		this.convert = convert;
+		this.scm = scm;
 //		this.dl = dl;
 		this.am = am;
+		
 		this.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
 				isMotorRunning = false;
 			}
 		});
-		setDensity(cfplaDensity);
+		
 		rbnTd175.setText(String.format("%.2f", config.feedback.target175));
 		rbnTd285.setText(String.format("%.2f", config.feedback.target285));
 		customMass=spnCustomMass.getSelection();
 	}
-	
 
+	@Subscribe
+	public void onConfigSetup(ConfigSetupEvent evt) {
+		spnDensity.setSelection((int)(config.conversion.density*100));
+	}
+
+	@Subscribe
+	public void onConfigStore(ConfigStoreEvent evt) {
+		scm.storeConversionState(config.conversion.density);
+	}
+	
 	@Subscribe
 	public void onMotorSpeedChange(StepperSpeedChangeEvent evt) {
 		if (evt.getFunction()==StepperFunction.TopRoller) {
@@ -433,13 +407,8 @@ public class CoilMassPanel extends Group {
 		delay = (System.currentTimeMillis()-prevStepTime)/1000.0f;  // convert to seconds
 		prevStepTime=System.currentTimeMillis();
 		if (delay>1) return;
-		float ips = convert.toIps(curMotorSpeed);
 		
-		// TODO:  put this in ConversionManager
-		float length = (ips*delay)*2.54f;     // convert inch/second to cm    
-		float radius = diameter/20;                           // convert to cm
-		float volume = length*(radius*radius*3.14159f);
-		grams+=volume*density;
+		grams+=convert.toGrams(diameter, delay, curMotorSpeed);
 		
 		if (rb125g.getSelection()) {
 			if (grams>125) resetCoil(true);

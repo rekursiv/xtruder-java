@@ -41,6 +41,7 @@ import com.protoplant.xtruder2.event.ConfigStoreEvent;
 import com.protoplant.xtruder2.event.StepperConnectEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.widgets.Label;
 //import org.eclipse.swt.widgets.List;
 
 
@@ -75,6 +76,9 @@ public class ConfigDetailPanel extends Composite {
 	
 	private boolean isMainEditReady;
 	private boolean isMainEditModified;
+	private Button btnRevert;
+	private Button btnDelete;
+	private Button btnUse;
 	
 
 	public ConfigDetailPanel(Composite parent, Injector injector) {
@@ -105,11 +109,10 @@ public class ConfigDetailPanel extends Composite {
 			}
 		});
 		FormData fd_btnPull = new FormData();
-		fd_btnPull.right = new FormAttachment(0, 195);
-		fd_btnPull.top = new FormAttachment(0, 12);
+		fd_btnPull.top = new FormAttachment(txtMainEdit, 0, SWT.TOP);
 		fd_btnPull.left = new FormAttachment(0, 12);
 		btnPull.setLayoutData(fd_btnPull);
-		btnPull.setText("Pull Machine State");
+		btnPull.setText("Pull");
 		
 		btnSave = new Button(this, SWT.NONE);
 		fd_btnPull.bottom = new FormAttachment(0, 50);
@@ -136,10 +139,9 @@ public class ConfigDetailPanel extends Composite {
 			}
 		});
 		FormData fd_btnSaveAs = new FormData();
-		fd_btnSaveAs.top = new FormAttachment(btnSave, -35);
-		fd_btnSaveAs.bottom = new FormAttachment(btnSave, 0, SWT.BOTTOM);
-		fd_btnSaveAs.left = new FormAttachment(btnPull, -80);
-		fd_btnSaveAs.right = new FormAttachment(btnPull, 0, SWT.RIGHT);
+		fd_btnSaveAs.top = new FormAttachment(0, 65);
+		fd_btnSaveAs.bottom = new FormAttachment(0, 100);
+		fd_btnSaveAs.right = new FormAttachment(0, 195);
 		btnSaveAs.setLayoutData(fd_btnSaveAs);
 		btnSaveAs.setText("Save as...");
 		
@@ -155,7 +157,7 @@ public class ConfigDetailPanel extends Composite {
 		fd_text_1.left = new FormAttachment(0, 12);
 		txtStatus.setLayoutData(fd_text_1);
 		
-		lstFiles = new org.eclipse.swt.widgets.List(this, SWT.BORDER);
+		lstFiles = new org.eclipse.swt.widgets.List(this, SWT.BORDER | SWT.V_SCROLL);
 		lstFiles.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -163,44 +165,46 @@ public class ConfigDetailPanel extends Composite {
 			}
 		});
 		FormData fd_lstFiles = new FormData();
+		fd_lstFiles.right = new FormAttachment(txtMainEdit, -6);
 		fd_lstFiles.bottom = new FormAttachment(txtMainEdit, 0, SWT.BOTTOM);
-		fd_lstFiles.right = new FormAttachment(0, 210);
 		fd_lstFiles.left = new FormAttachment(0, 12);
-		fd_lstFiles.top = new FormAttachment(0, 315);
+		fd_lstFiles.top = new FormAttachment(0, 195);
 		lstFiles.setLayoutData(fd_lstFiles);
 		
-		Button btnTest = new Button(this, SWT.NONE);
-		btnTest.addSelectionListener(new SelectionAdapter() {
+		btnRevert = new Button(this, SWT.NONE);
+		btnRevert.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				test();
+				onRevert();
 			}
 		});
-		FormData fd_btnTest = new FormData();
-		fd_btnTest.left = new FormAttachment(0, 77);
-		fd_btnTest.right = new FormAttachment(0, 135);
-		fd_btnTest.bottom = new FormAttachment(20, 25);
-		fd_btnTest.top = new FormAttachment(20);
-		btnTest.setLayoutData(fd_btnTest);
-		btnTest.setText("TEST");
+		FormData fd_btnRevert = new FormData();
+		fd_btnRevert.left = new FormAttachment(btnSaveAs, 0, SWT.LEFT);
+		fd_btnRevert.top = new FormAttachment(txtMainEdit, 0, SWT.TOP);
+		fd_btnRevert.bottom = new FormAttachment(btnPull, 0, SWT.BOTTOM);
+		fd_btnRevert.right = new FormAttachment(btnSaveAs, 0, SWT.RIGHT);
+		btnRevert.setLayoutData(fd_btnRevert);
+		btnRevert.setText("Revert");
 		
-		Button btnDelete = new Button(this, SWT.NONE);
+		btnDelete = new Button(this, SWT.NONE);
+		fd_btnSaveAs.left = new FormAttachment(btnDelete, 0, SWT.LEFT);
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				deleteCurFile();
+				deleteFileInView();
 			}
 		});
 		FormData fd_btnDelete = new FormData();
-		fd_btnDelete.left = new FormAttachment(lstFiles, -82);
-		fd_btnDelete.right = new FormAttachment(lstFiles, 0, SWT.RIGHT);
+		fd_btnDelete.right = new FormAttachment(0, 197);
+		fd_btnDelete.left = new FormAttachment(0, 115);
 		btnDelete.setLayoutData(fd_btnDelete);
 		btnDelete.setText("Delete");
 		
-		Button btnUse = new Button(this, SWT.NONE);
+		btnUse = new Button(this, SWT.NONE);
+		fd_btnDelete.top = new FormAttachment(0, 136);
+		fd_btnDelete.bottom = new FormAttachment(0, 176);
+		fd_btnPull.right = new FormAttachment(btnUse, 0, SWT.RIGHT);
 		fd_btnSave.right = new FormAttachment(btnUse, 0, SWT.RIGHT);
-		fd_btnDelete.bottom = new FormAttachment(btnUse, 30);
-		fd_btnDelete.top = new FormAttachment(btnUse, 0, SWT.TOP);
 		btnUse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -208,28 +212,26 @@ public class ConfigDetailPanel extends Composite {
 			}
 		});
 		FormData fd_btnUse = new FormData();
-		fd_btnUse.right = new FormAttachment(0, 95);
-		fd_btnUse.left = new FormAttachment(0, 13);
-		fd_btnUse.bottom = new FormAttachment(0, 300);
-		fd_btnUse.top = new FormAttachment(0, 270);
+		fd_btnUse.left = new FormAttachment(lstFiles, 0, SWT.LEFT);
+		fd_btnUse.right = new FormAttachment(0, 100);
+		fd_btnUse.bottom = new FormAttachment(0, 176);
+		fd_btnUse.top = new FormAttachment(0, 136);
 		btnUse.setLayoutData(fd_btnUse);
 		btnUse.setText("Use");
+		
+		Label label = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
+		FormData fd_label = new FormData();
+		fd_label.bottom = new FormAttachment(0, 117);
+		fd_label.right = new FormAttachment(btnDelete, 0, SWT.RIGHT);
+		fd_label.top = new FormAttachment(0, 115);
+		fd_label.left = new FormAttachment(0, 12);
+		label.setLayoutData(fd_label);
 		
 
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
 	
-
-	protected void onEdit() {
-		if (isMainEditReady && lstFiles.getSelectionIndex()==configIndexInUse) {
-			lstFiles.setItem(lstFiles.getSelectionIndex(), ">* "+configNameInUse);	
-			System.out.println("****");
-			isMainEditModified=true;
-		}
-
-	}
-
 
 	@Inject
 	public void inject(Logger log, EventBus eb, XtruderConfig config, ConfigManager<XtruderConfig> cfgMgr, StepperConfigManager scm) {
@@ -238,6 +240,9 @@ public class ConfigDetailPanel extends Composite {
 		this.config = config;
 		this.cfgMgr = cfgMgr;
 		this.scm = scm;
+		
+		readInUsefile();
+		updateFileList();
 	}
 
 	@Subscribe
@@ -247,67 +252,148 @@ public class ConfigDetailPanel extends Composite {
 		}
 	}
 	
-	protected void test() {
-//		lstFiles.
+	protected void onPanelFocus() {
+//		readInUsefile();
+//		updateFileList();
 	}
 	
-	public void onPanelFocus() {
-		readInUsefile();
-		updateFileList();
-//		lstFiles.select(0);
-//		onFileSelect();
-//		test();
+	protected void onRevert() {
+		if (isMainEditModified) {
+			MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+			mb.setMessage("Really revert '"+configNameInUse+"' to previously saved values,\noverwriting your current changes?");
+			mb.setText("Config File Revert");
+			int response = mb.open();
+			if (response==SWT.YES) {
+				revertFileInUse();
+			}
+		} else {
+			revertFileInUse();  // file showing should be identical to file on disk, but this can be used for debugging...
+		}
 	}
 	
-	private void readInUsefile() {
-		try {
-			configNameInUse = new String(Files.readAllBytes(buildPath(configDir+"inuse")), "UTF-8");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	protected void revertFileInUse() {
+		configTextInUse=null;
+		loadFileForViewing();
+		resetEditModified();
 	}
 
-	private void writeInUseFile() {
-		try {
-			Files.write(buildPath(configDir+"inuse"), configNameInUse.getBytes());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	protected void onEdit() {
+		if (!isMainEditModified && isMainEditReady && lstFiles.getSelectionIndex()==configIndexInUse) {
+			lstFiles.setItem(lstFiles.getSelectionIndex(), ">* "+configNameInUse);	
+			System.out.println("****");
+			isMainEditModified=true;
 		}
 	}
-
-
+	
+	protected void onFileSelect() {
+		int sel = lstFiles.getSelectionIndex();
+		if (sel>=0) {
+			
+			if (configIndexInUse==configIndexInView && isMainEditModified) {
+				configTextInUse = txtMainEdit.getText();
+				System.out.println("^^^");
+			}
+			
+			configIndexInView = sel;
+			if (lstFiles.getItem(sel).startsWith(">")) {
+				configNameInView=lstFiles.getItem(sel).substring(3);
+			} else {
+				configNameInView=lstFiles.getItem(sel);
+			}
+			
+			if (sel==configIndexInUse) {
+				if (configTextInUse!=null) {
+					isMainEditReady=false;
+					txtMainEdit.setText(configTextInUse);
+					isMainEditReady=true;
+				} else {
+					System.out.println("-------   '"+configNameInView+"'");
+					loadFileForViewing();
+				}
+				setUseMode();
+			}
+			else {
+				setViewMode();
+				loadFileForViewing();
+			}
+		}
+	}
+	
+	
+	protected void setViewMode() {
+		txtMainEdit.setEditable(false);
+		btnPull.setEnabled(false);
+		btnRevert.setEnabled(false);
+		btnSave.setEnabled(false);
+		btnSaveAs.setEnabled(false);
+		btnUse.setEnabled(true);
+		btnDelete.setEnabled(true);
+	}
+	
+	protected void setUseMode() {
+		txtMainEdit.setEditable(true);
+		btnPull.setEnabled(true);
+		btnRevert.setEnabled(true);
+		btnSave.setEnabled(true);
+		btnSaveAs.setEnabled(true);
+		btnUse.setEnabled(false);
+		btnDelete.setEnabled(false);
+	}
+	
 	protected void onSave() {
-		if (configNameInUse!=null) saveFile(configNameInUse);
+		if (configNameInUse!=null) {
+			applyEdits();
+			saveFileInUse();
+		}
 	}
 	
 	protected void onSaveAs() {
 		SaveAsDialog sad = new SaveAsDialog(this.getShell());
 		sad.create();
 		if (sad.open()==Window.OK) {
-			saveFile(sad.getFileName());
+			configNameInUse=sad.getFileName();
+			configNameInView=sad.getFileName();
+			applyEdits();
+			saveFileInUse();
+			updateFileList();
 		} else {
 			System.out.println("Cancel");	
 		}
 	}
 	
-	protected void saveFile(String fileName) {
+	
+	protected void saveFileInUse() {
 		try {
-//			txtMainEdit.getText();
 			String textToSave = txtMainEdit.getText().replace("\r", "");
 			List<String> lines = Arrays.asList(textToSave.split("\\n"));
-			
-			//  TODO:  parse/apply to machine
-			
-			Files.write(buildPath(settingsDir+fileName+".js"), lines, StandardCharsets.UTF_8);
-			isMainEditModified=false;
-			txtStatus.setText("Current configuration saved.");
-			updateFileList();
+			Files.write(buildPath(buildFileName()), lines, StandardCharsets.UTF_8);
+			resetEditModified();
+//			txtStatus.setText("Current configuration saved.");
 		} catch (Exception e) {
-			txtStatus.setText(e.getLocalizedMessage());
+			setStatusError(e);
 		}
 	}
+	
+	protected void resetEditModified() {
+		lstFiles.setItem(lstFiles.getSelectionIndex(), ">  "+configNameInUse);	
+		isMainEditModified=false;
+	}
+
+	protected void deleteFileInView() {
+		MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		mb.setMessage("Really delete '"+configNameInView+"'?");
+		mb.setText("Config File Delete");
+		int response = mb.open();
+		if (response==SWT.YES) {
+			try {
+				Files.delete(buildPath(buildFileName()));
+				updateFileList();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	
 	protected void useConfigInView() {
 		if (lstFiles.getSelectionIndex()!=configIndexInUse) {
@@ -322,64 +408,55 @@ public class ConfigDetailPanel extends Composite {
 			configIndexInUse=lstFiles.getSelectionIndex();
 			configNameInUse=configNameInView;
 			lstFiles.setItem(lstFiles.getSelectionIndex(), ">  "+configNameInUse);	
-			txtMainEdit.setEditable(true);
+			setUseMode();
 			isMainEditModified=false;
 			writeInUseFile();
-			eb.post(new ConfigFileSelectEvent(configNameInView));
+			log.info("");
+		}
+		applyEdits();
+		eb.post(new ConfigFileSelectEvent(configNameInView));
+	}
+
+	protected void readInUsefile() {
+		try {
+			configNameInUse = new String(Files.readAllBytes(buildPath(configDir+"inuse")), "UTF-8");
+		} catch (IOException e) {
+			setStatusError(e);
 		}
 	}
 
+	protected void writeInUseFile() {
+		try {
+			Files.write(buildPath(configDir+"inuse"), configNameInUse.getBytes());
+		} catch (IOException e) {
+			setStatusError(e);
+		}
+	}
 
-	public void onFileSelect() {
-		int sel = lstFiles.getSelectionIndex();
-		if (sel>=0) {
+	protected void applyEdits() {
+		try {
+			extractJson();
+
+			ObjectMapper om = new ObjectMapper();
+			JsonNode edit = om.readTree(curJson);
 			isMainEditReady=false;
-			if (configIndexInUse==configIndexInView) {  // TODO:  check for edit??
-				configTextInUse = txtMainEdit.getText();
-				System.out.println("^^^");
-			}
-			
-			configIndexInView = sel;
-			if (lstFiles.getItem(sel).startsWith(">")) {
-				configNameInView=lstFiles.getItem(sel).substring(2);
-			} else {
-				configNameInView=lstFiles.getItem(sel);
-			}
-			
-			if (sel==configIndexInUse) {
-				if (configTextInUse!=null) {
-					txtMainEdit.setText(configTextInUse);
-				} else {
-					loadFile(settingsDir+configNameInView+".js");
-				}
-				txtMainEdit.setEditable(true);
-			}
-			else {
-				txtMainEdit.setEditable(false);
-				loadFile(settingsDir+configNameInView+".js");
-			}
+			txtMainEdit.setText(curHeader+cfgMgr.getText(edit));
 			isMainEditReady=true;
+			JsonNode main = om.valueToTree(config);
+
+			main = merge(main, edit);
+//			System.out.println(cfgMgr.getText(main));
+			cfgMgr.update(cfgMgr.getText(main), config);
+			eb.post(new ConfigSetupEvent());
+			
+			txtStatus.setText("Current configuration updated.");
+		} catch (Exception e) {
+			setStatusError(e);
 		}
 	}
-	
-	public void deleteCurFile() {
-		MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
-		mb.setMessage("Really delete '"+configNameInView+"'?");
-		mb.setText("Config File Delete");
-		int response = mb.open();
-		if (response==SWT.YES) {
-			try {
-				Files.delete(buildPath(settingsDir+configNameInView+".js"));
-				updateFileList();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	//mapper.readerForUpdating(model).readValue(text);
-//	return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(model).replace("\r", "");
-	public void mergeMachineState() {
+
+
+	protected void mergeMachineState() {
 		extractJson();
 		eb.post(new ConfigStoreEvent());  //  update current machine state	
 		ObjectMapper om = new ObjectMapper();
@@ -390,7 +467,7 @@ public class ConfigDetailPanel extends Composite {
 			txtMainEdit.setText(curHeader+cfgMgr.getText(edit));
 			txtStatus.setText("");
 		} catch (Exception e) {
-			txtStatus.setText(e.getLocalizedMessage());
+			setStatusError(e);
 		}
 	}
 	
@@ -402,24 +479,66 @@ public class ConfigDetailPanel extends Composite {
 			curJson=curHeader.substring(startPos);
 			curHeader=curHeader.substring(0, startPos);
 		}
-		System.out.println("'"+curHeader+"'");
-		System.out.println("");
-		System.out.println("'"+curJson+"'");
+//		System.out.println("'"+curHeader+"'");
+//		System.out.println("");
+//		System.out.println("'"+curJson+"'");
 	}
 	
-	protected void newFile() {            //  FIXME  - use merge
-		eb.post(new ConfigStoreEvent());
-		try {
-			txtMainEdit.setText(cfgMgr.getText(scm.getMachineState()));
-			txtStatus.setText("");
-		} catch (Exception e) {
-			txtStatus.setText(e.getLocalizedMessage());
+	
+	protected void updateFileList() {
+		lstFiles.removeAll();
+		if (Files.exists(buildPath(configDir+"system.js"))) {
+			if (configNameInUse.equals("[SYSTEM]")) {
+				configIndexInUse = 0;
+				lstFiles.add(">  [SYSTEM]");
+			} else {
+				lstFiles.add("[SYSTEM]");
+			}
 		}
+		File cfgDir = new File(System.getProperty("user.dir")+settingsDir);
+		File[] fileList = cfgDir.listFiles();
+		for (File file : fileList) {
+			if (file.isFile()&&file.getName().endsWith(".js")) {
+				String nameRoot = stripExt(file.getName());
+				if (nameRoot.equals(configNameInUse)) {
+					configIndexInUse = lstFiles.getItemCount();
+					nameRoot = ">  "+nameRoot;
+				}
+				lstFiles.add(nameRoot);
+			}
+		}
+		
+		lstFiles.select(configIndexInUse);
+		configIndexInView=-1;
+		onFileSelect();
+		useConfigInView();
+	}
+	
+	protected void loadFileForViewing() {
+		StringBuilder sb = new StringBuilder();
+		try {
+			for (String line : Files.readAllLines(buildPath(buildFileName()), StandardCharsets.UTF_8)) {
+				if (sb.length()>0) sb.append("\n");
+				sb.append(line);
+			}
+		} catch (IOException e) {
+			setStatusError(e);
+		}
+		isMainEditReady=false;
+		txtMainEdit.setText(sb.toString());
+		isMainEditReady=true;
 	}
 	
 	
+	protected void setStatusError(Throwable e) {   //  todo:  red color bg
+		txtStatus.setText(e.getLocalizedMessage());
+		//  TODO:  log???
+		e.printStackTrace();
+	}
+	
+
 	// http://stackoverflow.com/questions/9895041/merging-two-json-documents-using-jackson
-	public JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
+	protected JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
 	    Iterator<String> fieldNames = updateNode.fieldNames();
 	    while (fieldNames.hasNext()) {
 	        String fieldName = fieldNames.next();
@@ -439,45 +558,15 @@ public class ConfigDetailPanel extends Composite {
 	    return mainNode;
 	}
 	
-	public void updateFileList() {
-		lstFiles.removeAll();
-		File cfgDir = new File(System.getProperty("user.dir")+settingsDir);
-		File[] fileList = cfgDir.listFiles();
-
-		for (File file : fileList) {
-			if (file.isFile()&&file.getName().endsWith(".js")) {
-				String nameRoot = stripExt(file.getName());
-				if (nameRoot.equals(configNameInUse)) {
-					configIndexInUse = lstFiles.getItemCount();
-					nameRoot = "> "+nameRoot;
-				}
-				lstFiles.add(nameRoot);
-			}
-		}
-		
-		lstFiles.select(configIndexInUse);
-		configIndexInView=-1;
-		onFileSelect();
-		useConfigInView();
-
+	protected String buildFileName() {
+		if (configNameInView.equals("[SYSTEM]")) {
+			return configDir+"system.js";
+		} else {
+			return settingsDir+configNameInView+".js";
+		}	
 	}
 	
-	protected void loadFile(String fileName) {
-		StringBuilder sb = new StringBuilder();
-		try {
-			for (String line : Files.readAllLines(buildPath(fileName), StandardCharsets.UTF_8)) {
-				if (sb.length()>0) sb.append("\n");
-				sb.append(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();   ///  FIXME
-		}
-		txtMainEdit.setText(sb.toString());
-	}
-	
-
-	
-	public Path buildPath(String fileName) {
+	protected Path buildPath(String fileName) {
 		String pathStr = System.getProperty("user.dir")+fileName;
 		Path path = Paths.get(pathStr);
 		return path;
@@ -490,39 +579,6 @@ public class ConfigDetailPanel extends Composite {
 	}
 	
 	
-	
-	
-	
-	protected void _editCurrent() {
-		try {
-			eb.post(new ConfigStoreEvent());
-			txtMainEdit.setText(cfgMgr.getText(config));
-			txtStatus.setText("Current configuration loaded into text editor.");
-		} catch (Exception e) {
-			txtStatus.setText(e.getLocalizedMessage());
-		}		
-	}
-	
-	protected void _applyEdits() {
-		try {
-			cfgMgr.update(txtMainEdit.getText(), config);
-//			scm.buildStepperMaps();
-			eb.post(new ConfigSetupEvent());
-			txtStatus.setText("Current configuration updated.");
-		} catch (Exception e) {
-			txtStatus.setText(e.getLocalizedMessage());
-		}
-	}
-
-	protected void _save() {
-		try {
-			cfgMgr.save(cfgMgr.mapConfigFromText(txtMainEdit.getText()));
-			txtStatus.setText("Current configuration saved.");
-		} catch (Exception e) {
-			txtStatus.setText(e.getLocalizedMessage());
-		}
-	}
-
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components

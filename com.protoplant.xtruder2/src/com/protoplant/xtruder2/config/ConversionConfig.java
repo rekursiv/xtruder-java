@@ -7,5 +7,6 @@ public class ConversionConfig {
 	public float rollerDiameter = 3.0f;
 	
 	public float pressureScale = 9.68f;
+	public float density = 1.0f;
 
 }

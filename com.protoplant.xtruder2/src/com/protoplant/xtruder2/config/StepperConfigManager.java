@@ -71,6 +71,10 @@ public class StepperConfigManager {
 		return function;
 	}
 
+	public void storeConversionState(float density) {
+		machineState.conversion.density = density;
+	}
+	
 	public void storeConveyanceState(int speedSliderInit) {
 		machineState.conveyance.speedSliderInit = speedSliderInit;
 	}

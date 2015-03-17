@@ -184,7 +184,6 @@ public class ConveyanceDetailPanel extends Composite {
 		this.eb = eb;
 		this.config = config;
 		this.scm = scm;
-		log.info("");
 	}
 	
 	@Subscribe
