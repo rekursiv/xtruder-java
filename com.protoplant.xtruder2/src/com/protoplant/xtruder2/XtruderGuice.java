@@ -19,7 +19,7 @@ import com.protoplant.xtruder2.config.XtruderConfig;
 
 public class XtruderGuice extends AbstractModule {
 
-	protected final ConfigManager<XtruderConfig> cfgMgr = new ConfigManager<XtruderConfig>(XtruderConfig.class, "config/default.js");
+	protected final ConfigManager<XtruderConfig> cfgMgr = new ConfigManager<XtruderConfig>(XtruderConfig.class, "config/system.js");
 	protected XtruderConfig config;
 	protected final EventBus eventBus = new EventBus();
 
