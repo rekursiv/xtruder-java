@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.window.Window;
@@ -39,6 +40,7 @@ import com.protoplant.xtruder2.event.ConfigFileSelectEvent;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.ConfigStoreEvent;
 import com.protoplant.xtruder2.event.StepperConnectEvent;
+
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.widgets.Label;
@@ -253,8 +255,7 @@ public class ConfigDetailPanel extends Composite {
 	}
 	
 	protected void onPanelFocus() {
-//		readInUsefile();
-//		updateFileList();
+
 	}
 	
 	protected void onRevert() {
@@ -389,7 +390,7 @@ public class ConfigDetailPanel extends Composite {
 				Files.delete(buildPath(buildFileName()));
 				updateFileList();
 			} catch (IOException e) {
-				e.printStackTrace();
+				setStatusError(e);
 			}
 		}
 	}
@@ -532,8 +533,8 @@ public class ConfigDetailPanel extends Composite {
 	
 	protected void setStatusError(Throwable e) {   //  todo:  red color bg
 		txtStatus.setText(e.getLocalizedMessage());
-		//  TODO:  log???
-		e.printStackTrace();
+		log.log(Level.WARNING, "", e);
+//		e.printStackTrace();
 	}
 	
 

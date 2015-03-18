@@ -66,9 +66,15 @@ public class StepperConfigManager {
 	public StepperFunction getFunction(String serial) {
 		StepperFunction function = StepperFunction.UNDEFINED;
 		for (Entry<StepperFunction, StepperConfig> entry : config.steppers.entrySet()) {
-			if (entry.getValue().serial.equals(serial)) return entry.getKey();
+			if (entry.getValue().serial!=null) {
+				if (entry.getValue().serial.equals(serial)) return entry.getKey();
+			}
 		}
 		return function;
+	}
+	
+	public void storeFeedbackState(float targetDiameter) {
+		machineState.feedback.targetDiameter = targetDiameter;
 	}
 
 	public void storeConversionState(float density) {

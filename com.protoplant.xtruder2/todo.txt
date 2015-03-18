@@ -3,7 +3,13 @@
 rename StepperConfigManager ->  XtruderConfigManager
 
 
+
+=============   Alarms
+
+move hopper alarm out of Test
+
 dia out-of-bounds alarm
+
 
 ==========   new system
 
@@ -23,34 +29,25 @@ put "tolerance lines" on chart, sync with dia. setting
 
 more data in graph, mark new spool
 
+
 ================  ConfigDetail
 
 ask Dustin:  extents for stepper motor speed sliders
 
-** problem: config file stays "in memory" and will overwrite settings 
+fix "missing inuse" crash
 
-----
+fill in "save as" file name text box with current name
+
+testing!!
 
 color status bg
 
 
-buttons:
- *Edit Current
- *Apply Edits
- Edit File...
- *Save File
- Save File As...
- ?? assign stepper...
-
-
-----
-
-Pull Machine Setup
-Save File
-New File...   >  name
-
-
 === BUGS
+
+!! config detail -> save as... does not update view correctly (seems to save file OK - hit "revert" as workaround)
+
+!!!  USB connecting to UNDEFINED stepper boards!!!
 
 random 0 data from indicator
 

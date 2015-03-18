@@ -52,10 +52,6 @@ import org.eclipse.swt.events.ModifyEvent;
 
 
 public class CoilMassPanel extends Group {
-
-//	private static final float pcabsDensity=1.13f;
-//	private static final float htplaDensity=1.28f;
-//	private static final float cfplaDensity=1.20f;
 	
 	private Logger log;
 	private Label lblData;
@@ -90,8 +86,6 @@ public class CoilMassPanel extends Group {
 //	private DataLogger dl;
 	private Spinner spnDensity;
 	private Group grpTargetDiameter;
-	private Button rbnTd175;
-	private Button rbnTd285;
 	private Button btnFeedback;
 	private Label lblFbPrevNudge;
 	private Label lblFbCnt;
@@ -102,6 +96,7 @@ public class CoilMassPanel extends Group {
 	private ConversionManager convert;
 	private AudioManager am;
 	private StepperConfigManager scm;
+	private Spinner spnTargetDia;
 
 
 	public CoilMassPanel(Composite parent, Injector injector) {   //  350 x 327
@@ -243,6 +238,7 @@ public class CoilMassPanel extends Group {
 		grpTargetDiameter.setText("Target Diameter");
 		grpTargetDiameter.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_grpTargetDiameter = new FormData();
+		fd_grpTargetDiameter.right = new FormAttachment(100, -15);
 		fd_grpTargetDiameter.bottom = new FormAttachment(grpReset, 75);
 		fd_grpTargetDiameter.top = new FormAttachment(grpReset, 0, SWT.TOP);
 		
@@ -262,17 +258,7 @@ public class CoilMassPanel extends Group {
 		spnCustomMass.setSelection(750);
 		spnCustomMass.setFont(SWTResourceManager.getFont("Segoe UI", 16, SWT.NORMAL));
 		fd_grpTargetDiameter.left = new FormAttachment(0, 445);
-		fd_grpTargetDiameter.right = new FormAttachment(0, 615);
 		grpTargetDiameter.setLayoutData(fd_grpTargetDiameter);
-		
-		rbnTd175 = new Button(grpTargetDiameter, SWT.RADIO);
-		rbnTd175.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		rbnTd175.setSelection(true);
-		rbnTd175.setText("1.75");
-		
-		rbnTd285 = new Button(grpTargetDiameter, SWT.RADIO);
-		rbnTd285.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		rbnTd285.setText("2.85");
 		
 		btnFeedback = new Button(this, SWT.CHECK);
 		btnFeedback.addSelectionListener(new SelectionAdapter() {
@@ -299,6 +285,18 @@ public class CoilMassPanel extends Group {
 		FormData fd_lblFbPrevNudge = new FormData();
 		fd_lblFbPrevNudge.right = new FormAttachment(100, -15);
 		fd_lblFbPrevNudge.bottom = new FormAttachment(grpTargetDiameter, -6);
+		
+		spnTargetDia = new Spinner(grpTargetDiameter, SWT.BORDER);
+		spnTargetDia.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				config.feedback.targetDiameter=(float)spnTargetDia.getSelection()/100.0f;
+			}
+		});
+		spnTargetDia.setMaximum(300);
+		spnTargetDia.setMinimum(150);
+		spnTargetDia.setSelection(173);
+		spnTargetDia.setFont(SWTResourceManager.getFont("Segoe UI", 16, SWT.NORMAL));
 		fd_lblFbPrevNudge.top = new FormAttachment(btnResetCount, -15);
 		lblFbPrevNudge.setLayoutData(fd_lblFbPrevNudge);
 		
@@ -334,20 +332,19 @@ public class CoilMassPanel extends Group {
 				isMotorRunning = false;
 			}
 		});
-		
-		rbnTd175.setText(String.format("%.2f", config.feedback.target175));
-		rbnTd285.setText(String.format("%.2f", config.feedback.target285));
 		customMass=spnCustomMass.getSelection();
 	}
 
 	@Subscribe
 	public void onConfigSetup(ConfigSetupEvent evt) {
 		spnDensity.setSelection((int)(config.conversion.density*100));
+		spnTargetDia.setSelection((int)(config.feedback.targetDiameter*100));
 	}
 
 	@Subscribe
 	public void onConfigStore(ConfigStoreEvent evt) {
 		scm.storeConversionState(config.conversion.density);
+		scm.storeFeedbackState(config.feedback.targetDiameter);
 	}
 	
 	@Subscribe
@@ -387,9 +384,7 @@ public class CoilMassPanel extends Group {
 	}
 	
 	public void doFeedback() {
-		float delta = 0;
-		if (rbnTd175.getSelection()) delta = diameter-config.feedback.target175;
-		else if (rbnTd285.getSelection()) delta = diameter-config.feedback.target285;		
+		float delta = diameter-config.feedback.targetDiameter;
 		if (Math.abs(delta)<config.feedback.deadband) {
 			++fbCenterCount;
 		} else {

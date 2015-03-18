@@ -6,7 +6,7 @@ public class ConversionConfig {
 	public int microStepsPerStep = 16;
 	public float rollerDiameter = 3.0f;
 	
-	public float pressureScale = 9.68f;
+	public float pressureScale = 1.1f;
 	public float density = 1.0f;
 
 }

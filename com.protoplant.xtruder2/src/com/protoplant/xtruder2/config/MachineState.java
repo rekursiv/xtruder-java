@@ -13,6 +13,7 @@ import com.protoplant.xtruder2.StepperFunction;
 public class MachineState {
 
 	public ConversionState conversion = new ConversionState();
+	public FeedbackState feedback = new FeedbackState();
 	public ConveyanceState conveyance = new ConveyanceState();
 	public TreeMap<StepperFunction, StepperState> steppers = new TreeMap<StepperFunction, StepperState>();
 	
