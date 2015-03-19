@@ -42,7 +42,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(280, 190);
+		return new Point(320, 200);
 	}
 
 	@Override
