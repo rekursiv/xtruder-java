@@ -10,6 +10,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.config.MachineState;
 import com.protoplant.xtruder2.config.StepperConfigManager;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
@@ -48,7 +49,8 @@ public class ConveyanceDetailPanel extends Composite {
 	private XtruderConfig config;
 	private Button btnLeft;
 	private Button btnRight;
-	private StepperConfigManager scm;
+	private MachineState ms;
+//	private StepperConfigManager scm;
 
 	public ConveyanceDetailPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
@@ -179,11 +181,12 @@ public class ConveyanceDetailPanel extends Composite {
 	}
 	
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config, StepperConfigManager scm) {
+	public void inject(Logger log, EventBus eb, XtruderConfig config, MachineState ms) {
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
-		this.scm = scm;
+		this.ms = ms;
+
 	}
 	
 	@Subscribe
@@ -197,7 +200,7 @@ public class ConveyanceDetailPanel extends Composite {
 	
 	@Subscribe
 	public void onConfigStore(ConfigStoreEvent evt) {
-		scm.storeConveyanceState(sldSpeedAdjust.getSelection());
+		ms.conveyance.speedSliderInit = sldSpeedAdjust.getSelection();
 	}
 	
 	@Subscribe

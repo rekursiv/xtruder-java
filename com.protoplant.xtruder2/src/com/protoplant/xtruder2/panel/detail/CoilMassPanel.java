@@ -26,6 +26,7 @@ import com.google.inject.Injector;
 import com.protoplant.xtruder2.AudioManager;
 import com.protoplant.xtruder2.ConversionManager;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.config.MachineState;
 import com.protoplant.xtruder2.config.StepperConfigManager;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.CoilMassEvent;
@@ -77,13 +78,9 @@ public class CoilMassPanel extends Group {
 	private Group grpMaterial;
 	private Group grpReset;
 	
-//	private XtruderConfig config;
-//	private AudioManager am;
-//	private ConfigManager<XtruderConfig> cfgMgr;
 	private Spinner spnCount;
 	private Label lblCount;
 	private EventBus eb;
-//	private DataLogger dl;
 	private Spinner spnDensity;
 	private Group grpTargetDiameter;
 	private Button btnFeedback;
@@ -97,6 +94,7 @@ public class CoilMassPanel extends Group {
 	private AudioManager am;
 	private StepperConfigManager scm;
 	private Spinner spnTargetDia;
+	private MachineState ms;
 
 
 	public CoilMassPanel(Composite parent, Injector injector) {   //  350 x 327
@@ -317,13 +315,12 @@ public class CoilMassPanel extends Group {
 	
 	
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config, ConversionManager convert, StepperConfigManager scm, AudioManager am) {//, DataLogger dl
+	public void inject(Logger log, EventBus eb, XtruderConfig config, ConversionManager convert, MachineState ms, AudioManager am) {//, DataLogger dl
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
 		this.convert = convert;
-		this.scm = scm;
-//		this.dl = dl;
+		this.ms = ms;
 		this.am = am;
 		
 		this.addDisposeListener(new DisposeListener() {
@@ -343,8 +340,8 @@ public class CoilMassPanel extends Group {
 
 	@Subscribe
 	public void onConfigStore(ConfigStoreEvent evt) {
-		scm.storeConversionState(config.conversion.density);
-		scm.storeFeedbackState(config.feedback.targetDiameter);
+		ms.conversion.density = config.conversion.density;
+		ms.feedback.targetDiameter = config.feedback.targetDiameter;
 	}
 	
 	@Subscribe

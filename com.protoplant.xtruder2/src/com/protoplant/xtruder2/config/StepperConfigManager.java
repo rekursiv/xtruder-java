@@ -1,14 +1,12 @@
 package com.protoplant.xtruder2.config;
 
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import util.config.ConfigManager;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.protoplant.xtruder2.StepperFunction;
@@ -19,15 +17,16 @@ public class StepperConfigManager {
 	private Logger log;
 	private XtruderConfig config;
 	private ConfigManager<XtruderConfig> cfgMgr;
+	private MachineState ms;
 
-	private MachineState machineState = new MachineState();
 
 
 	@Inject
-	public StepperConfigManager(Logger log, XtruderConfig config, ConfigManager<XtruderConfig> cfgMgr) {
+	public StepperConfigManager(Logger log, XtruderConfig config, ConfigManager<XtruderConfig> cfgMgr, MachineState ms) {
 		this.log = log;
 		this.config = config;
 		this.cfgMgr = cfgMgr;
+		this.ms = ms;
 		initConfig();
 	}
 
@@ -54,7 +53,7 @@ public class StepperConfigManager {
 	public int getNumDefinedSteppers() {
 		int num = 0;
 		for (StepperConfig sc : config.steppers.values()) {
-			if (sc.serial!=null) ++num;
+			if (sc.serial!=null && sc.serial.length()>0) ++num;
 		}
 		return num;
 	}
@@ -72,39 +71,16 @@ public class StepperConfigManager {
 		}
 		return function;
 	}
-	
-	public void storeFeedbackState(float targetDiameter) {
-		machineState.feedback.targetDiameter = targetDiameter;
-	}
 
-	public void storeConversionState(float density) {
-		machineState.conversion.density = density;
-	}
-	
-	public void storeConveyanceState(int speedSliderInit) {
-		machineState.conveyance.speedSliderInit = speedSliderInit;
-	}
 	
 	public void storeStepperState(StepperFunction function, int speedSliderInit) {
-		machineState.steppers.put(function, new StepperState(speedSliderInit));
+		ms.steppers.put(function, new StepperState(speedSliderInit));
 	}
 
 	public void storeStepperState(StepperFunction function, int speedSliderInit, boolean isTracking, float trackingScaleFactor) {
-		machineState.steppers.put(function, new StepperState(speedSliderInit, isTracking, trackingScaleFactor));
+		ms.steppers.put(function, new StepperState(speedSliderInit, isTracking, trackingScaleFactor));
 	}
 
-	public MachineState getMachineState() {
-		return machineState;
-	}
 	
-	
-	public void test() {
-		try {
-			System.out.println(cfgMgr.getText(machineState));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
+
 }

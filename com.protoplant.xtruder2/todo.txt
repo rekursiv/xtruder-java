@@ -1,8 +1,5 @@
 
 
-rename StepperConfigManager ->  XtruderConfigManager
-
-
 
 =============   Alarms
 
@@ -10,15 +7,6 @@ move hopper alarm out of Test
 
 dia out-of-bounds alarm
 
-
-==========   new system
-
-research computers
-  all-in-one
-  touchscreen
-  dual-hdmi
-  
-buy MSP430s
 
 =============   Chart
 
@@ -32,9 +20,9 @@ more data in graph, mark new spool
 
 ================  ConfigDetail
 
-testing!!
+** don't apply settings on save
 
-send stepper config on config file update
+send stepper config (and add to map) on config file update
 
 fix "missing inuse" crash
 
@@ -50,8 +38,6 @@ check for motors running, warn user on config update
 === BUGS
 
 !! config detail -> save as... does not update view correctly (seems to save file OK - hit "revert" as workaround)
-
-!!!  USB connecting to UNDEFINED stepper boards!!!
 
 random 0 data from indicator
 

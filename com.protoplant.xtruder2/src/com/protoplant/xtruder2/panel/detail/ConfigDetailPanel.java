@@ -34,6 +34,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.config.MachineState;
 import com.protoplant.xtruder2.config.StepperConfigManager;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.ConfigFileSelectEvent;
@@ -63,7 +64,6 @@ public class ConfigDetailPanel extends Composite {
 	protected Button btnSaveAs;
 	protected Text txtStatus;
 	private EventBus eb;
-	private StepperConfigManager scm;
 	private org.eclipse.swt.widgets.List lstFiles;
 	
 	private String configNameInView;
@@ -81,6 +81,7 @@ public class ConfigDetailPanel extends Composite {
 	private Button btnRevert;
 	private Button btnDelete;
 	private Button btnUse;
+	private MachineState ms;
 	
 
 	public ConfigDetailPanel(Composite parent, Injector injector) {
@@ -236,12 +237,12 @@ public class ConfigDetailPanel extends Composite {
 	
 
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config, ConfigManager<XtruderConfig> cfgMgr, StepperConfigManager scm) {
+	public void inject(Logger log, EventBus eb, XtruderConfig config, ConfigManager<XtruderConfig> cfgMgr, MachineState ms) {
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
 		this.cfgMgr = cfgMgr;
-		this.scm = scm;
+		this.ms = ms;
 		
 		readInUsefile();
 		updateFileList();
@@ -462,10 +463,10 @@ public class ConfigDetailPanel extends Composite {
 		eb.post(new ConfigStoreEvent());  //  update current machine state	
 		ObjectMapper om = new ObjectMapper();
 		try {
-			JsonNode edit = om.readTree(curJson);
-			JsonNode ms = om.valueToTree(scm.getMachineState());
-			edit = merge(edit, ms);
-			txtMainEdit.setText(curHeader+cfgMgr.getText(edit));
+			JsonNode editNode = om.readTree(curJson);
+			JsonNode msNode = om.valueToTree(ms);
+			editNode = merge(editNode, msNode);
+			txtMainEdit.setText(curHeader+cfgMgr.getText(editNode));
 			txtStatus.setText("");
 		} catch (Exception e) {
 			setStatusError(e);

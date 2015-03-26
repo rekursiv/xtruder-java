@@ -15,12 +15,14 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeListener;
 import com.google.inject.spi.TypeEncounter;
+import com.protoplant.xtruder2.config.MachineState;
 import com.protoplant.xtruder2.config.XtruderConfig;
 
 public class XtruderGuice extends AbstractModule {
 
 	protected final ConfigManager<XtruderConfig> cfgMgr = new ConfigManager<XtruderConfig>(XtruderConfig.class, "config/system.js");
 	protected XtruderConfig config;
+	protected MachineState machineState = new MachineState();
 	protected final EventBus eventBus = new EventBus();
 
 	
@@ -34,6 +36,7 @@ public class XtruderGuice extends AbstractModule {
 	protected void setupConfig() {
 		config = cfgMgr.load();
 		bind(XtruderConfig.class).toInstance(config);
+		bind(MachineState.class).toInstance(machineState);
 		bind(new TypeLiteral<ConfigManager<XtruderConfig>>() {}).toInstance(cfgMgr);
 	}
 	
