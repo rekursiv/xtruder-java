@@ -13,7 +13,7 @@ import com.protoplant.xtruder2.AudioManager;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.AnalogDataEvent;
-import com.protoplant.xtruder2.event.StepperDisconnectEvent;
+
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.panel.AdjustableStepperPanel;

@@ -2,8 +2,6 @@ package com.protoplant.xtruder2.usb;
 
 import java.util.logging.Logger;
 
-import javax.xml.bind.DatatypeConverter;
-
 import com.codeminders.hidapi.HIDDeviceInfo;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -12,13 +10,12 @@ import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.config.StepperConfig;
 import com.protoplant.xtruder2.config.StepperConfigManager;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
-import com.protoplant.xtruder2.event.StepperDisconnectEvent;
 import com.protoplant.xtruder2.event.StepperResetEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 import com.protoplant.xtruder2.event.StepperStopEvent;
-import com.protoplant.xtruder2.event.StepperConnectEvent;
+import com.protoplant.xtruder2.event.StepperUpdateEvent;
 
 public class StepperModule extends UsbModule {
 
@@ -41,21 +38,14 @@ public class StepperModule extends UsbModule {
 		if (evt.getFunction() == function) {
 			runSpeed = evt.getSpeed();
 			if (isRunning) {
-				curSpeed = runSpeed;
-				curCmd = CommandType.SET_SPEED;
+				setSpeed(runSpeed);
 			}
 		}
 	}
 
 	@Subscribe
 	public void onConfigSetup(ConfigSetupEvent evt) {   //  FIXME:  does this matter that it sets command on undefined steppers????
-		if (devInfo!=null) {
-//			function = scm.getFunction(devInfo);
-//			if (function!=StepperFunction.UNDEFINED) {
-				curCmd = CommandType.SET_CONFIG;
-				log.info("SET_CONFIG");
-//			}
-		}
+		updateConfig();
 	}
 
 	@Subscribe
@@ -68,8 +58,7 @@ public class StepperModule extends UsbModule {
 	@Subscribe
 	public void onRun(StepperRunEvent evt) {
 		if (evt.getFunction() == function) {
-			curSpeed = runSpeed;
-			curCmd = CommandType.SET_SPEED;
+			setSpeed(runSpeed);
 			isRunning = true;
 		}
 	}
@@ -77,8 +66,7 @@ public class StepperModule extends UsbModule {
 	@Subscribe
 	public void onStop(StepperStopEvent evt) {
 		if (evt.getFunction() == function) {
-			curSpeed = 0;
-			curCmd = CommandType.SET_SPEED;
+			setSpeed(0);
 			isRunning = false;
 		}
 	}
@@ -86,18 +74,34 @@ public class StepperModule extends UsbModule {
 	@Override
 	public void connect(HIDDeviceInfo devInfo) {
 		super.connect(devInfo);
-		if (this.devInfo!=null) {
-			function = scm.getFunction(this.devInfo.getSerial_number());
-			eb.post(new StepperConnectEvent(function, this.devInfo.getSerial_number()));
+		updateConfig();
+
+	}
+	
+	public void updateConfig() {
+		String serial = null;
+		if (devInfo!=null) serial = devInfo.getSerial_number();
+		StepperFunction newFunction = scm.getFunction(serial);
+		if (!isConnected()||newFunction==StepperFunction.UNDEFINED) {
+			eb.post(new StepperUpdateEvent(function, null));
+			log.info("Stepper "+function.name()+" disconnected.");
+		} else {
 			curCmd = CommandType.SET_CONFIG;
-			log.info("Stepper "+function.name()+" connected.");
+			eb.post(new StepperUpdateEvent(newFunction, serial));
+			if (function==StepperFunction.UNDEFINED) log.info("Stepper "+newFunction.name()+" connected.");
 		}
+		function = newFunction;
+	}
+	
+	
+	public void setSpeed(int speed) {
+		curSpeed=speed;
+		if (curCmd!=CommandType.SET_CONFIG) curCmd = CommandType.SET_SPEED;
 	}
 	
 	@Override
 	public void release() {
-		curSpeed = 0;
-		curCmd = CommandType.SET_SPEED;
+		setSpeed(0);
 		refreshWrite();
 		super.release();
 	}
@@ -105,10 +109,9 @@ public class StepperModule extends UsbModule {
 	@Override
 	public void disconnect() {
 		if (isConnected()) {
-			eb.post(new StepperDisconnectEvent(function));
-			log.info("Stepper "+function.name()+" disconnected.");
+			super.disconnect();
+			updateConfig();
 		}
-		super.disconnect();
 	}
 
 	@Override

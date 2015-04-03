@@ -20,11 +20,6 @@ more data in graph, mark new spool
 
 ================  ConfigDetail
 
-** don't apply settings on save
-
-send stepper config (and add to map) on config file update
-
-fix "missing inuse" crash
 
 fill in "save as" file name text box with current name
 
@@ -33,7 +28,6 @@ sort list (Linux)
 color status bg
 
 check for motors running, warn user on config update
-
 
 === BUGS
 

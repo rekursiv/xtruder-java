@@ -40,7 +40,7 @@ import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.ConfigFileSelectEvent;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.ConfigStoreEvent;
-import com.protoplant.xtruder2.event.StepperConnectEvent;
+import com.protoplant.xtruder2.event.StepperUpdateEvent;
 
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -249,7 +249,7 @@ public class ConfigDetailPanel extends Composite {
 	}
 
 	@Subscribe
-	public void onStepperConnect(StepperConnectEvent evt) {
+	public void onStepperConnect(StepperUpdateEvent evt) {
 		if (evt.getFunction()==StepperFunction.UNDEFINED) {
 			txtStatus.setText("Undefined stepper module detected, serial number = \""+evt.getSerial()+"\"");
 		}
@@ -282,7 +282,6 @@ public class ConfigDetailPanel extends Composite {
 	protected void onEdit() {
 		if (!isMainEditModified && isMainEditReady && lstFiles.getSelectionIndex()==configIndexInUse) {
 			lstFiles.setItem(lstFiles.getSelectionIndex(), ">* "+configNameInUse);	
-			System.out.println("****");
 			isMainEditModified=true;
 		}
 	}
@@ -293,7 +292,7 @@ public class ConfigDetailPanel extends Composite {
 			
 			if (configIndexInUse==configIndexInView && isMainEditModified) {
 				configTextInUse = txtMainEdit.getText();
-				System.out.println("^^^");
+//				System.out.println("^^^");
 			}
 			
 			configIndexInView = sel;
@@ -309,7 +308,7 @@ public class ConfigDetailPanel extends Composite {
 					txtMainEdit.setText(configTextInUse);
 					isMainEditReady=true;
 				} else {
-					System.out.println("-------   '"+configNameInView+"'");
+//					System.out.println("-------   '"+configNameInView+"'");
 					loadFileForViewing();
 				}
 				setUseMode();
@@ -328,7 +327,7 @@ public class ConfigDetailPanel extends Composite {
 		btnRevert.setEnabled(false);
 		btnSave.setEnabled(false);
 		btnSaveAs.setEnabled(false);
-		btnUse.setEnabled(true);
+//		btnUse.setEnabled(true);
 		btnDelete.setEnabled(true);
 	}
 	
@@ -338,13 +337,13 @@ public class ConfigDetailPanel extends Composite {
 		btnRevert.setEnabled(true);
 		btnSave.setEnabled(true);
 		btnSaveAs.setEnabled(true);
-		btnUse.setEnabled(false);
+//		btnUse.setEnabled(false);
 		btnDelete.setEnabled(false);
 	}
 	
 	protected void onSave() {
 		if (configNameInUse!=null) {
-			applyEdits();
+//			applyEdits();
 			saveFileInUse();
 		}
 	}
@@ -355,7 +354,7 @@ public class ConfigDetailPanel extends Composite {
 		if (sad.open()==Window.OK) {
 			configNameInUse=sad.getFileName();
 			configNameInView=sad.getFileName();
-			applyEdits();
+//			applyEdits();
 			saveFileInUse();
 			updateFileList();
 		} else {
@@ -421,7 +420,13 @@ public class ConfigDetailPanel extends Composite {
 
 	protected void readInUsefile() {
 		try {
-			configNameInUse = new String(Files.readAllBytes(buildPath(configDir+"inuse")), "UTF-8");
+			Path path = buildPath(configDir+"inuse");
+			if (!Files.exists(path)) {
+				configNameInUse="[SYSTEM]";
+				writeInUseFile();
+				return;
+			}
+			configNameInUse = new String(Files.readAllBytes(path), "UTF-8");
 		} catch (IOException e) {
 			setStatusError(e);
 		}
@@ -436,6 +441,7 @@ public class ConfigDetailPanel extends Composite {
 	}
 
 	protected void applyEdits() {
+		System.out.println("  ***   applyEdits");
 		try {
 			extractJson();
 

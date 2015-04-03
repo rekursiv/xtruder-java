@@ -112,7 +112,9 @@ public class UsbManager extends Thread {
 			HIDDeviceInfo[] devs = HIDManager.getInstance().listDevices();
 			if (devs!=null) {
 				for (HIDDeviceInfo info : devs) {
+//					log.info(info.toString());
 					if (info.getVendor_id()==vendorId&&info.getSerial_number()!=null) {
+						
 						if (!modules.containsKey(info.getSerial_number())) {  // check to see if this device is already mapped
 							UsbModule mod = null;
 							switch (info.getProduct_id()) {

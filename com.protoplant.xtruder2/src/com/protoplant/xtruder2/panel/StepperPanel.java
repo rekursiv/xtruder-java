@@ -5,6 +5,9 @@ import java.util.logging.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -17,25 +20,19 @@ import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.config.StepperConfigManager;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
-import com.protoplant.xtruder2.event.StepperConnectEvent;
-import com.protoplant.xtruder2.event.StepperDisconnectEvent;
 import com.protoplant.xtruder2.event.StepperResetEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
-import com.protoplant.xtruder2.event.StepperSpeedNudgeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 import com.protoplant.xtruder2.event.StepperStopEvent;
-
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormAttachment;
+import com.protoplant.xtruder2.event.StepperUpdateEvent;
 
 
 public class StepperPanel extends Group {
 
 	protected Logger log;
 	protected EventBus eb;
-	protected StepperFunction function;
+	protected final StepperFunction function;
 
 	protected Label lblTorque;
 	protected Label lblSetpt;
@@ -108,7 +105,6 @@ public class StepperPanel extends Group {
 	}
 	
 
-
 	@Inject
 	public void inject(Logger log, EventBus eb, StepperConfigManager scm) {
 		this.log = log;
@@ -118,18 +114,13 @@ public class StepperPanel extends Group {
 	}
 
 	@Subscribe
-	public void onConnect(StepperConnectEvent evt) {
+	public void onUpdate(StepperUpdateEvent evt) {
 		if (evt.getFunction()==function) {
 			adjustSpeed();
 			if (isRunning) eb.post(new StepperRunEvent(function));
-		}
-	}
-	
-	@Subscribe
-	public void onDisconnect(StepperDisconnectEvent evt) {
-		if (evt.getFunction() == function) {
-			showDisconnectState();
-		}
+			if (evt.getSerial()==null) showDisconnectState();
+//			log.info("################  "+function.name()+"   "+evt.getSerial());
+		}		
 	}
 	
 	private void showDisconnectState() {

@@ -66,7 +66,7 @@ public class Xtruder2App {
 		usb.init();
 		
 		// Dell touchscreen is 1600 X 900
-		shell.setBounds(0, 0, 1600, 900);
+		shell.setBounds(0, 0, 1600, 800);
 //		shell.setSize(1600, 900);
 		shell.setText("Protoplant Xtruder V"+appVersion);
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
