@@ -27,8 +27,8 @@ import com.protoplant.xtruder2.event.UsbStatusEvent;
 @Singleton
 public class UsbManager extends Thread {
 
-	private static final int IO_REFRESH_PERIOD = 100;
-	private static final int CONNECT_REFRESH_PERIOD = 2000;
+	public static final int IO_REFRESH_PERIOD = 100;
+	public static final int CONNECT_REFRESH_PERIOD = 2000;
 	
 	protected static final int vendorId = 0x2047;
 	

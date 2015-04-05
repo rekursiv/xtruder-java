@@ -12,6 +12,7 @@ public class XtruderConfig extends ConfigBase {
 	public boolean logToConsole=true;
 	public boolean logToFile=false;
 
+	public AlarmConfig alarm = new AlarmConfig();
 	public ConversionConfig conversion = new ConversionConfig();
 	public FeedbackConfig feedback = new FeedbackConfig();
 	public ConveyanceConfig conveyance = new ConveyanceConfig();	

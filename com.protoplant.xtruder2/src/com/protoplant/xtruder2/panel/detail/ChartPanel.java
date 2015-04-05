@@ -60,16 +60,10 @@ public class ChartPanel extends Composite {
 	private float samplePrevDiaMax=0;
 	private ConversionManager convert;
 
-	private float curDiaMin=0;
-	private float curDiaMax=0;
-//	private float prevDiaMin=0;
-//	private float prevDiaMax=0;
-	private Label lblPrevMax;
-	private Label lblPrevMin;
-	private Label lblMax;
-	private Label lblMin;
-	private Button btnResetDia;
 	
+	
+	
+
 	
 	
 	
@@ -94,14 +88,17 @@ public class ChartPanel extends Composite {
 			}
 		});
 		FormData fd_btnReset = new FormData();
-		fd_btnReset.right = new FormAttachment(0, 105);
-		fd_btnReset.left = new FormAttachment(0, 15);
+		fd_btnReset.right = new FormAttachment(0, 100);
+		fd_btnReset.left = new FormAttachment(0, 10);
 		btnReset.setLayoutData(fd_btnReset);
 		btnReset.setText("Reset Chart");
 		
 		Button btnTest = new Button(this, SWT.NONE);
-		fd_btnReset.top = new FormAttachment(100, -55);
-		fd_btnReset.bottom = new FormAttachment(100, -21);
+		
+
+		fd_canvas.bottom = new FormAttachment(100, -45);
+		fd_btnReset.top = new FormAttachment(100, -45);
+		fd_btnReset.bottom = new FormAttachment(100, -11);
 		btnTest.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -109,44 +106,12 @@ public class ChartPanel extends Composite {
 			}
 		});
 		FormData fd_btnTest = new FormData();
-		fd_btnTest.bottom = new FormAttachment(0, 844);
-		fd_btnTest.top = new FormAttachment(0, 810);
-		fd_btnTest.right = new FormAttachment(0, 600);
-		fd_btnTest.left = new FormAttachment(0, 525);
+		fd_btnTest.top = new FormAttachment(100, -45);
+		fd_btnTest.bottom = new FormAttachment(100, -12);
+		fd_btnTest.right = new FormAttachment(0, 205);
+		fd_btnTest.left = new FormAttachment(0, 130);
 		btnTest.setLayoutData(fd_btnTest);
 		btnTest.setText("TEST");
-		
-		Group grpDiameterMinmax = new Group(this, SWT.NONE);
-		fd_canvas.bottom = new FormAttachment(100, -105);
-		grpDiameterMinmax.setText("Diameter Min/Max");
-		FormData fd_grpDiameterMinmax = new FormData();
-		fd_grpDiameterMinmax.top = new FormAttachment(100, -99);
-		fd_grpDiameterMinmax.bottom = new FormAttachment(100, -12);
-		fd_grpDiameterMinmax.right = new FormAttachment(0, 465);
-		fd_grpDiameterMinmax.left = new FormAttachment(0, 130);
-		grpDiameterMinmax.setLayoutData(fd_grpDiameterMinmax);
-		
-		lblPrevMax = new Label(grpDiameterMinmax, SWT.BORDER);
-		lblPrevMax.setBounds(10, 20, 100, 25);
-		
-		lblPrevMin = new Label(grpDiameterMinmax, SWT.BORDER);
-		lblPrevMin.setBounds(10, 51, 100, 25);
-		
-		lblMax = new Label(grpDiameterMinmax, SWT.BORDER);
-		lblMax.setBounds(130, 20, 100, 25);
-		
-		lblMin = new Label(grpDiameterMinmax, SWT.BORDER);
-		lblMin.setBounds(130, 51, 100, 25);
-		
-		btnResetDia = new Button(grpDiameterMinmax, SWT.NONE);
-		btnResetDia.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				resetDia();
-			}
-		});
-		btnResetDia.setBounds(236, 20, 87, 35);
-		btnResetDia.setText("Reset Dia");
 		lws.setContents(graph);
 
 		
@@ -168,20 +133,7 @@ public class ChartPanel extends Composite {
 
 	}
 	
-	@Subscribe
-	public void onCoilReset(CoilResetEvent event) {
-		resetDia();
-	}
-	
-	
-	protected void resetDia() {
-		lblPrevMin.setText(lblMin.getText());
-		lblPrevMax.setText(lblMax.getText());
-		curDiaMin=0;
-		curDiaMax=0;
-		lblMin.setText(String.format("%.3f", curDiaMin));
-		lblMax.setText(String.format("%.3f", curDiaMax));
-	}
+
 
 	protected void test() {
 //		graph.setZoomType(ZoomType.PANNING);
@@ -228,16 +180,6 @@ public class ChartPanel extends Composite {
 		samplePrevDiaMax=max;
 		samplePrevDiaMin=min;
 		diameterData.addSample(new Sample(System.currentTimeMillis(), cur, plus, minus, 0, 0));
-		
-		if (max>curDiaMax) {
-			curDiaMax=max;
-			lblMax.setText(String.format("%.3f", max));
-		}
-		if (curDiaMin<0.1||min<curDiaMin) {
-			curDiaMin=min;
-			lblMin.setText(String.format("%.3f", min));
-		}
-		
 	}
 	
 	@Subscribe

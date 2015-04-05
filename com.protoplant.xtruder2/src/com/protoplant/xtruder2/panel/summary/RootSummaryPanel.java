@@ -22,6 +22,7 @@ public class RootSummaryPanel extends Composite {
 	protected ConfigSummaryPanel pnlConfig;
 	protected DataSummaryPanel pnlData;
 	protected SpoolingSummaryPanel pnlSpooling;
+	protected AlarmSummaryPanel pnlAlarm;
 
 	public RootSummaryPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
@@ -37,13 +38,16 @@ public class RootSummaryPanel extends Composite {
 		pnlConfig.setBounds(196, 10, 180, 90);
 		
 		pnlData = new DataSummaryPanel(this, injector);
-		pnlData.setBounds(10, 202, 366, 90);
+		pnlData.setBounds(10, 298, 366, 90);
 
 		pnlSpooling = new SpoolingSummaryPanel(this, injector);
 		pnlSpooling.setBounds(196, 106, 180, 90);
 		
+		pnlAlarm = new AlarmSummaryPanel(this, injector);
+		pnlAlarm.setBounds(10, 202, 180, 90);
+		
 		pnlTest = new TestSummaryPanel(this, injector);
-		pnlTest.setBounds(10, 357, 180, 90);
+		pnlTest.setBounds(196, 202, 180, 90);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -60,6 +64,6 @@ public class RootSummaryPanel extends Composite {
 	}
 
 	public void setDefaultFocus() {
-		eb.post(new PanelFocusEvent(pnlConfig));  //pnlSpooling
+		eb.post(new PanelFocusEvent(pnlAlarm));  //pnlSpooling
 	}
 }
