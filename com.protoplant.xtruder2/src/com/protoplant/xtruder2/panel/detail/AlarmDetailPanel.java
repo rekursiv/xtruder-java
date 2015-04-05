@@ -120,6 +120,7 @@ public class AlarmDetailPanel extends Composite {
 					diaAlarmCount=config.alarm.diaAlarmSilenceSeconds*usbEventHz;
 				} else {
 					chbDiaSilence.setText("Silence");
+					diaAlarmCount=0;
 				}
 			}
 		});
@@ -142,6 +143,7 @@ public class AlarmDetailPanel extends Composite {
 					hopperSilenceCount=config.alarm.hopperAlarmSilenceSeconds*usbEventHz;
 				} else {
 					chbHopperSilence.setText("Silence");
+					hopperSilenceCount=0;
 				}
 			}
 		});
@@ -226,7 +228,7 @@ public class AlarmDetailPanel extends Composite {
 					chbHopperSilence.setText("Silence");
 					chbHopperSilence.setSelection(false);
 				} else {
-					chbHopperSilence.setText("Silence:  "+(hopperSilenceCount/usbEventHz+1));	
+					chbHopperSilence.setText("Silence:  "+(hopperSilenceCount/usbEventHz+1));
 				}
 			}
 		} else {

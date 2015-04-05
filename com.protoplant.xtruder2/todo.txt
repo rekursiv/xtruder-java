@@ -1,13 +1,6 @@
 
 
 
-=============   Alarms
-
-move hopper alarm out of Test
-
-dia out-of-bounds alarm
-
-
 =============   Chart
 
 hack source
