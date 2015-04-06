@@ -16,7 +16,7 @@ import com.protoplant.xtruder2.usb.UsbManager;
 
 public class Xtruder2App {
 	
-	static final String appVersion = "2.10";
+	static final String appVersion = "2.11";
 	
 	
 	public static void main(String[] args) {
@@ -54,11 +54,11 @@ public class Xtruder2App {
 		shell.open();
 
 		Injector injector = Guice.createInjector(new XtruderGuice());
-
-		AudioManager am = injector.getInstance(AudioManager.class);
-		am.init();
 		
 		new RootPanel(shell, injector);
+		
+		AudioManager am = injector.getInstance(AudioManager.class);
+		am.init();
 		
 		StepperConfigManager scm = injector.getInstance(StepperConfigManager.class);
 		

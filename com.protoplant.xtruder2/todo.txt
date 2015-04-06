@@ -1,6 +1,20 @@
 
 
 
+
+======  global control non-selectable "summary panel"
+setup/production modes
+coil reset
+stop all motors
+feedback info??
+==============
+
+===== alarms
+
+bug:  "use" config file does not re-load voice
+
+sound effect to get attention before voice
+
 =============   Chart
 
 hack source

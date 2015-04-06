@@ -5,6 +5,13 @@ copy from C:\projects\javalib\freetts-1.2.2-bin\freetts-1.2\lib:
  cmulex.jar
  en_us.jar
  freetts.jar
+ mbrola.jar
+ 
+ ----
+ 
+aptitude search mbrola
+aptitude install mbrola  (???)
+aptitude install mbrola-us1
 
 ========
 

@@ -42,8 +42,8 @@ public class AlarmDetailPanel extends Composite {
 	private int hopperDisconnectCount;
 	private int hopperSilenceCount;
 	private int diaAlarmCount;
-	private int numDiaTooBig;
-	private int numDiaTooSmall;
+	private int diaOverCount;
+	private int diaUnderCount;
 	private int usbEventHz;
 	
 	private Logger log;
@@ -73,7 +73,7 @@ public class AlarmDetailPanel extends Composite {
 		
 		Group grpDiameterMinmax = new Group(this, SWT.NONE);
 		grpDiameterMinmax.setText("Diameter Min/Max");
-		grpDiameterMinmax.setBounds(10,  10, 243, 203);
+		grpDiameterMinmax.setBounds(10,  10, 275, 203);
 		
 		lblPrevMax = new Label(grpDiameterMinmax, SWT.BORDER);
 		lblPrevMax.setBounds(10, 20, 100, 25);
@@ -92,7 +92,6 @@ public class AlarmDetailPanel extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				resetDia();
-//				test();
 			}
 		});
 		btnResetDia.setBounds(10, 154, 100, 35);
@@ -124,12 +123,12 @@ public class AlarmDetailPanel extends Composite {
 				}
 			}
 		});
-		chbDiaSilence.setBounds(130, 165, 93, 16);
+		chbDiaSilence.setBounds(123, 156, 129, 30);
 		chbDiaSilence.setText("Silence");
 		
 		Group grpHopper = new Group(this, SWT.NONE);
 		grpHopper.setText("Hopper");
-		grpHopper.setBounds(259, 10, 148, 118);
+		grpHopper.setBounds(291, 10, 148, 118);
 		
 		lblHopperData = new Label(grpHopper, SWT.BORDER);
 		lblHopperData.setBounds(10, 26, 128, 30);
@@ -148,7 +147,17 @@ public class AlarmDetailPanel extends Composite {
 			}
 		});
 		chbHopperSilence.setText("Silence");
-		chbHopperSilence.setBounds(10, 72, 93, 16);
+		chbHopperSilence.setBounds(10, 72, 128, 36);
+		
+		Button btnTest = new Button(this, SWT.NONE);
+		btnTest.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				test();
+			}
+		});
+		btnTest.setBounds(315, 152, 75, 25);
+		btnTest.setText("TEST");
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -159,10 +168,10 @@ public class AlarmDetailPanel extends Composite {
 		this.eb = eb;
 		this.config = config;
 		this.am = am;
-		numDiaTooBig=0;
-		numDiaTooSmall=0;
-		lblOver.setText(""+numDiaTooBig);
-		lblUnder.setText(""+numDiaTooSmall);
+		diaOverCount=0;
+		diaUnderCount=0;
+		lblOver.setText(""+diaOverCount);
+		lblUnder.setText(""+diaUnderCount);
 		usbEventHz=1000/UsbManager.IO_REFRESH_PERIOD;
 	}
 
@@ -177,21 +186,17 @@ public class AlarmDetailPanel extends Composite {
 			curDiaMin=evt.getMin();
 			lblMin.setText(String.format("%.3f", evt.getMin()));
 		}
-		if (evt.getMax()>config.alarm.diaUpperThreshold) {
-			++numDiaTooBig;
-			lblOver.setText(""+numDiaTooBig);
-			if (diaAlarmCount<=0) {
-				diaAlarmCount=config.alarm.diaAlarmRepeatSeconds*usbEventHz;
-				soundDiaOverAlarm();
+		
+//		if (evt.getMax()>0.1f) {  //  don't count on setup (no filament in indicator)
+			if (evt.getMax()>config.alarm.diaUpperThreshold) {
+				++diaOverCount;
+				lblOver.setText(""+diaOverCount);
+			} else if (evt.getMin()<config.alarm.diaLowerThreshold) {
+				++diaUnderCount;
+				lblUnder.setText(""+diaUnderCount);
 			}
-		} else if (evt.getMin()<config.alarm.diaLowerThreshold) {
-			++numDiaTooSmall;
-			lblUnder.setText(""+numDiaTooSmall);
-			if (diaAlarmCount<=0) {
-				diaAlarmCount=config.alarm.diaAlarmRepeatSeconds*usbEventHz;
-				soundDiaUnderAlarm();
-			}
-		}
+//		}
+		
 		if (diaAlarmCount>0) {
 			diaAlarmCount--;
 			if (chbDiaSilence.getSelection()) {
@@ -202,15 +207,24 @@ public class AlarmDetailPanel extends Composite {
 					chbDiaSilence.setText("Silence:  "+(diaAlarmCount/usbEventHz+1));	
 				}
 			}
+		} else {
+			if (diaOverCount>0) {
+				diaAlarmCount=config.alarm.diaAlarmRepeatSeconds*usbEventHz;
+				soundDiaOverAlarm();
+			}
+			if (diaUnderCount>0) {
+				diaAlarmCount=config.alarm.diaAlarmRepeatSeconds*usbEventHz;
+				soundDiaUnderAlarm();
+			}
 		}
 	}
 	
 	private void soundDiaUnderAlarm() {
-		am.speak("filament too small");
+		am.speak("diameter undersize count is "+diaUnderCount);
 	}
 
 	private void soundDiaOverAlarm() {
-		am.speak("filament too big");
+		am.speak("diameter oversize count is "+diaOverCount);
 	}
 
 	@Subscribe
@@ -255,10 +269,10 @@ public class AlarmDetailPanel extends Composite {
 		curDiaMax=0;
 		lblMin.setText(String.format("%.3f", curDiaMin));
 		lblMax.setText(String.format("%.3f", curDiaMax));
-		numDiaTooBig=0;
-		numDiaTooSmall=0;
-		lblOver.setText(""+numDiaTooBig);
-		lblUnder.setText(""+numDiaTooSmall);
+		diaOverCount=0;
+		diaUnderCount=0;
+		lblOver.setText(""+diaOverCount);
+		lblUnder.setText(""+diaUnderCount);
 	}
 
 	public void soundDisconnectedAlarm() {
@@ -272,13 +286,18 @@ public class AlarmDetailPanel extends Composite {
 	
 	
 	
+	
 	public void test_mass() {
 		eb.post(new StepperSpeedChangeEvent(StepperFunction.TopRoller, 4000));
 		eb.post(new StepperRunEvent(StepperFunction.TopRoller));
 	}
 	
 	public void test() {
-
+		soundEmptyAlarm();
+		soundDisconnectedAlarm();
+		soundDiaUnderAlarm();
+		soundDiaOverAlarm();
+		
 	}
 	
 	@Override
