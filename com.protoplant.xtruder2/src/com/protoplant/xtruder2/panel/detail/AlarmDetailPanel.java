@@ -42,6 +42,7 @@ public class AlarmDetailPanel extends Composite {
 	private int hopperDisconnectCount;
 	private int hopperSilenceCount;
 	private int diaAlarmCount;
+	private int diaResetCount;
 	private int diaOverCount;
 	private int diaUnderCount;
 	private int usbEventHz;
@@ -170,6 +171,7 @@ public class AlarmDetailPanel extends Composite {
 		this.am = am;
 		diaOverCount=0;
 		diaUnderCount=0;
+		diaResetCount=-1;
 		lblOver.setText(""+diaOverCount);
 		lblUnder.setText(""+diaUnderCount);
 		usbEventHz=1000/UsbManager.IO_REFRESH_PERIOD;
@@ -187,15 +189,16 @@ public class AlarmDetailPanel extends Composite {
 			lblMin.setText(String.format("%.3f", evt.getMin()));
 		}
 		
-//		if (evt.getMax()>0.1f) {  //  don't count on setup (no filament in indicator)
-			if (evt.getMax()>config.alarm.diaUpperThreshold) {
-				++diaOverCount;
-				lblOver.setText(""+diaOverCount);
-			} else if (evt.getMin()<config.alarm.diaLowerThreshold) {
-				++diaUnderCount;
-				lblUnder.setText(""+diaUnderCount);
-			}
-//		}
+		if (evt.getMax()>config.alarm.diaUpperThreshold) {
+			diaResetCount=config.alarm.diaAlarmResetSeconds*usbEventHz;
+			++diaOverCount;
+			lblOver.setText(""+diaOverCount);
+		} else if (evt.getMin()<config.alarm.diaLowerThreshold) {
+			diaResetCount=config.alarm.diaAlarmResetSeconds*usbEventHz;
+			++diaUnderCount;
+			lblUnder.setText(""+diaUnderCount);
+		}
+
 		
 		if (diaAlarmCount>0) {
 			diaAlarmCount--;
@@ -208,23 +211,38 @@ public class AlarmDetailPanel extends Composite {
 				}
 			}
 		} else {
-			if (diaOverCount>0) {
+			if (diaOverCount>=config.alarm.diaOverCountTrigger) {
 				diaAlarmCount=config.alarm.diaAlarmRepeatSeconds*usbEventHz;
 				soundDiaOverAlarm();
 			}
-			if (diaUnderCount>0) {
+			if (diaUnderCount>=config.alarm.diaUnderCountTrigger) {
 				diaAlarmCount=config.alarm.diaAlarmRepeatSeconds*usbEventHz;
 				soundDiaUnderAlarm();
+			}
+		}
+		
+		if (diaResetCount>0) {
+			diaResetCount--;
+		} else if (diaResetCount==0) {
+			if (diaOverCount<config.alarm.diaOverCountTrigger) {
+				diaOverCount=0;
+				lblOver.setText(""+diaOverCount);
+				diaResetCount=-1;
+			}
+			if (diaUnderCount<config.alarm.diaUnderCountTrigger) {
+				diaUnderCount=0;
+				lblUnder.setText(""+diaUnderCount);
+				diaResetCount=-1;
 			}
 		}
 	}
 	
 	private void soundDiaUnderAlarm() {
-		am.speak("diameter undersize count is "+diaUnderCount);
+		am.speak("undersize");
 	}
 
 	private void soundDiaOverAlarm() {
-		am.speak("diameter oversize count is "+diaOverCount);
+		am.speak("oversize");
 	}
 
 	@Subscribe

@@ -1,8 +1,11 @@
 
 
-debug "use config"
 
-fix stepper connect/disconnect/update cycle
+
+
+fix config init spooling zero speed bug
+
+
 
 ======  global control non-selectable "summary panel"
 setup/production modes
@@ -10,11 +13,11 @@ coil reset
 stop all motors
 feedback info??
 
-
 =====  config
 
-put spool size (mass) in config
+move to dual-editor system???
 
+put spool size (mass) in config
 
 ===== alarms
 
@@ -22,7 +25,7 @@ USB disconnect alarm
 
 TODO:  "use" config file does not re-load voice
 
-sound effect to get attention before voice
+sound effect to get attention before voice??
 
 =============   Chart
 
@@ -47,11 +50,10 @@ check for motors running, warn user on config update
 
 === BUGS
 
+improve/test/debug stepper connect/disconnect/update cycle
+
 !! config detail -> save as... does not update view correctly (seems to save file OK - hit "revert" as workaround)
 
-random 0 data from indicator
-
-touchscreen flakey
 
 
 

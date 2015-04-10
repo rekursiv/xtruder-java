@@ -13,7 +13,10 @@ public class AlarmConfig {
 	public float diaUpperThreshold = 1.77f;
 	public float diaLowerThreshold = 1.71f;
 	public int diaAlarmRepeatSeconds = 10;
+	public int diaAlarmResetSeconds = 2;
 	public int diaAlarmSilenceSeconds = 240;
+	public int diaOverCountTrigger = 10;
+	public int diaUnderCountTrigger =10;
 	
 	
 }
