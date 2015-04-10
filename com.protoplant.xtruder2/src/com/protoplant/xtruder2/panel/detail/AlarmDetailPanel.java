@@ -114,6 +114,7 @@ public class AlarmDetailPanel extends Composite {
 		lblUnder.setBounds(130, 123, 100, 25);
 		
 		chbDiaSilence = new Button(grpDiameterMinmax, SWT.CHECK);
+		chbDiaSilence.setSelection(true);
 		chbDiaSilence.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -177,6 +178,7 @@ public class AlarmDetailPanel extends Composite {
 		lblOver.setText(""+diaOverCount);
 		lblUnder.setText(""+diaUnderCount);
 		usbEventHz=1000/UsbManager.IO_REFRESH_PERIOD;
+		diaAlarmCount=config.alarm.diaAlarmSilenceSeconds*usbEventHz;
 	}
 
 	
@@ -300,7 +302,7 @@ public class AlarmDetailPanel extends Composite {
 		lblOver.setText(""+diaOverCount);
 		lblUnder.setText(""+diaUnderCount);
 		needsReset=false;
-		diaAlarmCount=0;
+		if (!chbDiaSilence.getSelection()) diaAlarmCount=0;
 	}
 
 	public void soundDisconnectedAlarm() {

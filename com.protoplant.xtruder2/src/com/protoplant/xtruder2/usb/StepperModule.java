@@ -25,7 +25,7 @@ public class StepperModule extends UsbModule {
 	private CommandType curCmd = CommandType.PING;
 	private volatile int curSpeed = 0;
 	private volatile int runSpeed = 0;
-	private boolean isRunning = false;
+	private boolean isRunning = false;    ///////////////    TEST    for "rolling update"  = true
 	private StepperConfigManager scm;
 	private StepperFunction function = StepperFunction.UNDEFINED;
 
@@ -72,13 +72,16 @@ public class StepperModule extends UsbModule {
 			isRunning = false;
 		}
 	}
-	
+
+/*	
+ * ///////////////    disabled    for "rolling update"
 	@Override
 	public synchronized void release() {
 		setSpeed(0);
 		refreshWrite();
 		super.release();
 	}
+*/
 	
 	@Override
 	public synchronized void connect(HIDDeviceInfo devInfo) {

@@ -1,8 +1,12 @@
 
 
 
-
-
+experiment with "rolling update"
+  don't reset steppers on exit (done)
+  don't stop steppers on load  
+  ++ try to pull speeds from steppers?
+  
+  
 
 ======  global control non-selectable "summary panel"
 setup/production modes
