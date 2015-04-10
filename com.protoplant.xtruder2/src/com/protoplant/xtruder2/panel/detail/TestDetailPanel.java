@@ -51,7 +51,8 @@ public class TestDetailPanel extends Composite {
 	}
 	
 	public void test() {
-		lblTest.setText("TEST");
+//		lblTest.setText("TEST");
+		log.info("----------------------------------");
 	}
 
 	@Override

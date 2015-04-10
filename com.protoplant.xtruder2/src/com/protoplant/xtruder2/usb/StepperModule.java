@@ -93,67 +93,6 @@ public class StepperModule extends UsbModule {
 			update();
 		}
 	}
-	
-	private void update() {
-		String serial = null;
-		if (devInfo!=null) serial = devInfo.getSerial_number();
-		StepperFunction newFunction = scm.getFunction(serial);
-		if (isConnected()) {
-			curCmd = CommandType.SET_CONFIG;
-			if (function==StepperFunction.UNDEFINED) log.info("Stepper "+newFunction.name()+" connected.");   //   FIXME  fires when updated with undefined stepper
-			else log.info("Stepper "+newFunction.name()+" updated.");
-		} else {
-			postUpdateToUiThread(new StepperUpdateEvent(function, null));
-			log.info("Stepper "+function.name()+" disconnected.");
-		}
-		function = newFunction;
-	}
-	
-	private void TRY2_update() {
-		String serial = null;
-		if (devInfo!=null) serial = devInfo.getSerial_number();
-		StepperFunction newFunction = scm.getFunction(serial);
-		if (isConnected()) {
-//			if (newFunction!=StepperFunction.UNDEFINED) {
-			if (function==StepperFunction.UNDEFINED) log.info("Stepper "+newFunction.name()+" connected.");
-//				else log.info("Stepper "+newFunction.name()+" updated.");
-//			}
-			curCmd = CommandType.SET_CONFIG;
-		} else {
-			log.info("Stepper "+function.name()+" disconnected.");
-		}
-		function = newFunction;
-	}
-	
-	public void OLD_update() {
-		String serial = null;
-		if (devInfo!=null) serial = devInfo.getSerial_number();
-		StepperFunction newFunction = scm.getFunction(serial);
-		if (!isConnected()||newFunction==StepperFunction.UNDEFINED) {
-			postUpdateToUiThread(new StepperUpdateEvent(function, null));
-			log.info("Stepper "+function.name()+" disconnected.");
-		} else {
-			curCmd = CommandType.SET_CONFIG;
-			postUpdateToUiThread(new StepperUpdateEvent(newFunction, serial));
-			if (function==StepperFunction.UNDEFINED) log.info("Stepper "+newFunction.name()+" connected.");
-		}
-		function = newFunction;
-	}
-	
-	private void postUpdateToUiThread(StepperUpdateEvent event) {
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				eb.post(event);
-			}
-		});
-	}
-	
-	public void setSpeed(int speed) {
-		curSpeed=speed;
-		if (curCmd!=CommandType.SET_CONFIG) curCmd = CommandType.SET_SPEED;
-	}
-	
 
 	@Override
 	protected synchronized byte[] encodePacket() {
@@ -221,7 +160,55 @@ public class StepperModule extends UsbModule {
 		});
 	}
 
-
+	private void update() {
+		String serial = null;
+		if (devInfo!=null) serial = devInfo.getSerial_number();
+		StepperFunction newFunction = scm.getFunction(serial);
+		if (isConnected()) {
+			curCmd = CommandType.SET_CONFIG;
+			postUpdateToUiThread(new StepperUpdateEvent(newFunction, serial));
+			if (function==StepperFunction.UNDEFINED) log.info("Stepper "+newFunction.name()+" connected.");   //   FIXME  fires when updated with undefined stepper
+			else log.info("Stepper "+newFunction.name()+" updated.");
+		} else {
+			postUpdateToUiThread(new StepperUpdateEvent(function, null));
+			log.info("Stepper "+function.name()+" disconnected.");
+		}
+		function = newFunction;
+	}
+	
+	private void postUpdateToUiThread(StepperUpdateEvent event) {
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				eb.post(event);
+			}
+		});
+	}
+	
+	private void setSpeed(int speed) {
+		curSpeed=speed;
+		if (curCmd!=CommandType.SET_CONFIG) curCmd = CommandType.SET_SPEED;
+	}
+	
+	
+	
+	
+	
+	private void OLD_update() {
+		String serial = null;
+		if (devInfo!=null) serial = devInfo.getSerial_number();
+		StepperFunction newFunction = scm.getFunction(serial);
+		if (!isConnected()||newFunction==StepperFunction.UNDEFINED) {
+			postUpdateToUiThread(new StepperUpdateEvent(function, null));
+			log.info("Stepper "+function.name()+" disconnected.");
+		} else {
+			curCmd = CommandType.SET_CONFIG;
+			postUpdateToUiThread(new StepperUpdateEvent(newFunction, serial));
+			if (function==StepperFunction.UNDEFINED) log.info("Stepper "+newFunction.name()+" connected.");
+		}
+		function = newFunction;
+	}
+	
 }
 
 
