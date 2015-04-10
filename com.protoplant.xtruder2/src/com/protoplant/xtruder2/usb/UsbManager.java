@@ -54,7 +54,6 @@ public class UsbManager extends Thread {
 		ioRefreshCount = 0;
 		modules = new TreeMap<String, UsbModule>();
 		refreshConnections();
-        eb.post(new ConfigSetupEvent());
         start();
 	}
 	
@@ -84,16 +83,6 @@ public class UsbManager extends Thread {
 		}
 	}
 	
-	
-	private void refreshConnectionAsync() {
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				refreshConnections();
-			}
-		});
-	}
-	
 	private void refreshConnections() {
 //		System.out.println(modules.toString());
 //		log.info(modules.size()+"");
@@ -102,8 +91,9 @@ public class UsbManager extends Thread {
 			Map.Entry<String, UsbModule> entry = (Map.Entry<String, UsbModule>)it.next();
 //			System.out.println(entry.getKey() + " = " + entry.getValue().isConnected());
 			if (!entry.getValue().isConnected()) {
+				entry.getValue().release();
 				it.remove();
-				eb.post(new UsbStatusEvent(modules.size()));
+				postUsbStatusToUiThread(new UsbStatusEvent(modules.size()));
 			}
 		}
 //		log.info(modules.size()+"");
@@ -137,7 +127,7 @@ public class UsbManager extends Thread {
 								if (mod.isConnected()&&info.getSerial_number()!=null) {
 									prettyPrintInfo(info);
 									modules.put(info.getSerial_number(), mod);
-									eb.post(new UsbStatusEvent(modules.size()));
+									postUsbStatusToUiThread(new UsbStatusEvent(modules.size()));
 								}
 							}
 						}
@@ -149,27 +139,31 @@ public class UsbManager extends Thread {
 		}
 	}
 	
+	
+	public void postUsbStatusToUiThread(UsbStatusEvent event) {
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				eb.post(event);
+			}
+		});
+	}
+	
 
 	@Override
 	public void run() {
 		while (isAlive()) {
-			
+
 			if (ioRefreshCount*IO_REFRESH_PERIOD>CONNECT_REFRESH_PERIOD) {
-				refreshConnectionAsync();
+				refreshConnections();   // Async
 				ioRefreshCount=0;
 			} else {
 				++ioRefreshCount;
 			}
 
-			
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					for (UsbModule mod : modules.values()) {
-						mod.refreshWrite();
-					}
-				}
-			});
+			for (UsbModule mod : modules.values()) {
+				mod.refreshWrite();
+			}
 
 			try {
 				Thread.sleep(IO_REFRESH_PERIOD);
@@ -178,14 +172,9 @@ public class UsbManager extends Thread {
 				return;
 			}
 
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					for (UsbModule mod : modules.values()) {
-						mod.refreshRead();
-					}
-				}
-			});
+			for (UsbModule mod : modules.values()) {
+				mod.refreshRead();
+			}
 
 		}
 	}

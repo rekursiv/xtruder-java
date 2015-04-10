@@ -1,17 +1,26 @@
 
 
+debug "use config"
 
+fix stepper connect/disconnect/update cycle
 
 ======  global control non-selectable "summary panel"
 setup/production modes
 coil reset
 stop all motors
 feedback info??
-==============
+
+
+=====  config
+
+put spool size (mass) in config
+
 
 ===== alarms
 
-bug:  "use" config file does not re-load voice
+USB disconnect alarm
+
+TODO:  "use" config file does not re-load voice
 
 sound effect to get attention before voice
 

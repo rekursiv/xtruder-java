@@ -59,7 +59,6 @@ public class StatusSummaryPanel extends BaseSummaryPanel {
 		this.log = log;
 		this.eb = eb;
 		this.scm = scm;
-		
 	}
 	
 	@Subscribe

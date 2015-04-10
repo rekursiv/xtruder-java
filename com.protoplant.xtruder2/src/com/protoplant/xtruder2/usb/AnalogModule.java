@@ -2,6 +2,8 @@ package com.protoplant.xtruder2.usb;
 
 import java.util.logging.Logger;
 
+import org.eclipse.swt.widgets.Display;
+
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.protoplant.xtruder2.event.AnalogDataEvent;
@@ -24,7 +26,13 @@ public class AnalogModule extends UsbModule {
 	
 	@Override
 	protected void decodePacket(byte[] pkt) {
-        eb.post(new AnalogDataEvent(extractInt16(pkt, 3), extractInt16(pkt, 5), extractInt16(pkt, 7), extractInt16(pkt, 9)));
+		AnalogDataEvent ade = new AnalogDataEvent(extractInt16(pkt, 3), extractInt16(pkt, 5), extractInt16(pkt, 7), extractInt16(pkt, 9));
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				eb.post(ade);
+			}
+		});
 	}
 	
 	

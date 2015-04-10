@@ -1,6 +1,7 @@
 package com.protoplant.xtruder2.usb;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.DatatypeConverter;
@@ -30,6 +31,7 @@ public class UsbModule {
 	
 	public void release() {
 		disconnect();
+		eb.unregister(this);
 	}
 	
 	public boolean isConnected() {
@@ -53,8 +55,11 @@ public class UsbModule {
 	public void disconnect() {
 		if (isConnected()) {
 			try {
+		        log.info("~~~ pre close");
 				dev.close();
+				log.info("^^^ post close");
 			} catch (IOException e) {
+				log.log(Level.WARNING, "CLOSE ERROR", e);
 			} finally {
 				dev = null;
 				devInfo = null;
@@ -67,6 +72,7 @@ public class UsbModule {
 			try {
 				writeUsb();
 			} catch (IOException e) {
+				log.log(Level.WARNING, "WRITE ERROR", e);
 				disconnect();
 			}
 		}
@@ -77,6 +83,7 @@ public class UsbModule {
 			try {
 				readUsb();
 			} catch (IOException e) {
+				log.log(Level.WARNING, "READ ERROR", e);
 				disconnect();
 			}
 		}
@@ -115,13 +122,16 @@ public class UsbModule {
 			data[i]=pkt[i-2];
 		}
 //		log.info(DatatypeConverter.printHexBinary(data));
+//        log.info("~~~ pre write");
 		dev.write(data);
-//		log.info("^^^");
+//        log.info("^^^ post write");
 	}
 	
 	private void readUsb() throws IOException {
         byte[] data = new byte[64];
-        dev.readTimeout(data, 10);   // TODO:  check if this function returns 64 to catch errors??
+//        log.info("~~~ pre read");
+        dev.readTimeout(data, 1);   // TODO:  check if this function returns 64 to catch errors??
+//        log.info("^^^ post read");
 //        System.out.println("pktLen="+dev.readTimeout(data, 10));
         decodePacket(data);
 	}

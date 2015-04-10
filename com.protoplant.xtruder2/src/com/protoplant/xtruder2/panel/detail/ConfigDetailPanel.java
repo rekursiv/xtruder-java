@@ -248,12 +248,17 @@ public class ConfigDetailPanel extends Composite {
 		updateFileList();
 	}
 
+	
+	///   FIXME 
+	/*
 	@Subscribe
 	public void onStepperConnect(StepperUpdateEvent evt) {
 		if (evt.getFunction()==StepperFunction.UNDEFINED) {
 			txtStatus.setText("Undefined stepper module detected, serial number = \""+evt.getSerial()+"\"");
 		}
 	}
+	*/
+	
 	
 	protected void onPanelFocus() {
 

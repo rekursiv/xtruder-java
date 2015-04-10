@@ -4,6 +4,8 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.eclipse.swt.widgets.Display;
+
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -18,17 +20,16 @@ public class IndicatorModule extends UsbModule {
 	@Inject
 	public IndicatorModule(Logger log, EventBus eb) {
 		super(log, eb);
-//		pid = 0x03E0;
 	}
 
 	@Subscribe
-	public void onZero(IndicatorZeroEvent evt) {
+	public synchronized void onZero(IndicatorZeroEvent evt) {
 		doZero=true;
 	}
 	
 
 	@Override
-	protected byte[] encodePacket() {
+	protected synchronized byte[] encodePacket() {
 		byte[] pkt = new byte[1];
 		if (doZero) {
 			doZero=false;
@@ -40,20 +41,17 @@ public class IndicatorModule extends UsbModule {
 	}
 	
 	@Override
-	protected void decodePacket(byte[] pkt) {
+	protected synchronized void decodePacket(byte[] pkt) {
         float cur = (float)extractInt16(pkt, 3)*0.002f;
         float min = (float)extractInt16(pkt, 5)*0.002f;        
         float max = (float)extractInt16(pkt, 7)*0.002f;
         IndicatorDataEvent ide = new IndicatorDataEvent(cur, min, max);
-        eb.post(ide);
-       
-//        float up = max-cur;
-//        float dn = cur-min;
-//        log.info(cur+"  :  "+min+"  :  "+max+"  :  "+up+"  :  "+dn);
-        
-//      log.info(bufLen+":"+buf[1]+":"+buf[2]+":"+buf[3]+"     "+extractInt16(buf, 4)+":"+extractInt16(buf, 6)+":"+extractInt16(buf, 8));
-//        log.info(DatatypeConverter.printHexBinary(pkt));
-        
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				eb.post(ide);
+			}
+		});
 	}
 	
 
