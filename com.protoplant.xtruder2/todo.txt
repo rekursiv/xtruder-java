@@ -3,9 +3,6 @@
 
 
 
-fix config init spooling zero speed bug
-
-
 
 ======  global control non-selectable "summary panel"
 setup/production modes

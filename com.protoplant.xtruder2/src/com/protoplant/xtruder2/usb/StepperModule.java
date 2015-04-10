@@ -168,7 +168,7 @@ public class StepperModule extends UsbModule {
 			curCmd = CommandType.SET_CONFIG;
 			postUpdateToUiThread(new StepperUpdateEvent(newFunction, serial));
 			if (function==StepperFunction.UNDEFINED) log.info("Stepper "+newFunction.name()+" connected.");   //   FIXME  fires when updated with undefined stepper
-			else log.info("Stepper "+newFunction.name()+" updated.");
+//			else log.info("Stepper "+newFunction.name()+" updated.");
 		} else {
 			postUpdateToUiThread(new StepperUpdateEvent(function, null));
 			log.info("Stepper "+function.name()+" disconnected.");

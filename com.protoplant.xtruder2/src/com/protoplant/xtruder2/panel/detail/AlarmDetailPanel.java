@@ -46,6 +46,7 @@ public class AlarmDetailPanel extends Composite {
 	private int diaOverCount;
 	private int diaUnderCount;
 	private int usbEventHz;
+	private boolean needsReset;
 	
 	private Logger log;
 	private EventBus eb;
@@ -172,6 +173,7 @@ public class AlarmDetailPanel extends Composite {
 		diaOverCount=0;
 		diaUnderCount=0;
 		diaResetCount=-1;
+		needsReset=false;
 		lblOver.setText(""+diaOverCount);
 		lblUnder.setText(""+diaUnderCount);
 		usbEventHz=1000/UsbManager.IO_REFRESH_PERIOD;
@@ -225,11 +227,13 @@ public class AlarmDetailPanel extends Composite {
 			diaResetCount--;
 		} else if (diaResetCount==0) {
 			if (diaOverCount<config.alarm.diaOverCountTrigger) {
+				needsReset=false;
 				diaOverCount=0;
 				lblOver.setText(""+diaOverCount);
 				diaResetCount=-1;
 			}
 			if (diaUnderCount<config.alarm.diaUnderCountTrigger) {
+				needsReset=false;
 				diaUnderCount=0;
 				lblUnder.setText(""+diaUnderCount);
 				diaResetCount=-1;
@@ -238,11 +242,15 @@ public class AlarmDetailPanel extends Composite {
 	}
 	
 	private void soundDiaUnderAlarm() {
-		am.speak("undersize");
+		if (needsReset) am.speak("diameter needs reset");
+		else am.speak("undersize");
+		needsReset=true;
 	}
 
 	private void soundDiaOverAlarm() {
-		am.speak("oversize");
+		if (needsReset) am.speak("diameter needs reset");
+		else am.speak("oversize");
+		needsReset=true;
 	}
 
 	@Subscribe
@@ -291,6 +299,8 @@ public class AlarmDetailPanel extends Composite {
 		diaUnderCount=0;
 		lblOver.setText(""+diaOverCount);
 		lblUnder.setText(""+diaUnderCount);
+		needsReset=false;
+		diaAlarmCount=0;
 	}
 
 	public void soundDisconnectedAlarm() {

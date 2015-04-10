@@ -48,9 +48,10 @@ public class RootDetailPanel extends Composite {
 		pnlTest = new TestDetailPanel(this, injector);
 		pnlStatus = new StatusDetailPanel(this, injector);
 		pnlConv = new ConveyanceDetailPanel(this, injector);
-		pnlConfig = new ConfigDetailPanel(this, injector);
 		pnlSpooling = new SpoolingDetailPanel(this, injector);
 		pnlAlarm = new AlarmDetailPanel(this, injector);
+		
+		pnlConfig = new ConfigDetailPanel(this, injector);   //  create this LAST  (loads config on construct)
 		
 		if (injector!=null) injector.injectMembers(this);
 	}

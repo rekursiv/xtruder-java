@@ -230,8 +230,6 @@ public class ConfigDetailPanel extends Composite {
 		fd_label.left = new FormAttachment(0, 12);
 		label.setLayoutData(fd_label);
 		
-
-		
 		if (injector!=null) injector.injectMembers(this);
 	}
 	

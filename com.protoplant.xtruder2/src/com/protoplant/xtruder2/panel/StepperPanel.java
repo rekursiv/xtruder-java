@@ -143,6 +143,7 @@ public class StepperPanel extends Group {
 	public void onConfigSetup(ConfigSetupEvent evt) {
 		isReversed = scm.getConfig(function).isReversed;
 		adjustSpeed();
+//		log.info("****************  "+function.name());
 	}
 	
 	public void updatePos(int position) {
