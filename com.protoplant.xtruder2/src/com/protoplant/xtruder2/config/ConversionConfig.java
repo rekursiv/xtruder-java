@@ -1,5 +1,8 @@
 package com.protoplant.xtruder2.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversionConfig {
 	
 	public int stepsPerRev = 200;  // for 1.8 deg/step motor

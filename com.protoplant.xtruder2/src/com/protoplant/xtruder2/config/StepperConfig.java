@@ -1,6 +1,8 @@
 package com.protoplant.xtruder2.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StepperConfig {
 	
 	public String serial;
