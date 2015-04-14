@@ -255,13 +255,17 @@ public class AlarmDetailPanel extends Composite {
 		needsReset=true;
 	}
 
+	
 	@Subscribe
 	public void onAnalogData(final AnalogDataEvent evt) {
 		int curValue = evt.getMainHopper();
-		lblHopperData.setText(""+curValue);		
-		if (curValue>config.alarm.hopperDisconnectThreshold) ++hopperDisconnectCount;
-		else if (curValue>config.alarm.hopperFullThreshold) ++hopperFullCount;
-		else ++hopperEmptyCount;
+		lblHopperData.setText(""+curValue);
+		
+		if (curValue<config.alarm.hopperDisconnectThreshold) ++hopperDisconnectCount;
+		else if (curValue>config.alarm.hopperEmptyThreshold) ++hopperEmptyCount;
+		else ++hopperFullCount;
+		
+//		log.info(curValue+":"+hopperDisconnectCount+":"+hopperEmptyCount+":"+hopperFullCount+"#"+config.alarm.hopperDisconnectThreshold+"#"+config.alarm.hopperEmptyThreshold);
 		
 		if (hopperSilenceCount>0) {
 			--hopperSilenceCount;
@@ -275,15 +279,15 @@ public class AlarmDetailPanel extends Composite {
 			}
 		} else {
 			if (hopperDisconnectCount+hopperEmptyCount+hopperFullCount>config.alarm.hopperRepeatSeconds*usbEventHz) {
-				if (hopperDisconnectCount>hopperEmptyCount) soundDisconnectedAlarm();
+				if (hopperDisconnectCount>hopperFullCount) soundDisconnectedAlarm();
 				else if (hopperEmptyCount>hopperFullCount) soundEmptyAlarm();
 				hopperDisconnectCount=0;
 				hopperEmptyCount=0;
 				hopperFullCount=0;
 			}
 		}
-		
 	}
+	
 	
 	@Subscribe
 	public void onCoilReset(CoilResetEvent event) {

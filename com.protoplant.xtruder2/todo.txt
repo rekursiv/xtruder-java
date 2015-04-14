@@ -1,12 +1,8 @@
 
 
 
-experiment with "rolling update"
-  don't reset steppers on exit (done)
-  don't stop steppers on load  
-  ++ try to pull speeds from steppers?
-  
-  
+****  fix config file overwrite on JSON parse error bug
+
 
 ======  global control non-selectable "summary panel"
 setup/production modes
@@ -56,5 +52,13 @@ improve/test/debug stepper connect/disconnect/update cycle
 !! config detail -> save as... does not update view correctly (seems to save file OK - hit "revert" as workaround)
 
 
+==========
 
+
+experiment with "rolling update"
+  don't reset steppers on exit (done)
+  don't stop steppers on load  
+  ++ try to pull speeds from steppers?
+  
+  
 

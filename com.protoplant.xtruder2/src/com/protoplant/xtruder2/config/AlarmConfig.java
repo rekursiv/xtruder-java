@@ -5,8 +5,9 @@ public class AlarmConfig {
 	public String mbrolaBase = "c:/mbrola";   //  /usr/share/mbrola
 	public String voiceName = "mbrola_us1";   //  kevin16
 	
-	public int hopperFullThreshold = 1800;
-	public int hopperDisconnectThreshold = 4000;
+	public int hopperEmptyThreshold = 2500;
+	public int hopperDisconnectThreshold = 400;
+	
 	public int hopperRepeatSeconds = 20;
 	public int hopperAlarmSilenceSeconds = 240;	
 	
@@ -17,6 +18,7 @@ public class AlarmConfig {
 	public int diaAlarmSilenceSeconds = 240;
 	public int diaOverCountTrigger = 1;
 	public int diaUnderCountTrigger =1;
+
 	
 	
 }
