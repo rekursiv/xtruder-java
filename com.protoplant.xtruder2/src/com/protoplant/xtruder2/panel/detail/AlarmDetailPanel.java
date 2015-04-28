@@ -68,6 +68,11 @@ public class AlarmDetailPanel extends Composite {
 	private Label lblUnder;
 	private Button chbDiaSilence;
 	private Button chbHopperSilence;
+	private Group grpPressure;
+	private Label lblPresMax;
+	private Button chbPresSilence;
+	private int pressureSilenceCount;
+	private int pressureAlarmCount;
 	
 
 	public AlarmDetailPanel(Composite parent, Injector injector) {
@@ -159,8 +164,31 @@ public class AlarmDetailPanel extends Composite {
 				test();
 			}
 		});
-		btnTest.setBounds(315, 152, 75, 25);
+		btnTest.setBounds(10, 244, 75, 25);
 		btnTest.setText("TEST");
+		
+		grpPressure = new Group(this, SWT.NONE);
+		grpPressure.setText("Pressure");
+		grpPressure.setBounds(291, 134, 148, 118);
+		
+		lblPresMax = new Label(grpPressure, SWT.BORDER);
+		lblPresMax.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
+		lblPresMax.setBounds(10, 26, 128, 30);
+		
+		chbPresSilence = new Button(grpPressure, SWT.CHECK);
+		chbPresSilence.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (chbPresSilence.getSelection()) {
+					pressureSilenceCount=config.alarm.pressureAlarmSilenceSeconds*usbEventHz;
+				} else {
+					chbPresSilence.setText("Silence");
+					pressureSilenceCount=0;
+				}
+			}
+		});
+		chbPresSilence.setText("Silence");
+		chbPresSilence.setBounds(10, 72, 128, 36);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -179,6 +207,8 @@ public class AlarmDetailPanel extends Composite {
 		lblUnder.setText(""+diaUnderCount);
 		usbEventHz=1000/UsbManager.IO_REFRESH_PERIOD;
 		diaAlarmCount=config.alarm.diaAlarmSilenceSeconds*usbEventHz;
+		
+		lblPresMax.setText("MAX: "+config.alarm.pressureMax);
 	}
 
 	
@@ -258,11 +288,47 @@ public class AlarmDetailPanel extends Composite {
 	
 	@Subscribe
 	public void onAnalogData(final AnalogDataEvent evt) {
-		int curValue = evt.getMainHopper();
-		lblHopperData.setText(""+curValue);
+		handleHopperAlarm(evt.getMainHopper());
+		handlePressureAlarm(evt.getPressure());
+	}
+
+
+	@Subscribe
+	public void onCoilReset(CoilResetEvent event) {
+		resetDia();
+	}
+
+	protected void handlePressureAlarm(int curPressure) {
+//		if (curPressure > config.alarm.pressureMax) log.info("");
+		if (pressureSilenceCount>0) {
+			--pressureSilenceCount;
+			if (chbPresSilence.getSelection()) {
+				if (pressureSilenceCount==0) {
+					chbPresSilence.setText("Silence");
+					chbPresSilence.setSelection(false);
+				} else {
+					chbPresSilence.setText("Silence:  "+(pressureSilenceCount/usbEventHz+1));
+				}
+			}
+		} else {
+			if (pressureAlarmCount>0) {
+				--pressureAlarmCount;
+			} else {
+				if (curPressure > config.alarm.pressureMax) {
+					log.info("");
+					soundOverPressureAlarm();
+					pressureAlarmCount=config.alarm.pressureAlarmRepeastSeconds*usbEventHz;
+				}
+			}
+		}
 		
-		if (curValue<config.alarm.hopperDisconnectThreshold) ++hopperDisconnectCount;
-		else if (curValue>config.alarm.hopperEmptyThreshold) ++hopperEmptyCount;
+	}
+	
+	protected void handleHopperAlarm(int hopperData) {
+		lblHopperData.setText(""+hopperData);
+		
+		if (hopperData<config.alarm.hopperDisconnectThreshold) ++hopperDisconnectCount;
+		else if (hopperData>config.alarm.hopperEmptyThreshold) ++hopperEmptyCount;
 		else ++hopperFullCount;
 		
 //		log.info(curValue+":"+hopperDisconnectCount+":"+hopperEmptyCount+":"+hopperFullCount+"#"+config.alarm.hopperDisconnectThreshold+"#"+config.alarm.hopperEmptyThreshold);
@@ -288,12 +354,6 @@ public class AlarmDetailPanel extends Composite {
 		}
 	}
 	
-	
-	@Subscribe
-	public void onCoilReset(CoilResetEvent event) {
-		resetDia();
-	}
-	
 	protected void resetDia() {
 		lblPrevMin.setText(lblMin.getText());
 		lblPrevMax.setText(lblMax.getText());
@@ -310,14 +370,16 @@ public class AlarmDetailPanel extends Composite {
 	}
 
 	public void soundDisconnectedAlarm() {
-		am.speak("the hopper sensor is disconnected");
+		am.speak("hopper sensor disconnected");
 	}
 	
 	public void soundEmptyAlarm() {
-		am.speak("the hopper is almost empty");
+		am.speak("hopper almost empty");
 	}
 	
-	
+	private void soundOverPressureAlarm() {
+		am.speak("pressure too high");
+	}
 	
 	
 	

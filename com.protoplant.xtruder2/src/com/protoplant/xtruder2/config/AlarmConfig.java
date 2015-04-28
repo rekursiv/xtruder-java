@@ -22,6 +22,9 @@ public class AlarmConfig {
 	public int diaOverCountTrigger = 1;
 	public int diaUnderCountTrigger =1;
 
+	public int pressureMax = 2000;
+	public int pressureAlarmSilenceSeconds = 240;
+	public int pressureAlarmRepeastSeconds = 10;
 	
 	
 }

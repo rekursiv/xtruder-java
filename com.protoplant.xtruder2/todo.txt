@@ -1,7 +1,9 @@
 
 
-
-****  fix config file overwrite on JSON parse error bug
+merge config changes for overpressure alarm
+add wav file support in audioManager
+  new config section, put both text for speaking and wav file path, fall back to synth if file not found
+  
 
 
 ======  global control non-selectable "summary panel"
@@ -46,6 +48,9 @@ color status bg
 check for motors running, warn user on config update
 
 === BUGS
+
+fix StepperConfigManager#initConfig() so that new config files get init but existing ones with errors are not overwritten
+
 
 improve/test/debug stepper connect/disconnect/update cycle
 

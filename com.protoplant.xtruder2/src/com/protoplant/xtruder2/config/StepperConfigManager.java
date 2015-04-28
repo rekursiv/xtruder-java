@@ -41,11 +41,14 @@ public class StepperConfigManager {
 				config.steppers.put(function, new StepperConfig());
 			}
 			
+			//  FIXME  don't overwrite existing config file
+/*			
 			try {
 				cfgMgr.save(config);
 			} catch (Exception e) {
 				log.log(Level.WARNING, "Error saving steppers to config file: ", e);
 			}
+*/
 		}
 	}
 	
