@@ -16,7 +16,7 @@ import com.protoplant.xtruder2.usb.UsbManager;
 
 public class Xtruder2App {
 	
-	static final String appVersion = "2.19";
+	static final String appVersion = "2.20";
 	
 	
 	public static void main(String[] args) {

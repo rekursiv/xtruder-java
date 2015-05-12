@@ -13,6 +13,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.AudioManager;
 import com.protoplant.xtruder2.config.XtruderConfig;
 
 public class TestDetailPanel extends Composite {
@@ -21,6 +22,7 @@ public class TestDetailPanel extends Composite {
 	private EventBus eb;
 	private XtruderConfig config;
 	protected Label lblTest;
+	private AudioManager am;
 
 	
 	public TestDetailPanel(Composite parent, Injector injector) {
@@ -28,7 +30,7 @@ public class TestDetailPanel extends Composite {
 		
 		lblTest = new Label(this, SWT.NONE);
 		lblTest.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
-		lblTest.setBounds(20, 56, 569, 45);
+		lblTest.setBounds(10, 199, 569, 45);
 		
 		Button btnTest = new Button(this, SWT.NONE);
 		btnTest.addSelectionListener(new SelectionAdapter() {
@@ -44,17 +46,58 @@ public class TestDetailPanel extends Composite {
 	}
 
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config) {
+	public void inject(Logger log, EventBus eb, XtruderConfig config, AudioManager am) {
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
-	}
-	
-	public void test() {
-//		lblTest.setText("TEST");
-		log.info("----------------------------------");
+		this.am = am;
 	}
 
+	public void test() {
+		testVoices();
+	}
+	
+	public void testVoices() {
+		lblTest.setText("Testing voices...");
+		am.playClip("50gtg");
+		delay(2000);
+		am.playClip("30gtg");
+		delay(2000);
+		am.playClip("10gtg");
+		delay(2000);
+		am.playClip("5");
+		delay(1000);
+		am.playClip("4");
+		delay(1000);
+		am.playClip("3");
+		delay(1000);
+		am.playClip("2");
+		delay(1000);
+		am.playClip("1");
+		delay(1000);
+		am.playClip("mark");
+		delay(2000);
+		am.playClip("dia-reset");
+		delay(2000);
+		am.playClip("undersize");
+		delay(1000);
+		am.playClip("oversize");
+		delay(1000);
+		am.playClip("hopper-discon");
+		delay(2000);
+		am.playClip("hopper-empty");
+		delay(2000);
+		am.playClip("pressure-high");
+		lblTest.setText("Done.");
+	}
+
+	private void delay(long ms) {
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+		}
+	}
+	
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components

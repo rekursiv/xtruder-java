@@ -431,7 +431,7 @@ public class CoilMassPanel extends Group {
 //		grams=440;                             //////////////////////////////////////////////////////////////////////      TEST
 		if (isWrapAround) {
 			incrementCount();
-			am.speak("mark");
+			am.playClip("mark");
 		} else {
 			lblData.setText("0.00 g");
 		}
@@ -439,14 +439,14 @@ public class CoilMassPanel extends Group {
 	}
 
 	private void updateAudio(int total) {
-		if (checkpoint(total-50)) am.speak("50 grams to go");
-		else if (checkpoint(total-30)) am.speak("30 grams to go");
-		else if (checkpoint(total-10)) am.speak("10 grams to go");
-		else if (checkpoint(total-5)) am.speak("5");
-		else if (checkpoint(total-4)) am.speak("4");
-		else if (checkpoint(total-3)) am.speak("3");
-		else if (checkpoint(total-2)) am.speak("2");
-		else if (checkpoint(total-1)) am.speak("1");
+		if (checkpoint(total-50)) am.playClip("50gtg");
+		else if (checkpoint(total-30)) am.playClip("30gtg");
+		else if (checkpoint(total-10)) am.playClip("10gtg");
+		else if (checkpoint(total-5)) am.playClip("5");
+		else if (checkpoint(total-4)) am.playClip("4");
+		else if (checkpoint(total-3)) am.playClip("3");
+		else if (checkpoint(total-2)) am.playClip("2");
+		else if (checkpoint(total-1)) am.playClip("1");
 	}
 	
 	private boolean checkpoint(float ref) {

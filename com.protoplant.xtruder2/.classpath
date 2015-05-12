@@ -12,7 +12,6 @@
 	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/org.eclipse.draw2d_3.9.101.201408150207.jar"/>
 	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/org.eclipse.nebula.visualization.xygraph_1.0.0.201412230843.jar"/>
 	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar" sourcepath="C:/projects/eclipse/plugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
-	<classpathentry kind="lib" path="C:/projects/javalib/freetts-1.2.2_patched/lib/freetts.jar"/>
 	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/javax.inject_1.0.0.v20091030.jar" sourcepath="C:/projects/eclipse/plugins/javax.inject.source_1.0.0.v20091030.jar">
 		<accessrules>
 			<accessrule kind="accessible" pattern="javax/inject/*"/>

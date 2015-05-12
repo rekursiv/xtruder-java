@@ -3,7 +3,13 @@ package com.protoplant.xtruder2.panel.detail;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -20,20 +26,6 @@ import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.panel.AdjustableStepperPanel;
 import com.protoplant.xtruder2.panel.TrackingStepperPanel;
 import com.protoplant.xtruder2.usb.UsbManager;
-import com.protoplant.xtruder2.usb.UsbModule;
-import com.sun.speech.freetts.Voice;
-import com.sun.speech.freetts.VoiceManager;
-
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class AlarmDetailPanel extends Composite {
 
@@ -157,16 +149,6 @@ public class AlarmDetailPanel extends Composite {
 		chbHopperSilence.setText("Silence");
 		chbHopperSilence.setBounds(10, 72, 128, 36);
 		
-		Button btnTest = new Button(this, SWT.NONE);
-		btnTest.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				test();
-			}
-		});
-		btnTest.setBounds(10, 244, 75, 25);
-		btnTest.setText("TEST");
-		
 		grpPressure = new Group(this, SWT.NONE);
 		grpPressure.setText("Pressure");
 		grpPressure.setBounds(291, 134, 148, 118);
@@ -274,14 +256,14 @@ public class AlarmDetailPanel extends Composite {
 	}
 	
 	private void soundDiaUnderAlarm() {
-		if (needsReset) am.speak("diameter needs reset");
-		else am.speak("undersize");
+		if (needsReset) am.playClip("dia-reset");
+		else am.playClip("undersize");
 		needsReset=true;
 	}
 
 	private void soundDiaOverAlarm() {
-		if (needsReset) am.speak("diameter needs reset");
-		else am.speak("oversize");
+		if (needsReset) am.playClip("dia-reset");
+		else am.playClip("oversize");
 		needsReset=true;
 	}
 
@@ -370,15 +352,15 @@ public class AlarmDetailPanel extends Composite {
 	}
 
 	public void soundDisconnectedAlarm() {
-		am.speak("hopper sensor disconnected");
+		am.playClip("hopper-discon");
 	}
 	
 	public void soundEmptyAlarm() {
-		am.speak("hopper almost empty");
+		am.playClip("hopper-empty");
 	}
 	
 	private void soundOverPressureAlarm() {
-		am.speak("pressure too high");
+		am.playClip("pressure-high");
 	}
 	
 	
@@ -388,13 +370,6 @@ public class AlarmDetailPanel extends Composite {
 		eb.post(new StepperRunEvent(StepperFunction.TopRoller));
 	}
 	
-	public void test() {
-		soundEmptyAlarm();
-		soundDisconnectedAlarm();
-		soundDiaUnderAlarm();
-		soundDiaOverAlarm();
-		
-	}
 	
 	@Override
 	protected void checkSubclass() {

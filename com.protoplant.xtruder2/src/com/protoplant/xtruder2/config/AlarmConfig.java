@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AlarmConfig {
 	
-	public String mbrolaBase = "c:/mbrola";   //  /usr/share/mbrola
-	public String voiceName = "mbrola_us1";   //  kevin16
-	
 	public int hopperEmptyThreshold = 2500;
 	public int hopperDisconnectThreshold = 400;
 	
