@@ -45,7 +45,7 @@ public class RootDetailPanel extends Composite {
 		
 
 		pnlPressure = new DataDetailPanel(this, injector);
-		pnlTest = new TestDetailPanel(this, injector);
+//		pnlTest = new TestDetailPanel(this, injector);
 		pnlStatus = new StatusDetailPanel(this, injector);
 		pnlConv = new ConveyanceDetailPanel(this, injector);
 		pnlSpooling = new SpoolingDetailPanel(this, injector);
@@ -77,8 +77,8 @@ public class RootDetailPanel extends Composite {
 			stack.topControl = pnlAlarm;
 			layout();
 		} else if (w instanceof TestSummaryPanel) {
-			stack.topControl = pnlTest;
-			layout();
+//			stack.topControl = pnlTest;
+//			layout();
 		} else if (w instanceof StatusSummaryPanel) {
 			stack.topControl = pnlStatus;
 			layout();

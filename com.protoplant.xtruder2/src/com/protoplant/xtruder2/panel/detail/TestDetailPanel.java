@@ -55,6 +55,8 @@ public class TestDetailPanel extends Composite {
 
 	public void test() {
 		testVoices();
+		//System.getProperty("os.name" );
+//		am.playClip("50gtg");
 	}
 	
 	public void testVoices() {

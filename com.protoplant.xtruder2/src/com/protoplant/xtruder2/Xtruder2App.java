@@ -16,7 +16,7 @@ import com.protoplant.xtruder2.usb.UsbManager;
 
 public class Xtruder2App {
 	
-	static final String appVersion = "2.20";
+	static final String appVersion = "2.21";
 	
 	
 	public static void main(String[] args) {
@@ -57,9 +57,6 @@ public class Xtruder2App {
 		
 		new RootPanel(shell, injector);
 		
-		AudioManager am = injector.getInstance(AudioManager.class);
-		am.init();
-		
 		StepperConfigManager scm = injector.getInstance(StepperConfigManager.class);
 		
 		UsbManager usb = injector.getInstance(UsbManager.class);
@@ -74,7 +71,7 @@ public class Xtruder2App {
 		shell.init();  // main loop
 		
 		usb.release();
-		am.release();
+
 	}
 
 	

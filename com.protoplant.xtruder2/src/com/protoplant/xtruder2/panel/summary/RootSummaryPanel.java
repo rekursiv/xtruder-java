@@ -8,8 +8,13 @@ import org.eclipse.swt.widgets.Composite;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder2.Test;
 import com.protoplant.xtruder2.event.PanelFocusEvent;
 import com.protoplant.xtruder2.panel.detail.TestDetailPanel;
+
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class RootSummaryPanel extends Composite {
 
@@ -23,6 +28,7 @@ public class RootSummaryPanel extends Composite {
 	protected DataSummaryPanel pnlData;
 	protected SpoolingSummaryPanel pnlSpooling;
 	protected AlarmSummaryPanel pnlAlarm;
+	private Test test;
 
 	public RootSummaryPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
@@ -46,16 +52,27 @@ public class RootSummaryPanel extends Composite {
 		pnlAlarm = new AlarmSummaryPanel(this, injector);
 		pnlAlarm.setBounds(10, 202, 180, 90);
 		
-		pnlTest = new TestSummaryPanel(this, injector);
-		pnlTest.setBounds(196, 202, 180, 90);
+//		pnlTest = new TestSummaryPanel(this, injector);
+//		pnlTest.setBounds(196, 202, 180, 90);
+		
+		Button btnTest = new Button(this, SWT.NONE);
+		btnTest.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				test.test();
+			}
+		});
+		btnTest.setBounds(10, 429, 75, 25);
+		btnTest.setText("TEST");
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
 	
 	@Inject
-	public void inject(Logger log, EventBus eb) {
+	public void inject(Logger log, EventBus eb, Test test) {
 		this.log = log;
 		this.eb = eb;
+		this.test = test;
 	}
 
 	@Override

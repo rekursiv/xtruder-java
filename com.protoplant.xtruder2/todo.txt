@@ -1,9 +1,6 @@
 
 
-merge config changes for overpressure alarm
-add wav file support in audioManager
-  new config section, put both text for speaking and wav file path, fall back to synth if file not found
-  
+
 
 
 ======  global control non-selectable "summary panel"
@@ -20,9 +17,9 @@ put spool size (mass) in config
 
 ===== alarms
 
-USB disconnect alarm
+status on summary pnl
 
-TODO:  "use" config file does not re-load voice
+USB disconnect alarm
 
 sound effect to get attention before voice??
 

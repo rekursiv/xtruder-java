@@ -20,6 +20,7 @@ import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.AnalogDataEvent;
 import com.protoplant.xtruder2.event.CoilResetEvent;
+import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.IndicatorDataEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
@@ -188,11 +189,13 @@ public class AlarmDetailPanel extends Composite {
 		lblOver.setText(""+diaOverCount);
 		lblUnder.setText(""+diaUnderCount);
 		usbEventHz=1000/UsbManager.IO_REFRESH_PERIOD;
-		diaAlarmCount=config.alarm.diaAlarmSilenceSeconds*usbEventHz;
-		
-		lblPresMax.setText("MAX: "+config.alarm.pressureMax);
+		diaAlarmCount=config.alarm.diaAlarmSilenceSeconds*usbEventHz;		
 	}
 
+	@Subscribe
+	public void onConfigSetup(ConfigSetupEvent evt) {
+		lblPresMax.setText("MAX: "+config.alarm.pressureMax);
+	}
 	
 	@Subscribe
 	public void onInidcatorData(final IndicatorDataEvent evt) {
