@@ -4,10 +4,10 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Injector;
-import com.protoplant.xtruder2.SWTResourceManager;
 import com.protoplant.xtruder2.event.ConfigFileSelectEvent;
 
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;

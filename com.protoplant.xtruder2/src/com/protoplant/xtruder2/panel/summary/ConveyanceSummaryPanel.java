@@ -9,12 +9,12 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.ConversionManager;
-import com.protoplant.xtruder2.SWTResourceManager;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;

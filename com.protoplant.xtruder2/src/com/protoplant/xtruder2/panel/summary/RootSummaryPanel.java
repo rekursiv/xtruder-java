@@ -52,8 +52,8 @@ public class RootSummaryPanel extends Composite {
 		pnlAlarm = new AlarmSummaryPanel(this, injector);
 		pnlAlarm.setBounds(10, 202, 180, 90);
 		
-//		pnlTest = new TestSummaryPanel(this, injector);
-//		pnlTest.setBounds(196, 202, 180, 90);
+		pnlTest = new TestSummaryPanel(this, injector);
+		pnlTest.setBounds(196, 202, 180, 90);
 		
 		Button btnTest = new Button(this, SWT.NONE);
 		btnTest.addSelectionListener(new SelectionAdapter() {

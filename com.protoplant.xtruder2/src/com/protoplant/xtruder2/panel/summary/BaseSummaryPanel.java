@@ -8,12 +8,12 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.protoplant.xtruder2.SWTResourceManager;
 import com.protoplant.xtruder2.event.PanelFocusEvent;
 
 public class BaseSummaryPanel extends Group {

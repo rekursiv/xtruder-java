@@ -3,6 +3,8 @@ package com.protoplant.xtruder2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wb.swt.SWTResourceManager;
+
 
 public class XtruderShell extends Shell {
 

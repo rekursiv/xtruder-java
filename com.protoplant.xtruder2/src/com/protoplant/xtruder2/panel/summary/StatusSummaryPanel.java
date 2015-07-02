@@ -7,12 +7,12 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.protoplant.xtruder2.SWTResourceManager;
 import com.protoplant.xtruder2.config.StepperConfigManager;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;

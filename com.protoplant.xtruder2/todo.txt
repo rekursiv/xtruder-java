@@ -1,13 +1,27 @@
 
 
+======  Production Panel
+3 modes:  
+  setup:  no feedback
+  compound: no feedback or diameter alarms
+  extrude:  all alarms and feedback enabled
+ 
+coil reset btn
+sound test btn
+show feedback info
+
+
+stop all motors??
+
+=========================
 
 
 
-======  global control non-selectable "summary panel"
-setup/production modes
-coil reset
-stop all motors
-feedback info??
+2nd WinderMinder extents set in config file, sync with density rb, add 2KG spool
+
+return WM to full back pos at end of each spool
+
+physical reset btn on spooler
 
 =====  config
 
@@ -17,11 +31,7 @@ put spool size (mass) in config
 
 ===== alarms
 
-status on summary pnl
-
 USB disconnect alarm
-
-sound effect to get attention before voice??
 
 =============   Chart
 

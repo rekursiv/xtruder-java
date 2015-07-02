@@ -25,7 +25,6 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.ConversionManager;
-import com.protoplant.xtruder2.SWTResourceManager;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.AnalogDataEvent;
