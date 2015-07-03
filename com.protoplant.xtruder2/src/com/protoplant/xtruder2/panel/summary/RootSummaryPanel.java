@@ -8,13 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.protoplant.xtruder2.Test;
 import com.protoplant.xtruder2.event.PanelFocusEvent;
-import com.protoplant.xtruder2.panel.detail.TestDetailPanel;
-
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 public class RootSummaryPanel extends Composite {
 
@@ -23,12 +17,12 @@ public class RootSummaryPanel extends Composite {
 	
 	protected StatusSummaryPanel pnlStatus;
 	protected ConveyanceSummaryPanel pnlConv;
-	protected TestSummaryPanel pnlTest;
 	protected ConfigSummaryPanel pnlConfig;
 	protected DataSummaryPanel pnlData;
 	protected SpoolingSummaryPanel pnlSpooling;
-	protected AlarmSummaryPanel pnlAlarm;
-	private Test test;
+	
+	protected ProductionPanel pnlProduction;
+
 
 	public RootSummaryPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
@@ -44,35 +38,21 @@ public class RootSummaryPanel extends Composite {
 		pnlConfig.setBounds(196, 10, 180, 90);
 		
 		pnlData = new DataSummaryPanel(this, injector);
-		pnlData.setBounds(10, 298, 366, 90);
+		pnlData.setBounds(10, 202, 366, 90);
 
 		pnlSpooling = new SpoolingSummaryPanel(this, injector);
 		pnlSpooling.setBounds(196, 106, 180, 90);
 		
-		pnlAlarm = new AlarmSummaryPanel(this, injector);
-		pnlAlarm.setBounds(10, 202, 180, 90);
-		
-		pnlTest = new TestSummaryPanel(this, injector);
-		pnlTest.setBounds(196, 202, 180, 90);
-		
-		Button btnTest = new Button(this, SWT.NONE);
-		btnTest.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				test.test();
-			}
-		});
-		btnTest.setBounds(10, 429, 75, 25);
-		btnTest.setText("TEST");
+		pnlProduction = new ProductionPanel(this, injector);
+		pnlProduction.setBounds(10, 298, 366, 536);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
 	
 	@Inject
-	public void inject(Logger log, EventBus eb, Test test) {
+	public void inject(Logger log, EventBus eb) {
 		this.log = log;
 		this.eb = eb;
-		this.test = test;
 	}
 
 	@Override

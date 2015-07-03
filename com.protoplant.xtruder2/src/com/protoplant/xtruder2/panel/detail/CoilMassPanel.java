@@ -68,7 +68,7 @@ public class CoilMassPanel extends Group {
 //	private volatile float density=0;
 	private volatile float diameter=0;
 	private volatile float diameterUpdateCount=0;
-	private volatile int fbCenterCount=0;
+//	private volatile int fbCenterCount=0;
 	private volatile int customMass=0;
 	
 	private Button rb125g;
@@ -373,13 +373,13 @@ public class CoilMassPanel extends Group {
 			calcMass(diameter);
 			if (diameterUpdateCount>config.feedback.period) {
 				diameterUpdateCount=0;
-				if (btnFeedback.getSelection()) doFeedback();
+//				if (btnFeedback.getSelection()) doFeedback();
 			} else {
 				++diameterUpdateCount;
 			}
 		}
 	}
-	
+	/*
 	public void doFeedback() {
 		float delta = diameter-config.feedback.targetDiameter;
 		if (Math.abs(delta)<config.feedback.deadband) {
@@ -394,7 +394,7 @@ public class CoilMassPanel extends Group {
 		lblFbPrevNudge.setText(String.format("Delta: "+(int)delta));
 		lblFbCnt.setText("DBCount:  "+fbCenterCount);
 	}
-	
+	*/
 	private void calcMass(float diameter) {
 		delay = (System.currentTimeMillis()-prevStepTime)/1000.0f;  // convert to seconds
 		prevStepTime=System.currentTimeMillis();

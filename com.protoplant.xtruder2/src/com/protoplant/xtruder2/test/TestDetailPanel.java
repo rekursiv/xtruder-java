@@ -1,4 +1,4 @@
-package com.protoplant.xtruder2.panel.detail;
+package com.protoplant.xtruder2.test;
 
 import java.util.logging.Logger;
 

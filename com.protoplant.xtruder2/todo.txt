@@ -2,19 +2,18 @@
 
 ======  Production Panel
 3 modes:  
-  setup:  no feedback
+  setup:  no feedback or coil mass calc
   compound: no feedback or diameter alarms
   extrude:  all alarms and feedback enabled
  
-coil reset btn
-sound test btn
-show feedback info
 
 
 stop all motors??
 
 =========================
 
+add spool size to "spooling" summary pnl
+grams/sec display??
 
 
 2nd WinderMinder extents set in config file, sync with density rb, add 2KG spool

@@ -11,14 +11,11 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.event.PanelFocusEvent;
-import com.protoplant.xtruder2.panel.summary.AlarmSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.ConfigSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.ConveyanceSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.DataSummaryPanel;
-import com.protoplant.xtruder2.panel.summary.RootSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.SpoolingSummaryPanel;
 import com.protoplant.xtruder2.panel.summary.StatusSummaryPanel;
-import com.protoplant.xtruder2.panel.summary.TestSummaryPanel;
 
 public class RootDetailPanel extends Composite {
 
@@ -26,30 +23,24 @@ public class RootDetailPanel extends Composite {
 	protected StackLayout stack;
 	protected Injector injector;
 	
-	protected TestDetailPanel pnlTest;
-	protected AlarmDetailPanel pnlAlarm;
 	protected ConveyanceDetailPanel pnlConv;
 	protected StatusDetailPanel pnlStatus;
 	protected ConfigDetailPanel pnlConfig;
-	protected DataDetailPanel pnlPressure;
+	protected DataDetailPanel pnlData;
 	protected SpoolingDetailPanel pnlSpooling;
 	
 
-	
 	public RootDetailPanel(Composite parent, Injector injector) {
 		super(parent, SWT.BORDER);
 		setTouchEnabled(true);
 		this.injector = injector;
 		stack = new StackLayout();
 		setLayout(stack);
-		
 
-		pnlPressure = new DataDetailPanel(this, injector);
-//		pnlTest = new TestDetailPanel(this, injector);
+		pnlData = new DataDetailPanel(this, injector);
 		pnlStatus = new StatusDetailPanel(this, injector);
 		pnlConv = new ConveyanceDetailPanel(this, injector);
 		pnlSpooling = new SpoolingDetailPanel(this, injector);
-		pnlAlarm = new AlarmDetailPanel(this, injector);
 		
 		pnlConfig = new ConfigDetailPanel(this, injector);   //  create this LAST  (loads config on construct)
 		
@@ -71,14 +62,8 @@ public class RootDetailPanel extends Composite {
 			stack.topControl = pnlSpooling;
 			layout();
 		} else if (w instanceof DataSummaryPanel) {
-			stack.topControl = pnlPressure;
+			stack.topControl = pnlData;
 			layout();
-		} else if (w instanceof AlarmSummaryPanel) {
-			stack.topControl = pnlAlarm;
-			layout();
-		} else if (w instanceof TestSummaryPanel) {
-//			stack.topControl = pnlTest;
-//			layout();
 		} else if (w instanceof StatusSummaryPanel) {
 			stack.topControl = pnlStatus;
 			layout();
