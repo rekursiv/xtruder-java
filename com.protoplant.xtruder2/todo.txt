@@ -1,32 +1,36 @@
 
 
+
+
+---- deploy
+back up xtruder dir
+back up configs FTP
+copy "reset.wav"
+copy swt.jar
+fix config:  "pressureAlarmRepeastSeconds"
+-----------
+
+
+
+add "spool surplus %" spinner and calc actual spool mass
+
 ======  Production Panel
-3 modes:  
-  setup:  no feedback or coil mass calc
-  compound: no feedback or diameter alarms
-  extrude:  all alarms and feedback enabled
- 
 
-
-stop all motors??
+stop all motors?
 
 =========================
 
 add spool size to "spooling" summary pnl
 grams/sec display??
 
-
-2nd WinderMinder extents set in config file, sync with density rb, add 2KG spool
-
 return WM to full back pos at end of each spool
-
-physical reset btn on spooler
 
 =====  config
 
-move to dual-editor system???
-
 put spool size (mass) in config
+2nd WinderMinder extents set in config file, sync with spool size rb
+
+move to dual-editor system???
 
 ===== alarms
 
@@ -52,6 +56,8 @@ sort list (Linux)
 color status bg
 
 check for motors running, warn user on config update
+
+
 
 === BUGS
 

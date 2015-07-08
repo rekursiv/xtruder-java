@@ -60,12 +60,6 @@ public class ChartPanel extends Composite {
 	private ConversionManager convert;
 
 	
-	
-	
-
-	
-	
-	
 	public ChartPanel(Composite parent, Injector injector) {
 		super(parent, SWT.NONE);
 		setLayout(new FormLayout());
@@ -87,17 +81,20 @@ public class ChartPanel extends Composite {
 			}
 		});
 		FormData fd_btnReset = new FormData();
-		fd_btnReset.right = new FormAttachment(0, 100);
+		fd_btnReset.right = new FormAttachment(0, 127);
 		fd_btnReset.left = new FormAttachment(0, 10);
 		btnReset.setLayoutData(fd_btnReset);
 		btnReset.setText("Reset Chart");
 		
 		Button btnTest = new Button(this, SWT.NONE);
+		btnTest.setLayoutData(new FormData());
 		
 
 		fd_canvas.bottom = new FormAttachment(100, -45);
 		fd_btnReset.top = new FormAttachment(100, -45);
 		fd_btnReset.bottom = new FormAttachment(100, -11);
+
+/*		
 		btnTest.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -111,6 +108,8 @@ public class ChartPanel extends Composite {
 		fd_btnTest.left = new FormAttachment(0, 130);
 		btnTest.setLayoutData(fd_btnTest);
 		btnTest.setText("TEST");
+*/		
+		
 		lws.setContents(graph);
 
 		

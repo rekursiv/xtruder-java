@@ -15,6 +15,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Label;
 
 public class ProductionPanel extends Group {
 
@@ -34,52 +37,57 @@ public class ProductionPanel extends Group {
 		setText("Production");
 		
 		pnlAlarm = new AlarmPanel(this, injector);
-		pnlAlarm.setBounds(10, 93, 302, 280);
+		pnlAlarm.setBounds(10, 45, 360, 280);
 		
 		Button btnSetup = new Button(this, SWT.RADIO);
 		btnSetup.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				curMode=Mode.SETUP;
-				eb.post(new ProductionModeChangeEvent(curMode));   ///////////////////////////////////////////  FIXME
+				if (btnSetup.getSelection()) {
+					curMode=Mode.SETUP;
+					eb.post(new ProductionModeChangeEvent(curMode));
+				}
 			}
 		});
 		btnSetup.setSelection(true);
 		btnSetup.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		btnSetup.setBounds(10, 23, 80, 29);
+		btnSetup.setBounds(10, 10, 80, 29);
 		btnSetup.setText("Setup");
 		
 		Button btnCompound = new Button(this, SWT.RADIO);
 		btnCompound.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				curMode=Mode.COMPOUND;
-				eb.post(new ProductionModeChangeEvent(curMode));
+				if (btnCompound.getSelection()) {
+					curMode=Mode.COMPOUND;
+					eb.post(new ProductionModeChangeEvent(curMode));
+				}
 			}
 		});
 		btnCompound.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		btnCompound.setBounds(214, 23, 112, 29);
+		btnCompound.setBounds(238, 10, 112, 29);
 		btnCompound.setText("Compound");
 		
 		Button btnExtrude = new Button(this, SWT.RADIO);
 		btnExtrude.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				curMode=Mode.EXTRUDE;
-				eb.post(new ProductionModeChangeEvent(curMode));
+				if (btnExtrude.getSelection()) {
+					curMode=Mode.EXTRUDE;
+					eb.post(new ProductionModeChangeEvent(curMode));
+				}
 			}
 		});
 		btnExtrude.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		btnExtrude.setBounds(96, 23, 112, 29);
+		btnExtrude.setBounds(111, 10, 112, 29);
 		btnExtrude.setText("Extrude");
 		
-		Button btnResetCoil = new Button(this, SWT.NONE);
-		btnResetCoil.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		btnResetCoil.setBounds(10, 58, 302, 29);
-		btnResetCoil.setText("Reset Coil");
-		
 		pnlFeedback = new FeedbackPanel(this, injector);
-		pnlFeedback.setBounds(10, 390, 348, 71);
+		pnlFeedback.setBounds(10, 331, 360, 134);
+		
+		Label lblTargetDiameter = new Label(pnlFeedback, SWT.NONE);
+		lblTargetDiameter.setBounds(10, 68, 120, 32);
+		lblTargetDiameter.setText("Target Diameter:");
 		
 		
 		if (injector!=null) injector.injectMembers(this);
@@ -89,6 +97,9 @@ public class ProductionPanel extends Group {
 	public void inject(Logger log, EventBus eb) {
 		this.log = log;
 		this.eb = eb;
+		
+		curMode=Mode.SETUP;
+		eb.post(new ProductionModeChangeEvent(curMode));
 	}
 
 	@Override

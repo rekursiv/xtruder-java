@@ -38,6 +38,7 @@ public class AlarmPanel extends Group {
 	private int hopperDisconnectCount;
 	private int hopperSilenceCount;
 	private int diaSilenceCount;
+	private int diaRepeatCount;
 	private int diaResetCount;
 	private int diaOverCount;
 	private int diaUnderCount;
@@ -75,20 +76,20 @@ public class AlarmPanel extends Group {
 		setText("Alarms");
 		
 		Group grpDiameterMinmax = new Group(this, SWT.NONE);
-		grpDiameterMinmax.setText("Diameter Min/Max");
-		grpDiameterMinmax.setBounds(10,  20, 276, 153);
+		grpDiameterMinmax.setText("Diameter");
+		grpDiameterMinmax.setBounds(10,  10, 329, 153);
 		
 		lblPrevMax = new Label(grpDiameterMinmax, SWT.BORDER);
-		lblPrevMax.setBounds(10, 20, 100, 25);
+		lblPrevMax.setBounds(99, 10, 100, 25);
 		
 		lblPrevMin = new Label(grpDiameterMinmax, SWT.BORDER);
-		lblPrevMin.setBounds(10, 51, 100, 25);
+		lblPrevMin.setBounds(99, 41, 100, 25);
 		
 		lblMax = new Label(grpDiameterMinmax, SWT.BORDER);
-		lblMax.setBounds(130, 20, 100, 25);
+		lblMax.setBounds(219, 10, 100, 25);
 		
 		lblMin = new Label(grpDiameterMinmax, SWT.BORDER);
-		lblMin.setBounds(130, 51, 100, 25);
+		lblMin.setBounds(219, 41, 100, 25);
 		
 		btnResetDia = new Button(grpDiameterMinmax, SWT.NONE);
 		btnResetDia.addSelectionListener(new SelectionAdapter() {
@@ -97,22 +98,22 @@ public class AlarmPanel extends Group {
 				resetDia();
 			}
 		});
-		btnResetDia.setBounds(10, 123, 100, 25);
+		btnResetDia.setBounds(10, 104, 100, 25);
 		btnResetDia.setText("Reset");
 		
 		Label lblOverTitle = new Label(grpDiameterMinmax, SWT.NONE);
-		lblOverTitle.setBounds(10, 92, 47, 25);
+		lblOverTitle.setBounds(10, 73, 47, 25);
 		lblOverTitle.setText("# Over:");
 		
 		Label lblUnderTitle = new Label(grpDiameterMinmax, SWT.NONE);
 		lblUnderTitle.setText("# Under:");
-		lblUnderTitle.setBounds(148, 92, 55, 25);
+		lblUnderTitle.setBounds(148, 73, 55, 25);
 		
 		lblOver = new Label(grpDiameterMinmax, SWT.BORDER);
-		lblOver.setBounds(63, 91, 55, 25);
+		lblOver.setBounds(63, 72, 55, 25);
 		
 		lblUnder = new Label(grpDiameterMinmax, SWT.BORDER);
-		lblUnder.setBounds(209, 91, 57, 25);
+		lblUnder.setBounds(209, 72, 57, 25);
 		
 		chbDiaSilence = new Button(grpDiameterMinmax, SWT.CHECK);
 		chbDiaSilence.addSelectionListener(new SelectionAdapter() {
@@ -126,15 +127,23 @@ public class AlarmPanel extends Group {
 				}
 			}
 		});
-		chbDiaSilence.setBounds(130, 120, 136, 30);
+		chbDiaSilence.setBounds(130, 101, 136, 30);
 		chbDiaSilence.setText("Silence");
+		
+		Label lblMax_1 = new Label(grpDiameterMinmax, SWT.NONE);
+		lblMax_1.setBounds(30, 11, 55, 15);
+		lblMax_1.setText("Max:");
+		
+		Label lblMin_1 = new Label(grpDiameterMinmax, SWT.NONE);
+		lblMin_1.setBounds(30, 42, 55, 15);
+		lblMin_1.setText("Min:");
 		
 		Group grpHopper = new Group(this, SWT.NONE);
 		grpHopper.setText("Hopper");
-		grpHopper.setBounds(10, 179, 135, 81);
+		grpHopper.setBounds(10, 169, 155, 81);
 		
 		lblHopperData = new Label(grpHopper, SWT.BORDER);
-		lblHopperData.setBounds(10, 26, 115, 23);
+		lblHopperData.setBounds(19, 10, 115, 23);
 		lblHopperData.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
 		
 		chbHopperSilence = new Button(grpHopper, SWT.CHECK);
@@ -150,15 +159,15 @@ public class AlarmPanel extends Group {
 			}
 		});
 		chbHopperSilence.setText("Silence");
-		chbHopperSilence.setBounds(10, 55, 115, 23);
+		chbHopperSilence.setBounds(29, 39, 115, 23);
 		
 		grpPressure = new Group(this, SWT.NONE);
 		grpPressure.setText("Pressure");
-		grpPressure.setBounds(151, 179, 135, 81);
+		grpPressure.setBounds(171, 169, 168, 81);
 		
 		lblPresMax = new Label(grpPressure, SWT.BORDER);
 		lblPresMax.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
-		lblPresMax.setBounds(10, 26, 115, 24);
+		lblPresMax.setBounds(16, 10, 124, 24);
 		
 		chbPresSilence = new Button(grpPressure, SWT.CHECK);
 		chbPresSilence.addSelectionListener(new SelectionAdapter() {
@@ -173,7 +182,7 @@ public class AlarmPanel extends Group {
 			}
 		});
 		chbPresSilence.setText("Silence");
-		chbPresSilence.setBounds(10, 56, 115, 24);
+		chbPresSilence.setBounds(26, 40, 115, 24);
 		
 		
 		if (injector!=null) injector.injectMembers(this);
@@ -192,7 +201,6 @@ public class AlarmPanel extends Group {
 		lblOver.setText(""+diaOverCount);
 		lblUnder.setText(""+diaUnderCount);
 		usbEventHz=1000/UsbManager.IO_REFRESH_PERIOD;
-//		diaAlarmCount=config.alarm.diaAlarmSilenceSeconds*usbEventHz;		  ///  FIXME
 	}
 
 	@Subscribe
@@ -201,12 +209,25 @@ public class AlarmPanel extends Group {
 	}
 	
 	@Subscribe
+	public void onAnalogData(final AnalogDataEvent evt) {
+		handleHopperAlarm(evt.getMainHopper());
+		handlePressureAlarm(evt.getPressure());
+	}
+
+	@Subscribe
+	public void onCoilReset(CoilResetEvent event) {
+		resetDia();
+	}
+	
+	@Subscribe
 	public void onProductionModeChange(final ProductionModeChangeEvent evt) {
 		if (evt.getMode()==Mode.SETUP) {
 			chbHopperSilence.setSelection(true);
-			hopperSilenceCount=20;   ///
+			chbHopperSilence.setText("Silence");
+			hopperSilenceCount=-1;
 			
 			chbDiaSilence.setSelection(true);
+			chbDiaSilence.setText("Silence");
 			diaSilenceCount=-1;
 		} else if (evt.getMode()==Mode.EXTRUDE) {
 			chbHopperSilence.setSelection(false);
@@ -221,32 +242,20 @@ public class AlarmPanel extends Group {
 			chbPresSilence.setSelection(false);
 			chbPresSilence.setText("Silence");
 			pressureSilenceCount=0;
+		} else if (evt.getMode()==Mode.COMPOUND) {
+			chbHopperSilence.setSelection(false);
+			chbHopperSilence.setText("Silence");
+			hopperSilenceCount=0;
+			
+			chbDiaSilence.setSelection(true);
+			chbDiaSilence.setText("Silence");
+			diaSilenceCount=-1;
 		}
-		log.info(evt.getMode().toString());
 	}
 	
 	@Subscribe
 	public void onInidcatorData(final IndicatorDataEvent evt) {
-		if (evt.getMax()>curDiaMax) {
-			curDiaMax=evt.getMax();
-			lblMax.setText(String.format("%.3f", evt.getMax()));
-		}
-		if (curDiaMin<0.1||evt.getMin()<curDiaMin) {
-			curDiaMin=evt.getMin();
-			lblMin.setText(String.format("%.3f", evt.getMin()));
-		}
-		
-		if (evt.getMax()>config.alarm.diaUpperThreshold) {
-			diaResetCount=config.alarm.diaAlarmResetSeconds*usbEventHz;
-			++diaOverCount;
-			lblOver.setText(""+diaOverCount);
-		} else if (evt.getMin()<config.alarm.diaLowerThreshold) {
-			diaResetCount=config.alarm.diaAlarmResetSeconds*usbEventHz;
-			++diaUnderCount;
-			lblUnder.setText(""+diaUnderCount);
-		}
-
-		
+	
 		if (diaSilenceCount>0) {
 			diaSilenceCount--;
 			if (chbDiaSilence.getSelection()) {
@@ -258,15 +267,39 @@ public class AlarmPanel extends Group {
 				}
 			}
 		} else if (diaSilenceCount==0) {
-			if (diaOverCount>=config.alarm.diaOverCountTrigger) {
-				diaSilenceCount=config.alarm.diaAlarmRepeatSeconds*usbEventHz;
-				soundDiaOverAlarm();
+			if (evt.getMax()>curDiaMax) {
+				curDiaMax=evt.getMax();
+				lblMax.setText(String.format("%.3f", evt.getMax()));
 			}
-			if (diaUnderCount>=config.alarm.diaUnderCountTrigger) {
-				diaSilenceCount=config.alarm.diaAlarmRepeatSeconds*usbEventHz;
-				soundDiaUnderAlarm();
+			if (curDiaMin<0.1||evt.getMin()<curDiaMin) {
+				curDiaMin=evt.getMin();
+				lblMin.setText(String.format("%.3f", evt.getMin()));
+			}
+			
+			if (evt.getMax()>config.alarm.diaUpperThreshold) {
+				diaResetCount=config.alarm.diaAlarmResetSeconds*usbEventHz;
+				++diaOverCount;
+				lblOver.setText(""+diaOverCount);
+			} else if (evt.getMin()<config.alarm.diaLowerThreshold) {
+				diaResetCount=config.alarm.diaAlarmResetSeconds*usbEventHz;
+				++diaUnderCount;
+				lblUnder.setText(""+diaUnderCount);
+			}
+			
+			if (diaRepeatCount>0) {
+				diaRepeatCount--;
+			} else {
+				if (diaOverCount>=config.alarm.diaOverCountTrigger) {
+					diaRepeatCount=config.alarm.diaAlarmRepeatSeconds*usbEventHz;
+					soundDiaOverAlarm();
+				}
+				if (diaUnderCount>=config.alarm.diaUnderCountTrigger) {
+					diaRepeatCount=config.alarm.diaAlarmRepeatSeconds*usbEventHz;
+					soundDiaUnderAlarm();
+				}
 			}
 		}
+		
 		
 		if (diaResetCount>0) {
 			diaResetCount--;
@@ -298,19 +331,6 @@ public class AlarmPanel extends Group {
 		needsReset=true;
 	}
 
-	
-	@Subscribe
-	public void onAnalogData(final AnalogDataEvent evt) {
-		handleHopperAlarm(evt.getMainHopper());
-		handlePressureAlarm(evt.getPressure());
-	}
-
-
-	@Subscribe
-	public void onCoilReset(CoilResetEvent event) {
-		resetDia();
-	}
-
 	protected void handlePressureAlarm(int curPressure) {
 //		if (curPressure > config.alarm.pressureMax) log.info("");
 		if (pressureSilenceCount>0) {
@@ -330,7 +350,7 @@ public class AlarmPanel extends Group {
 				if (curPressure > config.alarm.pressureMax) {
 					log.info("");
 					soundOverPressureAlarm();
-					pressureAlarmCount=config.alarm.pressureAlarmRepeastSeconds*usbEventHz;
+					pressureAlarmCount=config.alarm.pressureAlarmRepeatSeconds*usbEventHz;
 				}
 			}
 		}
@@ -356,7 +376,7 @@ public class AlarmPanel extends Group {
 					chbHopperSilence.setText("Silence:  "+(hopperSilenceCount/usbEventHz+1));
 				}
 			}
-		} else {
+		} else if (hopperSilenceCount==0) {
 			if (hopperDisconnectCount+hopperEmptyCount+hopperFullCount>config.alarm.hopperRepeatSeconds*usbEventHz) {
 				if (hopperDisconnectCount>hopperFullCount) soundDisconnectedAlarm();
 				else if (hopperEmptyCount>hopperFullCount) soundEmptyAlarm();
@@ -376,6 +396,7 @@ public class AlarmPanel extends Group {
 		lblMax.setText(String.format("%.3f", curDiaMax));
 		diaOverCount=0;
 		diaUnderCount=0;
+		diaRepeatCount=0;
 		lblOver.setText(""+diaOverCount);
 		lblUnder.setText(""+diaUnderCount);
 		needsReset=false;

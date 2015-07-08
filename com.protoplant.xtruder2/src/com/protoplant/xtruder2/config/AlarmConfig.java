@@ -21,7 +21,7 @@ public class AlarmConfig {
 
 	public int pressureMax = 2000;
 	public int pressureAlarmSilenceSeconds = 240;
-	public int pressureAlarmRepeastSeconds = 10;
+	public int pressureAlarmRepeatSeconds = 10;
 	
 	
 }

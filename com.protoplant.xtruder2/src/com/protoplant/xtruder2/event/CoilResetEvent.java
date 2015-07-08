@@ -2,18 +2,20 @@ package com.protoplant.xtruder2.event;
 
 public class CoilResetEvent {
 
-	private Object isWrapAround;
+	public enum Context {SILENT, RESET, WRAP};
+	
+	private Context context;
 
-	public CoilResetEvent(boolean isWrapAround) {
-		this.setWrapAround(isWrapAround);
+	public CoilResetEvent(Context context) {
+		this.context = context;
 	}
 
-	public Object isWrapAround() {
-		return isWrapAround;
+	public Context getContext() {
+		return context;
 	}
 
-	public void setWrapAround(Object isWrapAround) {
-		this.isWrapAround = isWrapAround;
+	public void setContext(Context context) {
+		this.context = context;
 	}
 
 	

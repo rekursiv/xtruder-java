@@ -27,7 +27,7 @@ public class ConfigSummaryPanel extends BaseSummaryPanel {
 				setFocus();
 			}
 		});
-		lblConfigName.setBounds(10, 27, 210, 42);
+		lblConfigName.setBounds(10, 10, 210, 42);
 		lblConfigName.setText("ConfigName");
 		lblConfigName.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		if (injector!=null) injector.injectMembers(this);

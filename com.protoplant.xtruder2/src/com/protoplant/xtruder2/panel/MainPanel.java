@@ -16,20 +16,20 @@ import com.protoplant.xtruder2.panel.summary.RootSummaryPanel;
 
 import org.eclipse.swt.widgets.Group;
 
-public class RootPanel extends SashForm {
+public class MainPanel extends SashForm {
 
-	ProgressPanel pnlProgress;
-	MainPanel pnlMain;
+	RootSummaryPanel rsp;
+	RootDetailPanel rdp;
 	private Logger log;
 	
-	public RootPanel(Composite parent, Injector injector) {
-		super(parent, SWT.VERTICAL);
+	public MainPanel(Composite parent, Injector injector) {
+		super(parent, SWT.NONE);
 		setTouchEnabled(true);
 
-		pnlProgress = new ProgressPanel(this, injector);
-		pnlMain = new MainPanel(this, injector);
+		rsp = new RootSummaryPanel(this, injector);
+		rdp = new RootDetailPanel(this, injector);
 		
-		setWeights(new int[] { 1, 9});
+		setWeights(new int[] { 3, 9});
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -37,6 +37,13 @@ public class RootPanel extends SashForm {
 	@Inject
 	public void inject(Logger log, EventBus eb) {
 		this.log = log;
+		
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				rsp.setDefaultFocus();
+			}
+		});
 	}
 
 	@Override

@@ -41,7 +41,7 @@ public class ConveyanceSummaryPanel extends BaseSummaryPanel {
 
 		lblIps.setBackground(null);
 		lblIps.setFont(SWTResourceManager.getFont("Segoe UI", 18, SWT.NORMAL));
-		lblIps.setBounds(10, 24, 116, 32);
+		lblIps.setBounds(10, 10, 116, 32);
 		lblIps.setText("0");
 		
 		
@@ -52,7 +52,7 @@ public class ConveyanceSummaryPanel extends BaseSummaryPanel {
 				setFocus();
 			}
 		});
-		lblIpsTitle.setBounds(20, 62, 128, 20);
+		lblIpsTitle.setBounds(20, 48, 128, 20);
 		lblIpsTitle.setText("Inches Per Second");
 		
 		if (injector!=null) injector.injectMembers(this);

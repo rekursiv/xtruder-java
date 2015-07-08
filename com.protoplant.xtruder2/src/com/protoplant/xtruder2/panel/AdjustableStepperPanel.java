@@ -16,12 +16,14 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
+import com.protoplant.xtruder2.event.CoilResetEvent;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.ConfigStoreEvent;
 import com.protoplant.xtruder2.event.StepperRunEvent;
 import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
 import com.protoplant.xtruder2.event.StepperStatusEvent;
 import com.protoplant.xtruder2.event.StepperStopEvent;
+import com.protoplant.xtruder2.event.CoilResetEvent.Context;
 
 import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.layout.FormLayout;
@@ -161,6 +163,12 @@ public class AdjustableStepperPanel extends StepperPanel {
 	public void updatePos(int position) {
 		//  FIXME:  this is a hack to get position info to Adjustable subclass
 		lblPosition.setText("Position: "+position);
+		
+		//  "remote spool reset" hack
+		if (function==StepperFunction.Winder && position==2) {
+			eb.post(new CoilResetEvent(Context.RESET));
+//			log.info(""+position);
+		}
 	}
 	
 	@Override

@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
@@ -45,9 +46,6 @@ import com.protoplant.xtruder2.event.StepperUpdateEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.widgets.Label;
-//import org.eclipse.swt.widgets.List;
-
-
 
 
 public class ConfigDetailPanel extends Composite {
@@ -58,7 +56,7 @@ public class ConfigDetailPanel extends Composite {
 	private Logger log;
 	private XtruderConfig config;
 	private ConfigManager<XtruderConfig> cfgMgr;
-	protected Text txtMainEdit;
+	protected StyledText txtMainEdit;
 	protected Button btnPull;
 	protected Button btnSave;
 	protected Button btnSaveAs;
@@ -88,14 +86,13 @@ public class ConfigDetailPanel extends Composite {
 		super(parent, SWT.BORDER);
 		setLayout(new FormLayout());
 		
-		txtMainEdit = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		txtMainEdit = new StyledText(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		txtMainEdit.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent arg0) {
 				onEdit();
 			}
 		});
-//		txtMainEdit.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-//		txtMainEdit.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+
 		FormData fd_text = new FormData();
 		fd_text.right = new FormAttachment(100, -11);
 		fd_text.top = new FormAttachment(0, 12);

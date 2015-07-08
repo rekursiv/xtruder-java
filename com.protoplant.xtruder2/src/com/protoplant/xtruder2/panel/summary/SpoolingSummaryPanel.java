@@ -11,6 +11,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.event.CoilMassEvent;
 import com.protoplant.xtruder2.event.IndicatorDataEvent;
+import com.protoplant.xtruder2.event.SpoolTargetMassEvent;
 
 public class SpoolingSummaryPanel extends BaseSummaryPanel {
 
@@ -32,7 +33,7 @@ public class SpoolingSummaryPanel extends BaseSummaryPanel {
 
 		lblMass.setBackground(null);
 		lblMass.setFont(SWTResourceManager.getFont("Segoe UI", 18, SWT.NORMAL));
-		lblMass.setBounds(10, 24, 116, 32);
+		lblMass.setBounds(10, 10, 116, 32);
 		lblMass.setText("0.00");
 		
 		
@@ -43,17 +44,17 @@ public class SpoolingSummaryPanel extends BaseSummaryPanel {
 				setFocus();
 			}
 		});
-		lblMassTitle.setBounds(20, 62, 128, 20);
-		lblMassTitle.setText("grams");
+		lblMassTitle.setBounds(20, 48, 128, 20);
+		lblMassTitle.setText("Spool Size");
 		
 		if (injector!=null) injector.injectMembers(this);
 	}
 
 	@Subscribe
-	public void onInidcatorData(final CoilMassEvent evt) {
-		lblMass.setText(String.format("%.2f", evt.getMass()));
+	public void onSpoolTargetMass(SpoolTargetMassEvent evt) {
+		lblMass.setText(evt.getMass()+"g");
 	}
-
+	
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components

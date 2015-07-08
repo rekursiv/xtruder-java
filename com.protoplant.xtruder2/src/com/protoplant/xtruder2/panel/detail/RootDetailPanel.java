@@ -37,10 +37,10 @@ public class RootDetailPanel extends Composite {
 		stack = new StackLayout();
 		setLayout(stack);
 
-		pnlData = new DataDetailPanel(this, injector);
 		pnlStatus = new StatusDetailPanel(this, injector);
 		pnlConv = new ConveyanceDetailPanel(this, injector);
 		pnlSpooling = new SpoolingDetailPanel(this, injector);
+		pnlData = new DataDetailPanel(this, injector);
 		
 		pnlConfig = new ConfigDetailPanel(this, injector);   //  create this LAST  (loads config on construct)
 		
@@ -73,7 +73,6 @@ public class RootDetailPanel extends Composite {
 		} else if (w instanceof ConfigSummaryPanel) {
 			stack.topControl = pnlConfig;
 			layout(true, true);
-			layout(true, true);  // gotta do this TWICE on Linux to force layout of text editors, no idea why...
 			pnlConfig.onPanelFocus();
 		}
 	}

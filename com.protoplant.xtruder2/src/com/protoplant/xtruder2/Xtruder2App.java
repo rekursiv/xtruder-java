@@ -16,7 +16,7 @@ import com.protoplant.xtruder2.usb.UsbManager;
 
 public class Xtruder2App {
 	
-	static final String appVersion = "2.21";
+	static final String appVersion = "2.3";
 	
 	
 	public static void main(String[] args) {
@@ -34,7 +34,7 @@ public class Xtruder2App {
 		if (System.getProperty("os.name").contains("Windows")) {
 			System.out.println("Detected Windows, will attempt to run on remote system...");
 			ProcessBuilder pb = new ProcessBuilder("java", "-jar", "runremote.jar");
-			pb.directory(new File("C:/projects/eclipse_workspace/_deploy/runremote/"));
+			pb.directory(new File("C:/projects/eclipse_mars_workspace/_deploy/runremote/"));
 			pb.inheritIO();
 			try {
 				pb.start();
@@ -49,7 +49,8 @@ public class Xtruder2App {
 		XtruderShell shell = new XtruderShell();
 	
 		// splash screen
-		shell.setSize(600, 0);
+//		shell.setSize(600, 0);
+		shell.setBounds(0, 0, 1540, 900);
 		shell.setText("Loading Protoplant Xtruder, please wait...");
 		shell.open();
 
@@ -63,8 +64,13 @@ public class Xtruder2App {
 		usb.init();
 		
 		// Dell touchscreen is 1600 X 900
-		shell.setBounds(0, 0, 1600, 900);
-//		shell.setSize(1600, 900);
+		if (!System.getProperty("os.name").contains("Windows")) {
+			shell.setMaximized(true);
+		} else {
+			shell.setBounds(0, 0, 1600, 900);
+		}
+		
+//		
 		shell.setText("Protoplant Xtruder V"+appVersion);
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		

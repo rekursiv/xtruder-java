@@ -53,6 +53,7 @@ public class RootSummaryPanel extends Composite {
 	public void inject(Logger log, EventBus eb) {
 		this.log = log;
 		this.eb = eb;
+		setDefaultFocus();
 	}
 
 	@Override

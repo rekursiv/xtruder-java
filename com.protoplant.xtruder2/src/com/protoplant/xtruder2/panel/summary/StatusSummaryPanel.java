@@ -40,7 +40,7 @@ public class StatusSummaryPanel extends BaseSummaryPanel {
 
 		lblUsbCons.setBackground(null);
 		lblUsbCons.setFont(SWTResourceManager.getFont("Segoe UI", 18, SWT.NORMAL));
-		lblUsbCons.setBounds(10, 24, 116, 32);
+		lblUsbCons.setBounds(10, 10, 116, 32);
 		
 		lblUsbConsTitle = new Label(this, SWT.NONE);
 		lblUsbConsTitle.addMouseListener(new MouseAdapter() {
@@ -49,7 +49,7 @@ public class StatusSummaryPanel extends BaseSummaryPanel {
 				setFocus();
 			}
 		});
-		lblUsbConsTitle.setBounds(20, 62, 128, 20);
+		lblUsbConsTitle.setBounds(20, 48, 128, 20);
 		lblUsbConsTitle.setText("USB Connections");
 		
 	}

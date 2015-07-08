@@ -5,21 +5,15 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseSWT"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util.config"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util.logging"/>
-	<classpathentry kind="lib" path="C:/projects/javalib/guice-3.0/guice-3.0-no_aop.jar"/>
-	<classpathentry kind="lib" path="C:/projects/javalib/guice-3.0/javax.inject.jar"/>
-	<classpathentry kind="lib" path="C:/projects/javalib/guava-14.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/projects/javalib/guice-4.0-no_aop.jar"/>
+	<classpathentry kind="lib" path="C:/projects/javalib/guava-18.0.jar"/>
 	<classpathentry kind="lib" path="C:/projects/javalib/hidapi-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/org.eclipse.draw2d_3.9.101.201408150207.jar"/>
-	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/org.eclipse.nebula.visualization.xygraph_1.0.0.201412230843.jar"/>
-	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar" sourcepath="C:/projects/eclipse/plugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
-	<classpathentry kind="lib" path="C:/projects/eclipse/plugins/javax.inject_1.0.0.v20091030.jar" sourcepath="C:/projects/eclipse/plugins/javax.inject.source_1.0.0.v20091030.jar">
-		<accessrules>
-			<accessrule kind="accessible" pattern="javax/inject/*"/>
-			<accessrule ignoreifbetter="true" kind="nonaccessible" pattern="**/*"/>
-		</accessrules>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/projects/javalib/jackson-databind-2.3.3.jar" sourcepath="C:/Users/Aaron/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.3.3/jackson-databind-2.3.3-sources.jar"/>
-	<classpathentry kind="lib" path="C:/projects/javalib/jackson-annotations-2.3.3.jar"/>
-	<classpathentry kind="lib" path="C:/projects/javalib/jackson-core-2.3.3.jar"/>
+	<classpathentry kind="lib" path="C:/projects/eclipse_mars/plugins/org.eclipse.draw2d_3.10.0.201506010206.jar"/>
+	<classpathentry kind="lib" path="C:/projects/eclipse_mars/plugins/org.eclipse.nebula.visualization.xygraph_1.0.0.201507061257.jar"/>
+	<classpathentry kind="lib" path="C:/projects/eclipse_mars/plugins/org.eclipse.nebula.visualization.widgets_1.0.0.201507061257.jar"/>
+	<classpathentry kind="lib" path="C:/projects/javalib/jackson-databind-2.5.0.jar"/>
+	<classpathentry kind="lib" path="C:/projects/javalib/jackson-core-2.5.0.jar"/>
+	<classpathentry kind="lib" path="C:/projects/javalib/jackson-annotations-2.5.0.jar"/>
+	<classpathentry kind="lib" path="C:/projects/eclipse_mars/plugins/javax.inject_1.0.0.v20091030.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

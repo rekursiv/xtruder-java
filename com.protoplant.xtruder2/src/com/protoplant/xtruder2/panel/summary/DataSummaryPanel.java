@@ -42,7 +42,7 @@ public class DataSummaryPanel extends BaseSummaryPanel {
 
 		lblPsi.setBackground(null);
 		lblPsi.setFont(SWTResourceManager.getFont("Segoe UI", 18, SWT.NORMAL));
-		lblPsi.setBounds(10, 24, 116, 32);
+		lblPsi.setBounds(10, 10, 116, 32);
 		lblPsi.setText("0");
 		
 		
@@ -53,7 +53,7 @@ public class DataSummaryPanel extends BaseSummaryPanel {
 				setFocus();
 			}
 		});
-		lblPsiTitle.setBounds(20, 62, 128, 20);
+		lblPsiTitle.setBounds(20, 48, 128, 20);
 		lblPsiTitle.setText("PSI");
 		
 		
@@ -67,7 +67,7 @@ public class DataSummaryPanel extends BaseSummaryPanel {
 
 		lblMm.setBackground(null);
 		lblMm.setFont(SWTResourceManager.getFont("Segoe UI", 18, SWT.NORMAL));
-		lblMm.setBounds(231, 24, 216, 32);
+		lblMm.setBounds(231, 10, 216, 32);
 		lblMm.setText("0");
 		
 		
@@ -78,7 +78,7 @@ public class DataSummaryPanel extends BaseSummaryPanel {
 				setFocus();
 			}
 		});
-		lblMmTitle.setBounds(251, 62, 228, 20);
+		lblMmTitle.setBounds(251, 48, 228, 20);
 		lblMmTitle.setText("mm");
 		
 		if (injector!=null) injector.injectMembers(this);
