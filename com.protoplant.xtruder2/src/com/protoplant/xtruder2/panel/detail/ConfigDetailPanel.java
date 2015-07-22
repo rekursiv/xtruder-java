@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import util.config.ConfigManager;
 
@@ -60,7 +61,7 @@ public class ConfigDetailPanel extends Composite {
 	protected Button btnPull;
 	protected Button btnSave;
 	protected Button btnSaveAs;
-	protected Text txtStatus;
+	protected StyledText txtStatus;
 	private EventBus eb;
 	private org.eclipse.swt.widgets.List lstFiles;
 	
@@ -145,7 +146,7 @@ public class ConfigDetailPanel extends Composite {
 		btnSaveAs.setLayoutData(fd_btnSaveAs);
 		btnSaveAs.setText("Save as...");
 		
-		txtStatus = new Text(this, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
+		txtStatus = new StyledText(this, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
 		txtStatus.setTouchEnabled(true);
 //		txtStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 //		txtStatus.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -170,6 +171,7 @@ public class ConfigDetailPanel extends Composite {
 		fd_lstFiles.left = new FormAttachment(0, 12);
 		fd_lstFiles.top = new FormAttachment(0, 195);
 		lstFiles.setLayoutData(fd_lstFiles);
+		lstFiles.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		
 		btnRevert = new Button(this, SWT.NONE);
 		btnRevert.addSelectionListener(new SelectionAdapter() {
