@@ -41,15 +41,6 @@ public class FeederMonitor implements Runnable {
 	
 	public void disconnect() {
 		thread.interrupt();
-		try {
-			sock.close();
-			is.close();
-			os.close();
-			isEmpty = false;
-			log.info("Feeder at "+ip+" disconnected.");
-		} catch (IOException e) {
-			log.log(Level.WARNING, "", e);
-		}
 	}
 
 	public boolean isEmpty() {
@@ -57,7 +48,12 @@ public class FeederMonitor implements Runnable {
 	}
 	
 	public boolean isConnected() {
-		return !sock.isClosed()&&sock.isConnected();
+		try {
+			return !sock.isClosed()&&sock.isConnected();
+		} catch (Exception e) {
+			log.log(Level.WARNING, "", e);
+			return false;
+		}
 	}
 
 	
@@ -75,7 +71,7 @@ public class FeederMonitor implements Runnable {
 					parse(buf);
 				}
 			} catch (IOException e) {
-				System.out.println("!!!  "+e.getMessage());
+//				System.out.println("!!!  "+e.getMessage());
 				try {
 					os.writeChar('1');
 					os.writeChar('\r');
@@ -85,7 +81,19 @@ public class FeederMonitor implements Runnable {
 				++errCount;
 			}
 		}
-		disconnect();
+		shutdown();
+	}
+	
+	private void shutdown() {
+		try {
+			sock.close();
+			is.close();
+			os.close();
+			isEmpty = false;
+			log.info("Feeder at "+ip+" disconnected.");
+		} catch (IOException e) {
+			log.log(Level.WARNING, "", e);
+		}
 	}
 	
 	private void attemptConnection() {
@@ -108,7 +116,7 @@ public class FeederMonitor implements Runnable {
 			for (String datum : data) {
 				if (datum.startsWith("[23;26f")) {
 					String alarm = datum.substring(7);
-					System.out.println(alarm);
+//					System.out.println(alarm);
 					if (alarm.equals("**")) isEmpty = false;
 					else isEmpty = true;
 				}

@@ -10,6 +10,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 
@@ -100,6 +101,8 @@ public class StepperPanel extends Group {
 		btnReset.setText("Reset");
 
 		showDisconnectState();
+		
+		setTabList(new Control[]{});
 		
 		if (injector!=null) injector.injectMembers(this);
 	}

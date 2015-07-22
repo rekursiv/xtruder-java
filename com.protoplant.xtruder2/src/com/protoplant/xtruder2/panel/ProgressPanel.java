@@ -9,6 +9,7 @@ import org.eclipse.nebula.visualization.widgets.figures.ProgressBarFigure;
 import org.eclipse.nebula.visualization.xygraph.util.XYGraphMediaFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -67,6 +68,8 @@ public class ProgressPanel extends Composite {
 		});
 		
 		lws.setContents(progBar);
+		
+		setTabList(new Control[]{});
 		
 		if (injector!=null) injector.injectMembers(this);
 	}

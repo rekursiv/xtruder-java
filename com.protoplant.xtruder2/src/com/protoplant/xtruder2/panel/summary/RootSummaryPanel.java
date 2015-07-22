@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -46,6 +47,8 @@ public class RootSummaryPanel extends Composite {
 		pnlProduction = new ProductionPanel(this, injector);
 		pnlProduction.setBounds(10, 298, 366, 536);
 		
+		setTabList(new Control[]{});
+		
 		if (injector!=null) injector.injectMembers(this);
 	}
 	
@@ -62,6 +65,6 @@ public class RootSummaryPanel extends Composite {
 	}
 
 	public void setDefaultFocus() {
-		eb.post(new PanelFocusEvent(pnlStatus));  //pnlStatus
+		eb.post(new PanelFocusEvent(pnlConv));  //pnlStatus
 	}
 }

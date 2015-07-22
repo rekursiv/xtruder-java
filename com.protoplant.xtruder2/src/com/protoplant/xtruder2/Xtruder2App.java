@@ -16,7 +16,7 @@ import com.protoplant.xtruder2.usb.UsbManager;
 
 public class Xtruder2App {
 	
-	static final String appVersion = "2.32";
+	static final String appVersion = "2.33";
 	
 	
 	public static void main(String[] args) {
@@ -50,7 +50,7 @@ public class Xtruder2App {
 	
 		// splash screen
 //		shell.setSize(600, 0);
-		shell.setBounds(0, 0, 1540, 900);
+		shell.setBounds(0, 0, 1600, 900);  // 1540 with dock
 		shell.setText("Loading Protoplant Xtruder, please wait...");
 		shell.open();
 

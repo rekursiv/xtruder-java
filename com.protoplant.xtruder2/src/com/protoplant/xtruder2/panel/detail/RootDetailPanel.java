@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
 
 import com.google.common.eventbus.Subscribe;
@@ -43,6 +44,7 @@ public class RootDetailPanel extends Composite {
 		pnlData = new DataDetailPanel(this, injector);
 		
 		pnlConfig = new ConfigDetailPanel(this, injector);   //  create this LAST  (loads config on construct)
+		
 		
 		if (injector!=null) injector.injectMembers(this);
 	}

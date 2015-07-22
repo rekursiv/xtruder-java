@@ -1,65 +1,45 @@
 package com.protoplant.xtruder2.panel;
 
-import java.util.logging.Logger;
-
+import org.eclipse.draw2d.LightweightSystem;
+import org.eclipse.nebula.visualization.widgets.datadefinition.IManualValueChangeListener;
+import org.eclipse.nebula.visualization.widgets.figures.ScaledSliderFigure;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Scale;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.event.CoilResetEvent;
+import com.protoplant.xtruder2.event.CoilResetEvent.Context;
 import com.protoplant.xtruder2.event.ConfigSetupEvent;
 import com.protoplant.xtruder2.event.ConfigStoreEvent;
-import com.protoplant.xtruder2.event.StepperRunEvent;
-import com.protoplant.xtruder2.event.StepperSpeedChangeEvent;
-import com.protoplant.xtruder2.event.StepperStatusEvent;
-import com.protoplant.xtruder2.event.StepperStopEvent;
-import com.protoplant.xtruder2.event.CoilResetEvent.Context;
-
-import org.eclipse.swt.widgets.Slider;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormAttachment;
 
 public class AdjustableStepperPanel extends StepperPanel {
 	
-	protected Scale sldSpeed;	
+
+	private LightweightSystem lws;
+	protected Canvas cvsSpeedAdjust;
+	protected ScaledSliderFigure sldSpeedAdjust;
+	
 	protected Button btnRunStop;
 	private Label lblPosition;
 
 	public AdjustableStepperPanel(Composite parent, Injector injector, StepperFunction type) {
 		super(parent, null, type);
 
-		sldSpeed = new Scale(this, SWT.NONE);
-		sldSpeed.setTouchEnabled(true);
-		FormData fd_sldSpeed = new FormData();
-		fd_sldSpeed.top = new FormAttachment(lblSetpt);
-		fd_sldSpeed.bottom = new FormAttachment(0, 74);
-		sldSpeed.setLayoutData(fd_sldSpeed);
-		sldSpeed.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				adjustSpeed();
-			}
-		});
-		sldSpeed.setPageIncrement(20);
-//		sldSpeed.setMaximum(32000);
-//		sldSpeed.setSelection(5000);
-		
 		btnRunStop = new Button(this, SWT.NONE);
 		FormData fd_btnRunStop = new FormData();
-		fd_btnRunStop.top = new FormAttachment(sldSpeed, 6);
-		fd_btnRunStop.right = new FormAttachment(0, 82);
-		fd_btnRunStop.left = new FormAttachment(0, 7);
+		fd_btnRunStop.bottom = new FormAttachment(0, 165);
+		fd_btnRunStop.top = new FormAttachment(0, 125);
 		btnRunStop.setLayoutData(fd_btnRunStop);
 		btnRunStop.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -70,51 +50,48 @@ public class AdjustableStepperPanel extends StepperPanel {
 		});
 		btnRunStop.setText("Run");
 		
-		Button btnLeft = new Button(this, SWT.NONE);
-		btnLeft.setTouchEnabled(true);
-		btnLeft.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				sldSpeed.setSelection(sldSpeed.getSelection()-1);
-//				isReversed=!isReversed;                                       //   TEST
-				adjustSpeed();
-			}
-		});
-		fd_sldSpeed.left = new FormAttachment(btnLeft);
-		FormData fd_btnNewButton = new FormData();
-		fd_btnNewButton.bottom = new FormAttachment(sldSpeed, 0, SWT.BOTTOM);
-		fd_btnNewButton.top = new FormAttachment(lblSetpt);
-		fd_btnNewButton.right = new FormAttachment(btnRunStop, 25);
-		fd_btnNewButton.left = new FormAttachment(btnRunStop, 0, SWT.LEFT);
-		btnLeft.setLayoutData(fd_btnNewButton);
-		btnLeft.setText("<");
-		
-		Button btnRight = new Button(this, SWT.NONE);
-		btnRight.setTouchEnabled(true);
-		btnRight.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				sldSpeed.setSelection(sldSpeed.getSelection()+1);
-				adjustSpeed();
-			}
-		});
-		fd_sldSpeed.right = new FormAttachment(btnRight);
-		btnRight.setText(">");
-		FormData fd_button = new FormData();
-		fd_button.top = new FormAttachment(sldSpeed, -47);
-		fd_button.bottom = new FormAttachment(sldSpeed, 0, SWT.BOTTOM);
-		fd_button.right = new FormAttachment(100, -12);
-		fd_button.left = new FormAttachment(100, -37);
-		btnRight.setLayoutData(fd_button);
-		
 		lblPosition = new Label(this, SWT.NONE);
 		FormData fd_lblPosition = new FormData();
-		fd_lblPosition.bottom = new FormAttachment(0, 160);
-		fd_lblPosition.right = new FormAttachment(0, 280);
-		fd_lblPosition.top = new FormAttachment(0, 125);
-		fd_lblPosition.left = new FormAttachment(0, 7);
+		fd_lblPosition.right = new FormAttachment(lblSetpt, 273);
+		fd_lblPosition.left = new FormAttachment(lblSetpt, 0, SWT.LEFT);
+		fd_lblPosition.bottom = new FormAttachment(0, 238);
+		fd_lblPosition.top = new FormAttachment(0, 203);
 		lblPosition.setLayoutData(fd_lblPosition);
 		lblPosition.setText("Position:");
+		
+		cvsSpeedAdjust = new Canvas(this, SWT.NONE);
+		fd_btnRunStop.right = new FormAttachment(100, -827);
+		fd_btnRunStop.left = new FormAttachment(0, 18);
+		FormData fd_cvsSpeedAdjust = new FormData();
+		fd_cvsSpeedAdjust.bottom = new FormAttachment(0, 123);
+		fd_cvsSpeedAdjust.top = new FormAttachment(0, 28);
+		fd_cvsSpeedAdjust.right = new FormAttachment(100, -6);
+		fd_cvsSpeedAdjust.left = new FormAttachment(0, 15);
+		cvsSpeedAdjust.setLayoutData(fd_cvsSpeedAdjust);
+		
+		sldSpeedAdjust = new ScaledSliderFigure();
+		lws = new LightweightSystem(cvsSpeedAdjust);
+		lws.setContents(sldSpeedAdjust);
+
+//		sldSpeedAdjust.setEffect3D(false);
+		sldSpeedAdjust.setFillColor(new Color(cvsSpeedAdjust.getDisplay(), 230, 80, 0));
+		sldSpeedAdjust.setHorizontal(true);
+		sldSpeedAdjust.setShowMarkers(false);
+		sldSpeedAdjust.setShowLo(false);
+		sldSpeedAdjust.setShowLolo(false);
+		sldSpeedAdjust.setShowHi(false);
+		sldSpeedAdjust.setShowHihi(false);
+		sldSpeedAdjust.setPageIncrement(100);
+		sldSpeedAdjust.setMajorTickMarkStepHint(100);
+		sldSpeedAdjust.setValueLabelFormat("0");
+		sldSpeedAdjust.getScale().setFormatPattern("0");
+		sldSpeedAdjust.addManualValueChangeListener(new IManualValueChangeListener() {
+			public void manualValueChanged(double newValue) {
+				adjustSpeed();
+			}
+		});
+		
+	    setTabList(new Control[]{cvsSpeedAdjust});
 
 		if (injector!=null) injector.injectMembers(this);
 	}
@@ -130,20 +107,19 @@ public class AdjustableStepperPanel extends StepperPanel {
 	@Override
 	public void onConfigSetup(ConfigSetupEvent evt) {
 		super.onConfigSetup(evt);
-		sldSpeed.setMaximum(scm.getConfig(function).speedSliderMax);
-		sldSpeed.setMinimum(scm.getConfig(function).speedSliderMin);
-		sldSpeed.setSelection(scm.getConfig(function).speedSliderInit);
+		sldSpeedAdjust.setRange(scm.getConfig(function).speedSliderMin, scm.getConfig(function).speedSliderMax);
+		sldSpeedAdjust.setValue(scm.getConfig(function).speedSliderInit);
 		adjustSpeed();
 	}
 	
 	@Subscribe
 	public void onConfigStore(ConfigStoreEvent evt) {
-		scm.storeStepperState(function, sldSpeed.getSelection());
+		scm.storeStepperState(function, (int)sldSpeedAdjust.getValue());
 	}
 	
 	@Override
 	protected void adjustSpeed() {
-		speed = sldSpeed.getSelection();
+		speed = (int)sldSpeedAdjust.getValue();
 		super.adjustSpeed();
 	}
 	

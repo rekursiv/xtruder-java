@@ -73,6 +73,7 @@ public class AlarmPanel extends Group {
 	private int pressureAlarmCount;
 	private Button chbMonitorFeeders;
 	private FeederMonitor fm1;
+	private FeederMonitor fm2;
 	
 	public AlarmPanel(Composite parent, Injector injector) {
 		super(parent, SWT.NONE);
@@ -162,20 +163,25 @@ public class AlarmPanel extends Group {
 			}
 		});
 		chbHopperSilence.setText("Silence");
-		chbHopperSilence.setBounds(29, 39, 115, 23);
+		chbHopperSilence.setBounds(9, 35, 115, 23);
 		
 		chbMonitorFeeders = new Button(grpHopper, SWT.CHECK);
 		chbMonitorFeeders.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				if (chbMonitorFeeders.getSelection()) {
-					fm1.connect("192.168.1.11");
+					fm1.connect("192.168.1.10");
+					fm2.connect("192.168.1.11");
 				} else {
 					fm1.disconnect();
+					fm2.disconnect();
 				}
+				hopperDisconnectCount=0;
+				hopperEmptyCount=0;
+				hopperFullCount=0;
 			}
 		});
-		chbMonitorFeeders.setBounds(19, 67, 115, 16);
+		chbMonitorFeeders.setBounds(9, 55, 144, 16);
 		chbMonitorFeeders.setText("Monitor Feeders");
 		
 		grpPressure = new Group(this, SWT.NONE);
@@ -206,12 +212,13 @@ public class AlarmPanel extends Group {
 	}
 
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config, AudioManager am, FeederMonitor fm1) {
+	public void inject(Logger log, EventBus eb, XtruderConfig config, AudioManager am, FeederMonitor fm1, FeederMonitor fm2) {
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
 		this.am = am;
 		this.fm1 = fm1;
+		this.fm2 = fm2;
 		
 		diaOverCount=0;
 		diaUnderCount=0;
@@ -376,12 +383,30 @@ public class AlarmPanel extends Group {
 		
 	}
 	
+	protected void updateFeederStatus() {
+		String status;
+		if (fm1.isConnected()) {
+			status = "F1:C,";
+			if (fm1.isEmpty()) status += "AL";
+			else status += "OK";
+		}
+		else status = "F1:X";
+
+		if (fm2.isConnected()) {
+			status += "  F2:C,";
+			if (fm2.isEmpty()) status += "AL";
+			else status += "OK";
+		}
+		else status += "  F2:X";
+		lblHopperData.setText(status);
+	}
+	
 	protected void handleHopperAlarm(int hopperData) {
 
 		if (chbMonitorFeeders.getSelection()) {
-			lblHopperData.setText("feeders");    //  FIXME
-			if (!fm1.isConnected()) ++hopperDisconnectCount;
-			else if (fm1.isEmpty()) ++hopperEmptyCount;
+			updateFeederStatus();
+			if (!fm1.isConnected() || !fm2.isConnected()) ++hopperDisconnectCount;
+			else if (fm1.isEmpty() || fm2.isEmpty()) ++hopperEmptyCount;
 			else ++hopperFullCount;
 		} else {
 			lblHopperData.setText(""+hopperData);
@@ -390,7 +415,7 @@ public class AlarmPanel extends Group {
 			else ++hopperFullCount;
 		}
 	
-		log.info(hopperDisconnectCount+":"+hopperEmptyCount+":"+hopperFullCount+"#"+config.alarm.hopperDisconnectThreshold+"#"+config.alarm.hopperEmptyThreshold);
+//		log.info(hopperDisconnectCount+":"+hopperEmptyCount+":"+hopperFullCount+"#"+config.alarm.hopperDisconnectThreshold+"#"+config.alarm.hopperEmptyThreshold);
 
 		
 		if (hopperSilenceCount>0) {
