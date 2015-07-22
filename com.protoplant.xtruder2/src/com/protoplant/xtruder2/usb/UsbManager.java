@@ -152,7 +152,7 @@ public class UsbManager extends Thread {
 
 	@Override
 	public void run() {
-		while (isAlive()) {
+		while (!isInterrupted()) {
 
 			if (ioRefreshCount*IO_REFRESH_PERIOD>CONNECT_REFRESH_PERIOD) {
 				refreshConnections();   // Async

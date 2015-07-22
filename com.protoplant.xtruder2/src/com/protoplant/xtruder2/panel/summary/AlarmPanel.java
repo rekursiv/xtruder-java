@@ -16,6 +16,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.protoplant.xtruder2.AudioManager;
+import com.protoplant.xtruder2.FeederMonitor;
 import com.protoplant.xtruder2.StepperFunction;
 import com.protoplant.xtruder2.config.XtruderConfig;
 import com.protoplant.xtruder2.event.AnalogDataEvent;
@@ -70,6 +71,8 @@ public class AlarmPanel extends Group {
 	private Button chbPresSilence;
 	private int pressureSilenceCount;
 	private int pressureAlarmCount;
+	private Button chbMonitorFeeders;
+	private FeederMonitor fm1;
 	
 	public AlarmPanel(Composite parent, Injector injector) {
 		super(parent, SWT.NONE);
@@ -140,7 +143,7 @@ public class AlarmPanel extends Group {
 		
 		Group grpHopper = new Group(this, SWT.NONE);
 		grpHopper.setText("Hopper");
-		grpHopper.setBounds(10, 169, 155, 81);
+		grpHopper.setBounds(10, 169, 155, 93);
 		
 		lblHopperData = new Label(grpHopper, SWT.BORDER);
 		lblHopperData.setBounds(19, 10, 115, 23);
@@ -161,9 +164,23 @@ public class AlarmPanel extends Group {
 		chbHopperSilence.setText("Silence");
 		chbHopperSilence.setBounds(29, 39, 115, 23);
 		
+		chbMonitorFeeders = new Button(grpHopper, SWT.CHECK);
+		chbMonitorFeeders.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (chbMonitorFeeders.getSelection()) {
+					fm1.connect("192.168.1.11");
+				} else {
+					fm1.disconnect();
+				}
+			}
+		});
+		chbMonitorFeeders.setBounds(19, 67, 115, 16);
+		chbMonitorFeeders.setText("Monitor Feeders");
+		
 		grpPressure = new Group(this, SWT.NONE);
 		grpPressure.setText("Pressure");
-		grpPressure.setBounds(171, 169, 168, 81);
+		grpPressure.setBounds(171, 169, 168, 93);
 		
 		lblPresMax = new Label(grpPressure, SWT.BORDER);
 		lblPresMax.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
@@ -189,11 +206,13 @@ public class AlarmPanel extends Group {
 	}
 
 	@Inject
-	public void inject(Logger log, EventBus eb, XtruderConfig config, AudioManager am) {
+	public void inject(Logger log, EventBus eb, XtruderConfig config, AudioManager am, FeederMonitor fm1) {
 		this.log = log;
 		this.eb = eb;
 		this.config = config;
 		this.am = am;
+		this.fm1 = fm1;
+		
 		diaOverCount=0;
 		diaUnderCount=0;
 		diaResetCount=-1;
@@ -358,13 +377,21 @@ public class AlarmPanel extends Group {
 	}
 	
 	protected void handleHopperAlarm(int hopperData) {
-		lblHopperData.setText(""+hopperData);
-		
-		if (hopperData<config.alarm.hopperDisconnectThreshold) ++hopperDisconnectCount;
-		else if (hopperData>config.alarm.hopperEmptyThreshold) ++hopperEmptyCount;
-		else ++hopperFullCount;
-		
-//		log.info(curValue+":"+hopperDisconnectCount+":"+hopperEmptyCount+":"+hopperFullCount+"#"+config.alarm.hopperDisconnectThreshold+"#"+config.alarm.hopperEmptyThreshold);
+
+		if (chbMonitorFeeders.getSelection()) {
+			lblHopperData.setText("feeders");    //  FIXME
+			if (!fm1.isConnected()) ++hopperDisconnectCount;
+			else if (fm1.isEmpty()) ++hopperEmptyCount;
+			else ++hopperFullCount;
+		} else {
+			lblHopperData.setText(""+hopperData);
+			if (hopperData<config.alarm.hopperDisconnectThreshold) ++hopperDisconnectCount;
+			else if (hopperData>config.alarm.hopperEmptyThreshold) ++hopperEmptyCount;
+			else ++hopperFullCount;
+		}
+	
+		log.info(hopperDisconnectCount+":"+hopperEmptyCount+":"+hopperFullCount+"#"+config.alarm.hopperDisconnectThreshold+"#"+config.alarm.hopperEmptyThreshold);
+
 		
 		if (hopperSilenceCount>0) {
 			--hopperSilenceCount;

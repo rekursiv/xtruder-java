@@ -1,7 +1,6 @@
 
 
-
-
+ask about version with older version of SWT, change layout if OK
 
 
 
