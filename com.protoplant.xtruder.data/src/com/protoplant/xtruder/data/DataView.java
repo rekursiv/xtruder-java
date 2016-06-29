@@ -31,10 +31,10 @@ import org.eclipse.swt.widgets.FileDialog;
 
 public class DataView extends Composite {
 
-//	private final static String filePathTest = "C:/projects/Protoplant/data/test1.csv";
-//	private final static String fileDialogPath = "C:/projects/Protoplant/data/";
+	private final static String filePathTest = "C:/projects/eclipse_mars_workspace/protoplant_java/com.protoplant.xtruder4/data/2016-06-28_16-43-46_550.js";
+	private final static String fileDialogPath = "C:/projects/eclipse_mars_workspace/protoplant_java/com.protoplant.xtruder4/data";
 	
-	private DataReader data = new DataReader();
+	private JsonDataReader data = new JsonDataReader();
 	private XYGraph graph = new XYGraph();
 	ToolbarArmedXYGraph toolbarArmedXYGraph = new ToolbarArmedXYGraph(graph);
 	private Axis diameterTimeAxis;
@@ -71,8 +71,8 @@ public class DataView extends Composite {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 			   FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
-			   dialog.setFilterExtensions(new String [] {"*.csv"});
-//			   dialog.setFilterPath(fileDialogPath);
+			   dialog.setFilterExtensions(new String [] {"*.js"});
+			   if (fileDialogPath!=null) dialog.setFilterPath(fileDialogPath);
 			   String result = dialog.open();
 			   if (result!=null) loadData(result);
 			}
@@ -100,7 +100,7 @@ public class DataView extends Composite {
 		
 
 //		addTestBtn();     /////////////////   TEST BTN
-//		loadData(filePathTest);   //    TEST
+		if (filePathTest!=null) loadData(filePathTest);   //    TEST
 		
 
 	}
@@ -125,11 +125,11 @@ public class DataView extends Composite {
 	}
 	
 	private Color getPressureColor() {
-		return XYGraphMediaFactory.getInstance().getColor(190, 0, 0);
+		return XYGraphMediaFactory.getInstance().getColor(0, 190, 0);
 	}
 	
 	private Color getVelocityColor() {
-		return XYGraphMediaFactory.getInstance().getColor(0, 190, 0);
+		return XYGraphMediaFactory.getInstance().getColor(100, 0, 100);
 	}
 	
 	
@@ -172,7 +172,7 @@ public class DataView extends Composite {
 	private void setupVelocityTrace() {
 		Axis velocityAxis = new Axis("Velocity, in/sec", true);
 		velocityAxis.setForegroundColor(getVelocityColor());
-		velocityAxis.setRange(5, 12);
+		velocityAxis.setRange(5, 15);
 		graph.addAxis(velocityAxis);
 		
 		Trace velocityTrace = new Trace("Velocity", graph.primaryXAxis, velocityAxis, data.velocity);
