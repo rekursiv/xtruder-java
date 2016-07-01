@@ -8,6 +8,8 @@ import java.util.Arrays;
 
 import org.eclipse.nebula.visualization.xygraph.dataprovider.CircularBufferDataProvider;
 import org.eclipse.nebula.visualization.xygraph.dataprovider.Sample;
+import org.eclipse.nebula.visualization.xygraph.figures.Annotation;
+import org.eclipse.nebula.visualization.xygraph.figures.XYGraph;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -21,7 +23,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 public class JsonDataReader {
 
-	
+	public XYGraph graph = null;
 	public CircularBufferDataProvider diameter = new CircularBufferDataProvider(true);
 	public CircularBufferDataProvider pressure = new CircularBufferDataProvider(true);	
 	public CircularBufferDataProvider velocity = new CircularBufferDataProvider(true);	
@@ -62,20 +64,25 @@ public class JsonDataReader {
 		String type = "";
 		double value = 0;
 		long ts = 0;
+		int bundleIndex = 0;
+		int stickIndex = 0;
 		while (jp.nextToken()!=null && jp.getCurrentToken()!=JsonToken.END_OBJECT) {
 //			System.out.println(jp.getText());
 			if (jp.getCurrentName().equals("type")) {
 				jp.nextToken();
 				type = jp.getText();
-//				System.out.println("D "+jp.getText());
 			} else if (jp.getCurrentName().equals("timestamp")) {
 				jp.nextToken();
 				ts = jp.getLongValue();
-//				System.out.println("T "+jp.getLongValue());
 			} else if (jp.getCurrentName().equals("value")) {
 				jp.nextToken();
 				value = jp.getDoubleValue();
-//				System.out.println("V "+jp.getDoubleValue());
+			} else if (jp.getCurrentName().equals("bundle-index")) {
+				jp.nextToken();
+				bundleIndex = jp.getIntValue();
+			} else if (jp.getCurrentName().equals("stick-index")) {
+				jp.nextToken();
+				stickIndex = jp.getIntValue();
 			}
 		}
 //		System.out.println("-------");
@@ -85,6 +92,13 @@ public class JsonDataReader {
 		if (type.equals("diameter")) diameter.addSample(new Sample(ts, value));
 		else if (type.equals("pressure")) pressure.addSample(new Sample(ts, value));
 		else if (type.equals("velocity")) velocity.addSample(new Sample(ts, value));
+		else if (type.equals("cut")) {
+			Annotation a = new Annotation(bundleIndex+":"+stickIndex, graph.primaryXAxis, graph.primaryYAxis);
+			a.setValues(ts, 71.25);
+			a.setdxdy(-20, -20);
+			a.setShowPosition(false);
+			graph.addAnnotation(a);
+		}
 		++dataPoints;
 	}
 	

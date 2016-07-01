@@ -45,6 +45,8 @@ public class DataView extends Composite {
 	public DataView(Composite parent) {
 		super(parent, SWT.NONE);
 
+		data.graph = graph;
+		
 		graph.primaryXAxis.setDateEnabled(true);
 		graph.primaryXAxis.setAutoScale(true);
 		graph.primaryXAxis.setTitle("Time");
@@ -193,8 +195,6 @@ public class DataView extends Composite {
 		graph.primaryXAxis.performAutoScale(true);
 		diameterTimeAxis.setRange(graph.primaryXAxis.getRange());
 		updateTimeOffset();
-		
-	
 
 	}
 	
