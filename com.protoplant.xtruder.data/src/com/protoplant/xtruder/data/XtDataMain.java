@@ -35,7 +35,7 @@ public class XtDataMain {
 
 		shell = new Shell();
 		shell.setSize(1200, 800);
-		shell.setText("Proto-Pasta Statistical Process Control Data Plotter V1.1");
+		shell.setText("Proto-Pasta Statistical Process Control Data Plotter V1.2");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 
 		new DataView(shell);

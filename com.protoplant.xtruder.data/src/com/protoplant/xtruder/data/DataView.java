@@ -31,7 +31,8 @@ import org.eclipse.swt.widgets.FileDialog;
 
 public class DataView extends Composite {
 
-	private final static String filePathTest = "C:/projects/eclipse_mars_workspace/protoplant_java/com.protoplant.xtruder4/data/2016-06-28_16-43-46_550.js";
+//	private final static String filePathTest = "F:/dmdata/2016-07-07_11-11-02_238.js";
+	private final static String filePathTest = "C:/projects/eclipse_mars_workspace/protoplant_java/com.protoplant.xtruder4/data/2016-07-11_14-21-21_228.js";
 	private final static String fileDialogPath = "C:/projects/eclipse_mars_workspace/protoplant_java/com.protoplant.xtruder4/data";
 	
 	private JsonDataReader data = new JsonDataReader();
@@ -143,7 +144,7 @@ public class DataView extends Composite {
 		graph.addAxis(diameterTimeAxis);
 		
 		Axis diameterAxis = new Axis("Diameter, mm", true);
-		diameterAxis.setRange(1.5, 1.9);
+		diameterAxis.setRange(0.0, 4.0);
 		diameterAxis.setForegroundColor(getDiameterColor());
 		graph.addAxis(diameterAxis);
 		
@@ -161,7 +162,7 @@ public class DataView extends Composite {
 	
 	private void setupPressureTrace() {
 		Axis pressureAxis = new Axis("Pressure, psi", true);
-		pressureAxis.setRange(500, 2000);
+		pressureAxis.setRange(0, 2000);
 		pressureAxis.setForegroundColor(getPressureColor());
 		pressureAxis.setPrimarySide(false);
 		graph.addAxis(pressureAxis);

@@ -65,6 +65,48 @@ public class JsonDataReader {
 		double value = 0;
 		long ts = 0;
 		int bundleIndex = 0;
+		String pos = "";
+		while (jp.nextToken()!=null && jp.getCurrentToken()!=JsonToken.END_OBJECT) {
+//			System.out.println(jp.getText());
+			if (jp.getCurrentName().equals("type")) {
+				jp.nextToken();
+				type = jp.getText();
+			} else if (jp.getCurrentName().equals("timestamp")) {
+				jp.nextToken();
+				ts = jp.getLongValue();
+			} else if (jp.getCurrentName().equals("value")) {
+				jp.nextToken();
+				value = jp.getDoubleValue();
+			} else if (jp.getCurrentName().equals("bundle")) {
+				jp.nextToken();
+				bundleIndex = jp.getIntValue();
+			} else if (jp.getCurrentName().equals("pos")) {
+				jp.nextToken();
+				pos = jp.getText();
+			}
+		}
+
+		if (type.equals("diameter")) diameter.addSample(new Sample(ts, value));
+		else if (type.equals("pressure")) pressure.addSample(new Sample(ts, value));
+		else if (type.equals("velocity")) velocity.addSample(new Sample(ts, value));
+		else if (type.equals("mark")) {
+			Annotation a = new Annotation(bundleIndex+":"+pos, graph.primaryXAxis, graph.primaryYAxis);
+			a.setValues(ts, 71.25);
+			a.setdxdy(-20, -20);
+			a.setShowPosition(false);
+			graph.addAnnotation(a);
+		}
+		++dataPoints;
+	}
+	
+	
+	
+	
+	public void readDataPoint_V1(JsonParser jp) throws Exception {
+		String type = "";
+		double value = 0;
+		long ts = 0;
+		int bundleIndex = 0;
 		int stickIndex = 0;
 		while (jp.nextToken()!=null && jp.getCurrentToken()!=JsonToken.END_OBJECT) {
 //			System.out.println(jp.getText());
@@ -102,47 +144,6 @@ public class JsonDataReader {
 		++dataPoints;
 	}
 	
-	public void _readFromFile(String filePath) throws Exception {
-		
-		diameter.clearTrace();
-		diameter.setBufferSize(500000);
-		
-		pressure.clearTrace();
-		pressure.setBufferSize(500000);
-		
-		velocity.clearTrace();
-		velocity.setBufferSize(500000);
-		
-		CSVReader reader = new CSVReader(new FileReader(filePath));
-		
-		String[] row = reader.readNext();  
-		int rowCount = 0;
-		while (row!=null) {
-			if (rowCount>0) {  // first line is header
-				if (row[1].equals("Diameter") && row.length==3) {
-					diameter.addSample(new Sample(timeStampToMilis(row[0]), Float.parseFloat(row[2])));
-//					diameter.addSample(new Sample(timeStampToMilis(row[0])-24000, Float.parseFloat(row[2])));
-				} else if (row[1].equals("Pressure") && row.length==3) {
-					pressure.addSample(new Sample(timeStampToMilis(row[0]), Float.parseFloat(row[2])));
-				} else if (row[1].equals("Motor") && row[2].equals("Roller")) {
-					velocity.addSample(new Sample(timeStampToMilis(row[0]), Float.parseFloat(row[3])));
-				} 
-//				else System.out.println("*** UNMAPPED:  "+Arrays.toString(row));
-			}
-			row = reader.readNext();
-			++rowCount;
-//			if (rowCount>100) break;
-		}
-		
-		reader.close();
-		
-		System.out.println("Number of Rows: "+rowCount);
-		System.out.println("Number of Samples:  Diameter="+diameter.getSize()+"   Pressure="+pressure.getSize()+"   Velocity="+velocity.getSize());
-		
-//		diameter.triggerUpdate();
-//		pressure.triggerUpdate();
-//		velocity.triggerUpdate();
-	}
 	
 	
 	private long timeStampToMilis(String ts) {
