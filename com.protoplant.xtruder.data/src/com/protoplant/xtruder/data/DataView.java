@@ -31,8 +31,8 @@ import org.eclipse.swt.widgets.FileDialog;
 
 public class DataView extends Composite {
 
-//	private final static String filePathTest = "F:/dmdata/2016-07-07_11-11-02_238.js";
-	private final static String filePathTest = "C:/projects/eclipse_mars_workspace/protoplant_java/com.protoplant.xtruder4/data/2016-07-11_14-21-21_228.js";
+	private final static String filePathTest = "F:/dmdata/2016-07-07_11-11-02_238.js";
+//	private final static String filePathTest = "C:/projects/eclipse_mars_workspace/protoplant_java/com.protoplant.xtruder4/data/2016-07-11_14-21-21_228.js";
 	private final static String fileDialogPath = "C:/projects/eclipse_mars_workspace/protoplant_java/com.protoplant.xtruder4/data";
 	
 	private JsonDataReader data = new JsonDataReader();
